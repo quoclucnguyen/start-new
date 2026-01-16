@@ -62,7 +62,7 @@ const meta: Meta<typeof NotificationList> = {
   parameters: {
     layout: 'centered',
   },
-  tags: ['autodocs'],
+  
   decorators: [
     (Story) => (
       <div className="w-[400px] h-[600px] overflow-y-auto bg-background border rounded-xl">

@@ -11,7 +11,7 @@ const meta: Meta<typeof InventoryDashboard> = {
       defaultViewport: 'mobile1',
     },
   },
-  tags: ['autodocs'],
+  
 };
 
 export default meta;

@@ -11,7 +11,7 @@ const meta: Meta<typeof ShutterButton> = {
       values: [{ name: 'dark', value: '#000000' }],
     },
   },
-  tags: ['autodocs'],
+  
 };
 
 export default meta;

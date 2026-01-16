@@ -7,7 +7,7 @@ const meta: Meta<typeof UserAvatar> = {
   parameters: {
     layout: 'centered',
   },
-  tags: ['autodocs'],
+  
   argTypes: {
     size: {
       control: 'select',

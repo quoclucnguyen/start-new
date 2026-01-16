@@ -7,7 +7,7 @@ const meta: Meta<typeof CameraViewfinder> = {
   parameters: {
     layout: 'fullscreen',
   },
-  tags: ['autodocs'],
+  
   decorators: [
     (Story) => (
       <div className="h-[844px] max-w-md mx-auto">

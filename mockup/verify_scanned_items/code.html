@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Verify Scanned Items</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec5b",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216",
+                        "card-light": "#ffffff",
+                        "card-dark": "#1c2e22",
+                        "text-main-light": "#0d1b12",
+                        "text-main-dark": "#e0e7e3",
+                        "text-sec-light": "#4c9a66",
+                        "text-sec-dark": "#8abf9e",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display h-screen flex flex-col overflow-hidden text-text-main-light dark:text-text-main-dark transition-colors duration-200">
+<!-- Header -->
+<header class="flex items-center justify-between p-4 bg-background-light dark:bg-background-dark z-10 shrink-0">
+<button class="flex size-10 items-center justify-center rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-text-main-light dark:text-text-main-dark">arrow_back</span>
+</button>
+<h2 class="text-lg font-bold leading-tight tracking-[-0.015em] flex-1 text-center pr-10">Verify Items</h2>
+</header>
+<!-- Scrollable Content -->
+<main class="flex-1 overflow-y-auto pb-32 no-scrollbar">
+<!-- Progress Bar Section -->
+<div class="flex flex-col gap-2 px-4 py-2">
+<div class="flex justify-between items-end">
+<p class="text-base font-bold text-primary">Processing Complete</p>
+<p class="text-sm font-medium opacity-70">100%</p>
+</div>
+<div class="h-2 w-full rounded-full bg-[#cfe7d7] dark:bg-white/10 overflow-hidden">
+<div class="h-full bg-primary rounded-full" style="width: 100%;"></div>
+</div>
+</div>
+<!-- Instructions -->
+<p class="text-base font-normal leading-normal px-4 py-4 text-text-sec-light dark:text-text-sec-dark">
+            Review items detected from your receipt. Correct any mistakes before adding to inventory.
+        </p>
+<!-- Item List -->
+<div class="flex flex-col gap-3 px-4">
+<!-- Card 1: Verified Item -->
+<div class="bg-card-light dark:bg-card-dark rounded-xl p-3 shadow-sm flex flex-col gap-3">
+<div class="flex gap-3 justify-between items-start">
+<!-- Icon -->
+<div class="flex items-center justify-center rounded-lg bg-[#e7f3eb] dark:bg-[#13ec5b]/10 shrink-0 size-12 text-[#0d1b12] dark:text-primary">
+<span class="material-symbols-outlined text-[24px]">water_drop</span>
+</div>
+<!-- Content -->
+<div class="flex flex-1 flex-col gap-2">
+<!-- Inputs Row 1 -->
+<div class="flex gap-2">
+<input class="flex-1 bg-transparent border-b border-gray-200 dark:border-gray-700 text-base font-medium focus:outline-none focus:border-primary pb-1 placeholder-gray-400 dark:text-white" placeholder="Item Name" type="text" value="Whole Milk"/>
+</div>
+<!-- Inputs Row 2 -->
+<div class="flex gap-3 items-center">
+<!-- Category Pill -->
+<div class="flex items-center gap-1 px-2 py-1 rounded bg-gray-100 dark:bg-white/5 text-xs font-medium text-text-sec-light dark:text-text-sec-dark">
+<span class="material-symbols-outlined text-[14px]">category</span>
+<span>Dairy</span>
+</div>
+<!-- Qty Stepper -->
+<div class="flex items-center bg-gray-50 dark:bg-black/20 rounded px-2 py-1 border border-gray-100 dark:border-white/5">
+<span class="text-xs text-gray-500 mr-2">Qty</span>
+<input class="w-8 bg-transparent text-center text-sm font-semibold focus:outline-none dark:text-white appearance-none" type="number" value="1"/>
+</div>
+<!-- Price Input -->
+<div class="flex items-center bg-gray-50 dark:bg-black/20 rounded px-2 py-1 border border-gray-100 dark:border-white/5 ml-auto">
+<span class="text-xs text-gray-500 mr-1">$</span>
+<input class="w-12 bg-transparent text-right text-sm font-semibold focus:outline-none dark:text-white" type="text" value="2.50"/>
+</div>
+</div>
+</div>
+</div>
+<!-- Actions Footer -->
+<div class="flex justify-end gap-2 border-t border-gray-100 dark:border-white/5 pt-2">
+<button class="p-2 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+<button class="flex items-center gap-1 px-3 py-1 rounded-lg bg-primary/10 text-green-700 dark:text-primary hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-[18px]">check</span>
+<span class="text-sm font-semibold">Verified</span>
+</button>
+</div>
+</div>
+<!-- Card 2: Verified Item -->
+<div class="bg-card-light dark:bg-card-dark rounded-xl p-3 shadow-sm flex flex-col gap-3">
+<div class="flex gap-3 justify-between items-start">
+<div class="flex items-center justify-center rounded-lg bg-[#e7f3eb] dark:bg-[#13ec5b]/10 shrink-0 size-12 text-[#0d1b12] dark:text-primary">
+<span class="material-symbols-outlined text-[24px]">nutrition</span>
+</div>
+<div class="flex flex-1 flex-col gap-2">
+<div class="flex gap-2">
+<input class="flex-1 bg-transparent border-b border-gray-200 dark:border-gray-700 text-base font-medium focus:outline-none focus:border-primary pb-1 placeholder-gray-400 dark:text-white" placeholder="Item Name" type="text" value="Gala Apples"/>
+</div>
+<div class="flex gap-3 items-center">
+<div class="flex items-center gap-1 px-2 py-1 rounded bg-gray-100 dark:bg-white/5 text-xs font-medium text-text-sec-light dark:text-text-sec-dark">
+<span class="material-symbols-outlined text-[14px]">eco</span>
+<span>Produce</span>
+</div>
+<div class="flex items-center bg-gray-50 dark:bg-black/20 rounded px-2 py-1 border border-gray-100 dark:border-white/5">
+<span class="text-xs text-gray-500 mr-2">Qty</span>
+<input class="w-8 bg-transparent text-center text-sm font-semibold focus:outline-none dark:text-white appearance-none" type="number" value="2"/>
+</div>
+<div class="flex items-center bg-gray-50 dark:bg-black/20 rounded px-2 py-1 border border-gray-100 dark:border-white/5 ml-auto">
+<span class="text-xs text-gray-500 mr-1">$</span>
+<input class="w-12 bg-transparent text-right text-sm font-semibold focus:outline-none dark:text-white" type="text" value="1.20"/>
+</div>
+</div>
+</div>
+</div>
+<div class="flex justify-end gap-2 border-t border-gray-100 dark:border-white/5 pt-2">
+<button class="p-2 rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+<button class="flex items-center gap-1 px-3 py-1 rounded-lg bg-primary/10 text-green-700 dark:text-primary hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-[18px]">check</span>
+<span class="text-sm font-semibold">Verified</span>
+</button>
+</div>
+</div>
+<!-- Card 3: Low Confidence Item -->
+<div class="bg-yellow-50 dark:bg-yellow-900/10 border border-yellow-200 dark:border-yellow-700/30 rounded-xl p-3 shadow-sm flex flex-col gap-3 relative overflow-hidden">
+<!-- Warning Indicator -->
+<div class="absolute top-0 right-0 p-2 text-yellow-600 dark:text-yellow-500">
+<span class="material-symbols-outlined text-[20px]">warning</span>
+</div>
+<div class="flex gap-3 justify-between items-start">
+<div class="flex items-center justify-center rounded-lg bg-yellow-100 dark:bg-yellow-900/30 shrink-0 size-12 text-yellow-700 dark:text-yellow-500">
+<span class="material-symbols-outlined text-[24px]">help_center</span>
+</div>
+<div class="flex flex-1 flex-col gap-2 z-10">
+<div class="flex gap-2 pr-8">
+<input class="flex-1 bg-transparent border-b border-yellow-300 dark:border-yellow-700 text-base font-medium text-yellow-900 dark:text-yellow-100 focus:outline-none focus:border-yellow-500 pb-1 italic" type="text" value="Unrecognized Item"/>
+</div>
+<div class="flex gap-3 items-center">
+<div class="flex items-center gap-1 px-2 py-1 rounded bg-yellow-100/50 dark:bg-yellow-900/30 text-xs font-medium text-yellow-800 dark:text-yellow-200">
+<span class="material-symbols-outlined text-[14px]">edit</span>
+<span>Select Category</span>
+</div>
+<div class="flex items-center bg-white/50 dark:bg-black/20 rounded px-2 py-1 border border-yellow-200 dark:border-yellow-700/30 ml-auto">
+<span class="text-xs text-yellow-700 dark:text-yellow-400 mr-1">$</span>
+<input class="w-12 bg-transparent text-right text-sm font-semibold focus:outline-none text-yellow-900 dark:text-yellow-100" type="text" value="0.00"/>
+</div>
+</div>
+</div>
+</div>
+<div class="flex justify-end gap-2 border-t border-yellow-200 dark:border-yellow-700/30 pt-2 z-10">
+<button class="p-2 rounded-lg text-red-500 hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+<button class="flex items-center gap-1 px-3 py-1 rounded-lg bg-yellow-200 dark:bg-yellow-800 text-yellow-900 dark:text-yellow-100 hover:bg-yellow-300 dark:hover:bg-yellow-700 transition-colors shadow-sm">
+<span class="material-symbols-outlined text-[18px]">edit</span>
+<span class="text-sm font-semibold">Review</span>
+</button>
+</div>
+</div>
+<!-- Add Missing Item Button -->
+<button class="group mt-2 mb-4 flex w-full items-center justify-center gap-2 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-700 p-4 text-center text-text-sec-light dark:text-text-sec-dark transition-all hover:border-primary hover:bg-primary/5 hover:text-primary dark:hover:text-primary">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform">add_circle</span>
+<span class="text-sm font-semibold">Add Missing Item</span>
+</button>
+</div>
+</main>
+<!-- Footer Summary -->
+<footer class="shrink-0 bg-card-light dark:bg-card-dark border-t border-gray-100 dark:border-gray-800 p-5 pb-8 shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)] z-20">
+<div class="flex justify-between items-center mb-4">
+<div class="flex flex-col">
+<span class="text-sm text-text-sec-light dark:text-text-sec-dark font-medium">3 Items found</span>
+<span class="text-xs text-gray-400 dark:text-gray-500">Tax incl.</span>
+</div>
+<div class="flex items-end gap-1">
+<span class="text-sm font-medium text-gray-500 dark:text-gray-400 pb-1">Total:</span>
+<span class="text-2xl font-bold text-text-main-light dark:text-white">$3.70</span>
+</div>
+</div>
+<button class="w-full rounded-full bg-primary py-4 px-6 text-[#0d1b12] font-bold text-base shadow-lg shadow-primary/20 hover:shadow-primary/40 hover:brightness-105 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">check_circle</span>
+            Confirm &amp; Add to Inventory
+        </button>
+</footer>
+</body></html>

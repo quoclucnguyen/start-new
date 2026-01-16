@@ -7,7 +7,7 @@ const meta: Meta<typeof IngredientTag> = {
   parameters: {
     layout: 'centered',
   },
-  tags: ['autodocs'],
+  
 };
 
 export default meta;

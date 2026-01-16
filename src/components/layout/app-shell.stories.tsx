@@ -7,7 +7,7 @@ const meta: Meta<typeof AppShell> = {
   parameters: {
     layout: 'fullscreen',
   },
-  tags: ['autodocs'],
+  
 };
 
 export default meta;

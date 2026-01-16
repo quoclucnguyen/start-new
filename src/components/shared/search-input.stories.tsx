@@ -7,7 +7,7 @@ const meta: Meta<typeof SearchInput> = {
   parameters: {
     layout: 'centered',
   },
-  tags: ['autodocs'],
+  
   decorators: [
     (Story) => (
       <div className="w-[350px]">

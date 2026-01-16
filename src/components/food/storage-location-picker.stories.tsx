@@ -8,7 +8,7 @@ const meta: Meta<typeof StorageLocationPicker> = {
   parameters: {
     layout: 'centered',
   },
-  tags: ['autodocs'],
+  
   decorators: [
     (Story) => (
       <div className="w-[350px]">

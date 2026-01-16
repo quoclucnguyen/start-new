@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Shopping List UI</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200..800;1,200..800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+            extend: {
+                colors: {
+                "primary": "#13ec5b",
+                "background-light": "#f6f8f6",
+                "background-dark": "#102216",
+                },
+                fontFamily: {
+                "display": ["Plus Jakarta Sans", "sans-serif"]
+                },
+                borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                keyframes: {
+                    fadeInUp: {
+                        '0%': { opacity: '0', transform: 'translateY(20px)' },
+                        '100%': { opacity: '1', transform: 'translateY(0)' },
+                    }
+                },
+                animation: {
+                    'fade-in-up': 'fadeInUp 0.3s ease-out forwards',
+                }
+            },
+            },
+        }
+    </script>
+<style>.no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    body {
+      min-height: max(884px, 100dvh);
+    }
+</style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-slate-100 antialiased selection:bg-primary selection:text-slate-900">
+<div class="relative flex h-full min-h-screen w-full flex-col overflow-x-hidden">
+<header class="sticky top-0 z-40 w-full bg-background-light/90 dark:bg-background-dark/90 backdrop-blur-md border-b border-slate-200 dark:border-slate-800 transition-colors duration-300">
+<div class="h-12 w-full"></div>
+<div class="flex items-center justify-between px-4 pb-3">
+<div class="flex-1">
+<h2 class="text-2xl font-bold leading-tight tracking-tight text-slate-900 dark:text-white">Shopping List</h2>
+<p class="text-xs text-slate-500 dark:text-slate-400 font-medium">3 items selected</p>
+</div>
+<div class="flex items-center justify-end gap-2">
+<button class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 transition-colors text-slate-900 dark:text-white">
+<span class="material-symbols-outlined text-[20px]">ios_share</span>
+</button>
+<button class="flex h-10 w-10 items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 transition-colors text-slate-900 dark:text-white">
+<span class="material-symbols-outlined text-[20px]">more_horiz</span>
+</button>
+</div>
+</div>
+</header>
+<main class="flex-1 px-4 pt-4 pb-48">
+<div class="mb-6 @container animate-fade-in-down">
+<div class="flex flex-col gap-4 rounded-xl border border-primary/30 bg-white dark:bg-slate-900 p-5 shadow-sm shadow-slate-200/50 dark:shadow-none relative overflow-hidden group">
+<div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-primary/10 rounded-full blur-2xl"></div>
+<div class="flex items-start gap-4 z-10">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-primary/20 text-green-700 dark:text-primary">
+<span class="material-symbols-outlined filled">tips_and_updates</span>
+</div>
+<div class="flex flex-1 flex-col gap-1">
+<p class="text-slate-900 dark:text-white text-base font-bold leading-tight">Restock Alert</p>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-normal leading-normal">
+<span class="font-semibold text-slate-700 dark:text-slate-300">Milk</span> and <span class="font-semibold text-slate-700 dark:text-slate-300">Eggs</span> expired yesterday. Add to list?
+                            </p>
+</div>
+</div>
+<div class="flex items-center justify-end z-10 w-full mt-2">
+<button class="w-full flex cursor-pointer items-center justify-center rounded-lg h-10 bg-primary hover:bg-green-400 transition-colors text-slate-900 text-sm font-bold shadow-md shadow-primary/20 active:scale-[0.98]">
+<span class="material-symbols-outlined text-[18px] mr-2">add</span>
+                            Add All to List
+                        </button>
+</div>
+</div>
+</div>
+<div class="mb-2">
+<div class="sticky top-[88px] z-30 bg-background-light dark:bg-background-dark py-2 transition-colors duration-300">
+<h3 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">Produce</h3>
+</div>
+<div class="flex flex-col gap-3">
+<div class="group relative flex items-center justify-between rounded-xl bg-green-50/50 dark:bg-green-900/10 border border-primary/40 dark:border-primary/30 shadow-sm transition-all overflow-hidden ring-1 ring-primary/20">
+<div class="flex flex-1 items-center gap-3 p-3 pl-4">
+<div class="relative flex items-center shrink-0">
+<input checked="" class="peer h-6 w-6 cursor-pointer appearance-none rounded-full border-2 border-slate-300 dark:border-slate-600 bg-transparent transition-all checked:border-primary checked:bg-primary hover:border-primary focus:ring-0 focus:ring-offset-0" type="checkbox"/>
+<span class="material-symbols-outlined pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-[16px] text-slate-900 opacity-0 peer-checked:opacity-100 transition-opacity">check</span>
+</div>
+<div aria-label="Edit Bananas" class="flex flex-1 items-center gap-3 cursor-pointer select-none" role="button">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white dark:bg-slate-800 text-xl">🍌</div>
+<div class="flex flex-col min-w-0">
+<span class="text-base font-semibold text-slate-900 dark:text-white truncate">Bananas</span>
+<span class="text-xs text-slate-500 dark:text-slate-500 truncate">Organic</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-1 pr-2">
+<div class="flex h-8 items-center rounded-lg bg-white dark:bg-slate-800 px-1 mr-1 shadow-sm">
+<button class="flex h-8 w-8 items-center justify-center text-slate-500 hover:text-slate-900 dark:hover:text-white active:scale-90 transition-transform"><span class="material-symbols-outlined text-[18px]">remove</span></button>
+<span class="min-w-[1rem] text-center text-sm font-bold text-slate-900 dark:text-white">1</span>
+<button class="flex h-8 w-8 items-center justify-center text-slate-500 hover:text-slate-900 dark:hover:text-white active:scale-90 transition-transform"><span class="material-symbols-outlined text-[18px]">add</span></button>
+</div>
+<button class="flex h-8 w-8 items-center justify-center rounded-full text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+<div class="relative overflow-hidden rounded-xl shadow-sm bg-red-500">
+<div class="absolute right-0 top-0 bottom-0 w-24 flex items-center justify-center text-white z-0">
+<div class="flex flex-col items-center gap-1">
+<span class="material-symbols-outlined">delete</span>
+<span class="text-[10px] font-bold uppercase tracking-wider">Delete</span>
+</div>
+</div>
+<div class="relative z-10 flex w-full items-center justify-between bg-green-50/50 dark:bg-green-900/10 border border-primary/40 dark:border-primary/30 transition-transform -translate-x-0 rounded-xl ring-1 ring-primary/20">
+<div class="flex flex-1 items-center gap-3 p-3 pl-4">
+<div class="relative flex items-center shrink-0">
+<input checked="" class="peer h-6 w-6 cursor-pointer appearance-none rounded-full border-2 border-slate-300 dark:border-slate-600 bg-transparent transition-all checked:border-primary checked:bg-primary hover:border-primary focus:ring-0 focus:ring-offset-0" type="checkbox"/>
+<span class="material-symbols-outlined pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-[16px] text-slate-900 opacity-0 peer-checked:opacity-100 transition-opacity">check</span>
+</div>
+<div class="flex flex-1 items-center gap-3 cursor-pointer select-none">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white dark:bg-slate-800 text-xl">🥗</div>
+<div class="flex flex-col min-w-0">
+<span class="text-base font-semibold text-slate-900 dark:text-white truncate">Spinach</span>
+<span class="text-xs text-slate-500 dark:text-slate-500 truncate">2 bags</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-1 pr-2">
+<div class="flex h-8 items-center rounded-lg bg-white dark:bg-slate-800 px-1 mr-1 shadow-sm">
+<button class="flex h-8 w-8 items-center justify-center text-slate-500 hover:text-slate-900 dark:hover:text-white"><span class="material-symbols-outlined text-[18px]">remove</span></button>
+<span class="min-w-[1rem] text-center text-sm font-bold text-slate-900 dark:text-white">2</span>
+<button class="flex h-8 w-8 items-center justify-center text-slate-500 hover:text-slate-900 dark:hover:text-white"><span class="material-symbols-outlined text-[18px]">add</span></button>
+</div>
+<button class="flex h-8 w-8 items-center justify-center rounded-full text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="h-6"></div>
+<div class="mb-2">
+<div class="sticky top-[88px] z-30 bg-background-light dark:bg-background-dark py-2 transition-colors duration-300">
+<h3 class="text-slate-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">Dairy</h3>
+</div>
+<div class="flex flex-col gap-3">
+<div class="group relative flex items-center justify-between rounded-xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 shadow-sm transition-all overflow-hidden">
+<div class="flex flex-1 items-center gap-3 p-3 pl-4">
+<div class="relative flex items-center shrink-0">
+<input class="peer h-6 w-6 cursor-pointer appearance-none rounded-full border-2 border-slate-300 dark:border-slate-600 bg-transparent transition-all checked:border-primary checked:bg-primary hover:border-primary focus:ring-0 focus:ring-offset-0" type="checkbox"/>
+<span class="material-symbols-outlined pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-[16px] text-slate-900 opacity-0 peer-checked:opacity-100 transition-opacity">check</span>
+</div>
+<div class="flex flex-1 items-center gap-3 cursor-pointer select-none">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-slate-50 dark:bg-slate-800 text-xl grayscale-0">🧀</div>
+<div class="flex flex-col min-w-0">
+<span class="text-base font-semibold text-slate-900 dark:text-white truncate">Cheddar Cheese</span>
+<span class="text-xs text-slate-500 dark:text-slate-500 truncate">1 block</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-1 pr-2">
+<div class="flex h-8 items-center rounded-lg bg-slate-100 dark:bg-slate-800 px-1 mr-1">
+<button class="flex h-8 w-8 items-center justify-center text-slate-500"><span class="material-symbols-outlined text-[18px]">remove</span></button>
+<span class="min-w-[1rem] text-center text-sm font-bold text-slate-900 dark:text-white">1</span>
+<button class="flex h-8 w-8 items-center justify-center text-slate-500"><span class="material-symbols-outlined text-[18px]">add</span></button>
+</div>
+<button class="flex h-8 w-8 items-center justify-center rounded-full text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+<div class="group relative flex items-center justify-between rounded-xl bg-green-50/50 dark:bg-green-900/10 border border-primary/40 dark:border-primary/30 shadow-sm transition-all overflow-hidden ring-1 ring-primary/20">
+<div class="flex flex-1 items-center gap-3 p-3 pl-4">
+<div class="relative flex items-center shrink-0">
+<input checked="" class="peer h-6 w-6 cursor-pointer appearance-none rounded-full border-2 border-slate-300 dark:border-slate-600 bg-transparent transition-all checked:border-primary checked:bg-primary hover:border-primary focus:ring-0 focus:ring-offset-0" type="checkbox"/>
+<span class="material-symbols-outlined pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 text-[16px] text-slate-900 opacity-0 peer-checked:opacity-100 transition-opacity">check</span>
+</div>
+<div class="flex flex-1 items-center gap-3 cursor-pointer select-none">
+<div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white dark:bg-slate-800 text-xl">🥛</div>
+<div class="flex flex-col min-w-0">
+<span class="text-base font-semibold text-slate-900 dark:text-white truncate">Oat Milk</span>
+<span class="text-xs text-slate-500 dark:text-slate-500 truncate">3 cartons</span>
+</div>
+</div>
+</div>
+<div class="flex items-center gap-1 pr-2">
+<div class="flex h-8 items-center rounded-lg bg-white dark:bg-slate-800 px-1 mr-1 shadow-sm">
+<button class="flex h-8 w-8 items-center justify-center text-slate-500 hover:text-slate-900 dark:hover:text-white active:scale-90 transition-transform"><span class="material-symbols-outlined text-[18px]">remove</span></button>
+<span class="min-w-[1rem] text-center text-sm font-bold text-slate-900 dark:text-white">3</span>
+<button class="flex h-8 w-8 items-center justify-center text-slate-500 hover:text-slate-900 dark:hover:text-white active:scale-90 transition-transform"><span class="material-symbols-outlined text-[18px]">add</span></button>
+</div>
+<button class="flex h-8 w-8 items-center justify-center rounded-full text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-[20px]">more_vert</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<div class="fixed bottom-[84px] left-0 w-full px-4 z-40 transform transition-all duration-300">
+<button class="w-full h-14 bg-primary hover:bg-green-400 active:scale-[0.98] rounded-2xl shadow-xl shadow-primary/30 flex items-center justify-between px-6 text-slate-900 font-bold text-lg ring-2 ring-white/20 dark:ring-black/20">
+<span>3 items selected</span>
+<div class="flex items-center gap-2">
+<span>Confirm &amp; Add</span>
+<span class="material-symbols-outlined">arrow_forward</span>
+</div>
+</button>
+</div>
+<button class="fixed bottom-36 right-5 z-30 flex h-14 w-14 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-white shadow-lg border border-slate-200 dark:border-slate-700 transition-transform active:scale-90 hover:scale-105 hover:bg-slate-200 dark:hover:bg-slate-700">
+<span class="material-symbols-outlined text-[28px] font-bold">add</span>
+</button>
+<nav class="fixed bottom-0 z-40 w-full border-t border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/90 backdrop-blur-lg pb-safe">
+<div class="flex h-16 items-center justify-around px-2 pb-2">
+<a class="flex flex-1 flex-col items-center justify-center gap-1 p-2 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]">inventory_2</span>
+<span class="text-[10px] font-medium">Inventory</span>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 p-2 text-slate-900 dark:text-white" href="#">
+<div class="relative">
+<span class="material-symbols-outlined text-[24px] filled">checklist</span>
+<span class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[9px] font-bold text-slate-900">3</span>
+</div>
+<span class="text-[10px] font-bold">List</span>
+</a>
+<a class="flex flex-1 flex-col items-center justify-center gap-1 p-2 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors" href="#">
+<span class="material-symbols-outlined text-[24px]">restaurant_menu</span>
+<span class="text-[10px] font-medium">Recipes</span>
+</a>
+</div>
+<div class="h-6 w-full"></div>
+</nav>
+<div aria-modal="true" class="fixed inset-0 z-50 flex items-end sm:items-center justify-center" role="dialog">
+<div class="absolute inset-0 bg-slate-900/60 backdrop-blur-[3px] transition-opacity"></div>
+<div class="relative w-full sm:max-w-md bg-white dark:bg-slate-900 rounded-t-3xl sm:rounded-3xl shadow-2xl overflow-hidden animate-fade-in-up flex flex-col max-h-[90vh]">
+<div class="w-full flex justify-center pt-3 pb-1 sm:hidden">
+<div class="w-12 h-1.5 rounded-full bg-slate-200 dark:bg-slate-700"></div>
+</div>
+<div class="p-5 flex-1 overflow-y-auto no-scrollbar">
+<div class="flex items-center justify-between mb-2">
+<h3 class="text-xl font-bold text-slate-900 dark:text-white">Confirm Purchase</h3>
+<button class="p-2 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors">
+<span class="material-symbols-outlined text-slate-500">close</span>
+</button>
+</div>
+<p class="text-sm text-slate-500 dark:text-slate-400 mb-6">Review expiration dates for 3 items before adding them to your inventory.</p>
+<div class="space-y-4 mb-6">
+<div class="flex items-center gap-4 bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-100 dark:border-slate-800">
+<div class="text-2xl">🍌</div>
+<div class="flex-1 min-w-0">
+<div class="font-bold text-slate-900 dark:text-white truncate">Bananas</div>
+<div class="text-xs text-slate-500">1 bunch</div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Expires</span>
+<button class="flex items-center gap-1.5 bg-white dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm text-sm font-semibold text-slate-700 dark:text-slate-300 active:scale-95 transition-transform">
+<span>Aug 29</span>
+<span class="material-symbols-outlined text-[16px]">edit_calendar</span>
+</button>
+</div>
+</div>
+<div class="flex items-center gap-4 bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-100 dark:border-slate-800">
+<div class="text-2xl">🥗</div>
+<div class="flex-1 min-w-0">
+<div class="font-bold text-slate-900 dark:text-white truncate">Spinach</div>
+<div class="text-xs text-slate-500">2 bags</div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Expires</span>
+<button class="flex items-center gap-1.5 bg-white dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm text-sm font-semibold text-slate-700 dark:text-slate-300 active:scale-95 transition-transform">
+<span>Aug 27</span>
+<span class="material-symbols-outlined text-[16px]">edit_calendar</span>
+</button>
+</div>
+</div>
+<div class="flex items-center gap-4 bg-slate-50 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-100 dark:border-slate-800">
+<div class="text-2xl">🥛</div>
+<div class="flex-1 min-w-0">
+<div class="font-bold text-slate-900 dark:text-white truncate">Oat Milk</div>
+<div class="text-xs text-slate-500">3 cartons</div>
+</div>
+<div class="flex flex-col items-end gap-1">
+<span class="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Expires</span>
+<button class="flex items-center gap-1.5 bg-white dark:bg-slate-800 px-3 py-1.5 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm text-sm font-semibold text-slate-700 dark:text-slate-300 active:scale-95 transition-transform">
+<span>Sep 10</span>
+<span class="material-symbols-outlined text-[16px]">edit_calendar</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="p-5 border-t border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900/50">
+<button class="w-full py-4 rounded-xl bg-primary text-slate-900 font-bold text-lg shadow-lg shadow-primary/25 hover:bg-green-400 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">inventory_2</span>
+                    Add to Inventory
+                </button>
+</div>
+</div>
+</div>
+</div>
+</body></html>

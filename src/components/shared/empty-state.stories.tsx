@@ -8,7 +8,7 @@ const meta: Meta<typeof EmptyState> = {
   parameters: {
     layout: 'centered',
   },
-  tags: ['autodocs'],
+  
   decorators: [
     (Story) => (
       <div className="w-[380px]">

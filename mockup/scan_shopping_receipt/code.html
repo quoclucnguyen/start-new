@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Scan Shopping Receipt - Family Food Manager</title>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Google Fonts: Inter -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Theme Configuration -->
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#13ec5b",
+              "background-light": "#f6f8f6",
+              "background-dark": "#102216",
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+            animation: {
+              'scan-line': 'scan 3s ease-in-out infinite',
+            },
+            keyframes: {
+              scan: {
+                '0%': { top: '5%', opacity: '0' },
+                '15%': { opacity: '1' },
+                '85%': { opacity: '1' },
+                '100%': { top: '95%', opacity: '0' },
+              }
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        /* Custom Styles for Icons */
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined.fill {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display h-screen w-full overflow-hidden select-none">
+<!-- Main Container: Full Screen Camera UI -->
+<div class="relative h-full w-full flex flex-col bg-black">
+<!-- LAYER 1: Simulated Camera Feed (Background) -->
+<div class="absolute inset-0 z-0">
+<!-- Camera Feed Image -->
+<img alt="Top down view of a grocery receipt on a dark surface, slightly out of focus" class="h-full w-full object-cover opacity-90" data-alt="Top down view of a grocery receipt on a dark surface, slightly out of focus" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDT1IntvozF3kpFNza7_mKEx3NQeXgnRzaUDQxsutSzH-bJEYjjCBsyrFcZlR7-QKfPtsKhmWXU1PGNoXq9up8wHzRU01YnJ3VQdfwEvrW3PzLuzk__r7vzNuFEvywTZr9tZRqVtAc_-fHEwUReDlTXQ-ZUVZTBAlq2ETfPFgzLfb4_wrjORjJL_18NZamD4edXkDI5wC1cbKF5iBd__g58BpdinKkYVJxVkHagQQOZQ4jmtztU_Qa6zfDYuja7Y9VtzsMcNWtm8q6y"/>
+<!-- Vignette Overlay for focus -->
+<div class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_0%,rgba(0,0,0,0.4)_100%)]"></div>
+</div>
+<!-- LAYER 2: Top Bar (Floating) -->
+<div class="relative z-20 flex items-center justify-between p-5 pt-12 bg-gradient-to-b from-black/80 to-transparent">
+<!-- Close Button -->
+<button class="flex size-10 items-center justify-center rounded-full bg-black/20 text-white backdrop-blur-md transition hover:bg-white/20">
+<span class="material-symbols-outlined text-2xl">close</span>
+</button>
+<!-- Flash Toggle -->
+<button class="flex size-10 items-center justify-center rounded-full bg-black/20 text-white backdrop-blur-md transition hover:bg-white/20 group">
+<!-- Using filled icon for active state indication -->
+<span class="material-symbols-outlined group-hover:text-primary transition-colors">flash_on</span>
+</button>
+</div>
+<!-- LAYER 3: Viewfinder & Guides (Center) -->
+<div class="relative z-10 flex flex-1 flex-col items-center justify-center px-6">
+<!-- Scanning Frame -->
+<!-- The border pulses green to indicate active detection as per requirements -->
+<div class="relative w-full max-w-[340px] aspect-[2/3] rounded-2xl border-[3px] border-primary/80 shadow-[0_0_40px_-5px_rgba(19,236,91,0.4)] overflow-hidden">
+<!-- Corner Indicators (Decorations) -->
+<div class="absolute top-0 left-0 h-8 w-8 border-t-4 border-l-4 border-primary rounded-tl-lg"></div>
+<div class="absolute top-0 right-0 h-8 w-8 border-t-4 border-r-4 border-primary rounded-tr-lg"></div>
+<div class="absolute bottom-0 left-0 h-8 w-8 border-b-4 border-l-4 border-primary rounded-bl-lg"></div>
+<div class="absolute bottom-0 right-0 h-8 w-8 border-b-4 border-r-4 border-primary rounded-br-lg"></div>
+<!-- Animated Scan Line -->
+<div class="absolute left-0 right-0 h-0.5 bg-primary shadow-[0_0_15px_2px_#13ec5b] animate-scan-line"></div>
+<!-- Scanning Grid Overlay (Subtle) -->
+<div class="absolute inset-0 opacity-10" style="background-image: linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px); background-size: 33.3% 33.3%;">
+</div>
+</div>
+<!-- Feedback / Instructions -->
+<div class="mt-8 flex flex-col items-center space-y-3">
+<!-- Status Badge -->
+<div class="flex items-center gap-2 rounded-full bg-primary/20 border border-primary/30 px-3 py-1.5 backdrop-blur-sm">
+<span class="relative flex h-2.5 w-2.5">
+<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+<span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary"></span>
+</span>
+<span class="text-xs font-semibold uppercase tracking-wider text-primary">Edges Detected</span>
+</div>
+<!-- Main Text -->
+<div class="text-center">
+<h3 class="text-white text-xl font-bold leading-tight drop-shadow-md">Align receipt within frame</h3>
+<p class="text-white/80 text-sm font-medium mt-1 drop-shadow-sm">Hold steady for automatic scan</p>
+</div>
+</div>
+</div>
+<!-- LAYER 4: Bottom Controls (Floating Sheet) -->
+<div class="relative z-20 w-full bg-gradient-to-t from-black/95 via-black/70 to-transparent pb-10 pt-16">
+<div class="mx-auto flex max-w-sm items-center justify-between px-8">
+<!-- Recent Thumbnail -->
+<button class="relative flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-lg border-2 border-white/20 bg-gray-800 transition hover:border-white/60 hover:scale-105 active:scale-95">
+<img alt="Thumbnail of the previously scanned grocery receipt" class="h-full w-full object-cover opacity-80" data-alt="Thumbnail of the previously scanned grocery receipt" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQ66YnqNjytqBTLRmtQIpJ4o4p9QL-03PKg0XHwnYgSrwbHoGg9DV35dn_V3ymMvQv4kJYKUkCUn2fF4QIEaF7J9rWQefVxcRVebdnok_JAG1kRpPkwVnqcw5VeWo5cqu0kekZ2ksZ-lIJyxAG6ScC6Gszw_kj8LXn_FUfixqPIO-CFh5WcTCfxaa0Jfwpp86ja9D7l_vktyeC9G-bHhzruBJkjyidQFfbqarbG9KflHk1r8Ne9dBhsTRwPIMsWQ_uoqI_oWVzwoSY"/>
+</button>
+<!-- Shutter Button -->
+<button class="group flex shrink-0 items-center justify-center rounded-full bg-transparent p-1 transition-transform active:scale-95">
+<div class="flex size-20 items-center justify-center rounded-full border-[5px] border-white group-hover:border-primary transition-colors duration-300">
+<div class="size-16 rounded-full bg-white group-hover:bg-primary transition-colors duration-300 shadow-lg"></div>
+</div>
+</button>
+<!-- Gallery Import -->
+<button class="flex size-12 shrink-0 items-center justify-center rounded-full bg-white/10 text-white backdrop-blur-md transition hover:bg-white/20 hover:scale-105 active:scale-95">
+<span class="material-symbols-outlined text-[28px]">photo_library</span>
+</button>
+</div>
+<!-- Bottom safe area spacer if needed -->
+<div class="h-4"></div>
+</div>
+</div>
+</body></html>

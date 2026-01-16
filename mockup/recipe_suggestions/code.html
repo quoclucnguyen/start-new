@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Recipe Suggestions</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700&amp;family=Noto+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec5b",
+                        "primary-dark": "#0fb847",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216",
+                        "card-light": "#ffffff",
+                        "card-dark": "#1a2e22",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"],
+                        "body": ["Noto Sans", "sans-serif"],
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark min-h-screen font-display text-neutral-900 dark:text-white pb-24">
+<!-- Top App Bar -->
+<div class="sticky top-0 z-50 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md transition-colors duration-200">
+<div class="flex items-center p-4 pb-2 justify-between">
+<h2 class="text-xl font-bold leading-tight tracking-tight flex-1">Suggestions</h2>
+<div class="flex w-12 items-center justify-end">
+<button class="flex items-center justify-center rounded-full w-10 h-10 hover:bg-neutral-200 dark:hover:bg-neutral-800 transition-colors">
+<span class="material-symbols-outlined text-neutral-900 dark:text-white">tune</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Hero / Headline Section -->
+<div class="px-4 py-4">
+<div class="flex items-start gap-3">
+<div class="flex-1">
+<p class="text-sm font-medium text-primary uppercase tracking-wider mb-1">Expiration Alert</p>
+<h1 class="text-[28px] font-bold leading-tight text-neutral-900 dark:text-white">
+                    Don't let your <span class="text-primary underline decoration-2 underline-offset-2">Spinach</span> spoil!
+                </h1>
+<p class="text-neutral-500 dark:text-neutral-400 mt-2 text-sm">We found 3 recipes to use it up before Friday.</p>
+</div>
+<div class="w-16 h-16 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-green-600 dark:text-primary text-3xl">eco</span>
+</div>
+</div>
+</div>
+<!-- Filter Chips -->
+<div class="flex gap-3 px-4 pb-4 overflow-x-auto hide-scrollbar">
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-primary/20 border border-primary px-4 transition-colors">
+<span class="text-neutral-900 dark:text-white text-sm font-semibold">Suggested</span>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-card-light dark:bg-card-dark border border-neutral-200 dark:border-neutral-700 px-4 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors">
+<span class="material-symbols-outlined text-neutral-500 dark:text-neutral-400 text-[18px]">schedule</span>
+<span class="text-neutral-700 dark:text-neutral-300 text-sm font-medium">Under 30m</span>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-card-light dark:bg-card-dark border border-neutral-200 dark:border-neutral-700 px-4 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors">
+<span class="text-neutral-700 dark:text-neutral-300 text-sm font-medium">Vegetarian</span>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-card-light dark:bg-card-dark border border-neutral-200 dark:border-neutral-700 px-4 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors">
+<span class="text-neutral-700 dark:text-neutral-300 text-sm font-medium">One Pot</span>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-card-light dark:bg-card-dark border border-neutral-200 dark:border-neutral-700 px-4 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors">
+<span class="text-neutral-700 dark:text-neutral-300 text-sm font-medium">Dinner</span>
+</button>
+</div>
+<!-- Content Feed -->
+<div class="flex flex-col gap-6 px-4">
+<!-- Priority Card (Use It Up) -->
+<div class="relative group">
+<div class="absolute -inset-0.5 bg-gradient-to-r from-primary to-green-600 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-200"></div>
+<div class="relative flex flex-col items-stretch justify-start rounded-xl shadow-sm bg-card-light dark:bg-card-dark overflow-hidden border border-neutral-100 dark:border-neutral-800">
+<div class="relative h-48 w-full">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="Close up of creamy green spinach pasta with parmesan cheese" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBVOBzE3QYVbeGfFXTKd_b8ESVhw5IJ74Y5kb7jNWcpXohhn_4tMWitroxpv5B8rQnBzPgKoWRcF1vYaN-QJxs-MfkQZQz7V9g8ZqFJDcVF4CticzXJWMdNMk_JgCS4h5Yeae2JVmxyMo9f_VP_LWok1r6HwH_CwiseL1ibktQxqwa1svFgQd0FiZrjCR0nRWFcGL0zY15cI-L2bhzrdAnmczD6sMdGePFXKziwgwrNLd2ExRuBwa7fjSFa4ysSX13e5TBN8tQkOMNc");'></div>
+<div class="absolute top-3 left-3 bg-white/90 dark:bg-black/80 backdrop-blur-sm px-3 py-1 rounded-lg flex items-center gap-1 shadow-sm">
+<span class="material-symbols-outlined text-primary text-[16px]">auto_awesome</span>
+<span class="text-xs font-bold text-neutral-900 dark:text-white uppercase tracking-wide">Use Spinach</span>
+</div>
+</div>
+<div class="flex flex-col p-4 gap-3">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-lg font-bold leading-tight text-neutral-900 dark:text-white mb-1">Creamy Spinach Pasta</h3>
+<div class="flex items-center gap-3 text-neutral-500 dark:text-neutral-400 text-sm">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">timer</span> 15 min</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">equalizer</span> Easy</span>
+</div>
+</div>
+<div class="flex flex-col items-end">
+<span class="text-xs font-semibold text-primary">Great Match</span>
+<div class="text-sm font-bold text-neutral-900 dark:text-white">4/5 Items</div>
+</div>
+</div>
+<!-- Ingredients Progress -->
+<div class="w-full h-1.5 bg-neutral-100 dark:bg-neutral-700 rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full w-[80%]"></div>
+</div>
+<div class="flex flex-col gap-1 text-sm bg-neutral-50 dark:bg-neutral-800/50 p-3 rounded-lg">
+<p class="text-neutral-700 dark:text-neutral-300">
+<span class="text-primary font-bold">Use:</span> Spinach (Expiring), Cream, Pasta, Onion
+                        </p>
+<p class="text-neutral-400 dark:text-neutral-500">
+<span class="font-medium">Missing:</span> Garlic
+                        </p>
+</div>
+<button class="w-full mt-1 cursor-pointer flex items-center justify-center gap-2 rounded-lg h-10 bg-primary hover:bg-primary-dark text-background-dark text-sm font-bold leading-normal transition-colors shadow-sm shadow-green-900/10">
+<span class="material-symbols-outlined text-[20px]">skillet</span>
+                        Cook Now
+                    </button>
+</div>
+</div>
+</div>
+<!-- Section Header -->
+<div class="pt-2">
+<h3 class="text-lg font-bold leading-tight text-neutral-900 dark:text-white">Suggested for You</h3>
+<p class="text-sm text-neutral-500 dark:text-neutral-400">Based on your pantry items</p>
+</div>
+<!-- Suggestion Card 2 -->
+<div class="flex flex-col items-stretch justify-start rounded-xl shadow-sm bg-card-light dark:bg-card-dark overflow-hidden border border-neutral-100 dark:border-neutral-800">
+<div class="relative h-40 w-full">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="Top down view of colorful vegetable chicken stir fry in a wok" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCACOjrcsJYts8PET226H8XtrS114oEu9o3-Zlp11Sg6xRbzmZn4p9NGqjVRzNQPvjcJ3IDfSIfu6ehN8OTxcwvG1TSwve0x8KKhE5g80MYabAr0RlDKcBSe8Yhuu_jpZ-Sf7GO8u2rU8he9qL4aoR-QZT2J2wGN7d_PGYvg_Gowz76CdolfzPlVDdGaj-noyVb-qrx4P1Exc9nEzMVrCcwj4PdpUGUsKpWi9yxcBF407nqRmebbQHiyMNwvUy6CWAGmNw2I9f0AO_N");'></div>
+</div>
+<div class="flex flex-col p-4 gap-3">
+<div class="flex justify-between items-start">
+<div>
+<h3 class="text-lg font-bold leading-tight text-neutral-900 dark:text-white mb-1">Chicken Stir Fry</h3>
+<div class="flex items-center gap-3 text-neutral-500 dark:text-neutral-400 text-sm">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">timer</span> 25 min</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">equalizer</span> Medium</span>
+</div>
+</div>
+</div>
+<!-- Ingredients Progress -->
+<div class="flex items-center gap-2">
+<div class="flex-1 h-1.5 bg-neutral-100 dark:bg-neutral-700 rounded-full overflow-hidden">
+<div class="h-full bg-yellow-400 rounded-full w-[60%]"></div>
+</div>
+<span class="text-xs font-medium text-neutral-500 dark:text-neutral-400">60% Match</span>
+</div>
+<div class="flex flex-wrap gap-2 text-xs">
+<span class="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 rounded-md font-medium">Chicken Breast</span>
+<span class="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 rounded-md font-medium">Bell Peppers</span>
+<span class="px-2 py-1 bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 rounded-md line-through decoration-neutral-400/50">Soy Sauce</span>
+<span class="px-2 py-1 bg-neutral-100 dark:bg-neutral-800 text-neutral-500 dark:text-neutral-400 rounded-md line-through decoration-neutral-400/50">Ginger</span>
+</div>
+<div class="flex gap-2 mt-1">
+<button class="flex-1 cursor-pointer flex items-center justify-center rounded-lg h-9 bg-neutral-100 dark:bg-neutral-800 text-neutral-900 dark:text-white text-sm font-semibold hover:bg-neutral-200 dark:hover:bg-neutral-700 transition-colors">
+                        Add Missing
+                    </button>
+<button class="flex-1 cursor-pointer flex items-center justify-center rounded-lg h-9 bg-primary hover:bg-primary-dark text-background-dark text-sm font-bold transition-colors">
+                        View Recipe
+                    </button>
+</div>
+</div>
+</div>
+<!-- Suggestion Card 3 -->
+<div class="flex flex-col items-stretch justify-start rounded-xl shadow-sm bg-card-light dark:bg-card-dark overflow-hidden border border-neutral-100 dark:border-neutral-800 mb-4">
+<div class="relative h-40 w-full">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="Bowl of spicy red curry with chickpeas and rice" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDzJPiPSpLSrzSGlMaZcvjrIAKfP2pMH1FSvY-4XSqfXWFk3GviuD3iBvVuqnYARPQHM9nPG_vGBEuwA_B3k7d6BKynLdJvMhisrtPONt2-m_EAKQH1Ox-ijziw9jx2xcbrmoE6Be04BBvWA4shwr5vw0dGfHz_SOCGB6m4w3fyt0I1uq4GrDfbq8519g1wRjFmYFcxaxHHzkQqw3KafRaUMbvIOmKkyU4IdRHSEgpUO76tqx3Aag7mo-y-Hw8Dsi6F-RQutx6omcyO");'></div>
+<div class="absolute top-3 right-3 bg-black/60 backdrop-blur-sm p-1.5 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-white text-[18px]">favorite</span>
+</div>
+</div>
+<div class="flex flex-col p-4 gap-2">
+<div>
+<h3 class="text-lg font-bold leading-tight text-neutral-900 dark:text-white mb-1">Spicy Chickpea Curry</h3>
+<div class="flex items-center gap-3 text-neutral-500 dark:text-neutral-400 text-sm">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">timer</span> 40 min</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">local_fire_department</span> Spicy</span>
+</div>
+</div>
+<div class="mt-2 flex items-center justify-between">
+<div class="flex items-center gap-2">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<span class="text-xs text-neutral-500 dark:text-neutral-400">Pantry Staple</span>
+</div>
+<button class="cursor-pointer text-primary text-sm font-bold hover:underline">
+                        View Recipe
+                    </button>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Navigation -->
+<div class="fixed bottom-0 left-0 right-0 bg-card-light dark:bg-card-dark border-t border-neutral-200 dark:border-neutral-800 px-6 py-3 pb-6 flex justify-between items-end z-50">
+<button class="flex flex-col items-center gap-1 text-neutral-400 dark:text-neutral-500 hover:text-primary dark:hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-2xl">kitchen</span>
+<span class="text-[10px] font-medium">Pantry</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-neutral-400 dark:text-neutral-500 hover:text-primary dark:hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-2xl">shopping_cart</span>
+<span class="text-[10px] font-medium">Shop</span>
+</button>
+<div class="relative -top-5">
+<button class="flex items-center justify-center w-14 h-14 rounded-full bg-primary text-background-dark shadow-lg shadow-green-500/30 transform transition-transform active:scale-95">
+<span class="material-symbols-outlined text-3xl">restaurant_menu</span>
+</button>
+<span class="absolute -bottom-5 left-1/2 -translate-x-1/2 text-[10px] font-bold text-neutral-900 dark:text-white">Recipes</span>
+</div>
+<button class="flex flex-col items-center gap-1 text-neutral-400 dark:text-neutral-500 hover:text-primary dark:hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-2xl">calendar_month</span>
+<span class="text-[10px] font-medium">Plan</span>
+</button>
+<button class="flex flex-col items-center gap-1 text-neutral-400 dark:text-neutral-500 hover:text-primary dark:hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-2xl">person</span>
+<span class="text-[10px] font-medium">Profile</span>
+</button>
+</div>
+</body></html>

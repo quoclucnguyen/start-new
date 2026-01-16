@@ -43,7 +43,7 @@ const meta: Meta<typeof BottomNavigation> = {
   parameters: {
     layout: 'fullscreen',
   },
-  tags: ['autodocs'],
+  
   decorators: [
     (Story) => (
       <div className="max-w-md mx-auto bg-background min-h-[300px] relative">

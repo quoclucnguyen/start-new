@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
+import { Avatar } from 'antd-mobile';
 
 interface UserAvatarProps extends React.HTMLAttributes<HTMLDivElement> {
   src?: string;
@@ -11,9 +12,9 @@ interface UserAvatarProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const sizeClasses = {
-  sm: 'size-8',
-  md: 'size-10',
-  lg: 'size-12',
+  sm: '32px',
+  md: '40px',
+  lg: '48px',
 };
 
 const statusSizeClasses = {
@@ -38,34 +39,29 @@ const UserAvatar = React.forwardRef<HTMLDivElement, UserAvatarProps>(
       .slice(0, 2);
 
     return (
-      <div ref={ref} className={cn('relative group cursor-pointer', className)} {...props}>
-        {src ? (
-          <div
-            className={cn(
-              'bg-center bg-no-repeat bg-cover rounded-full border-2 border-primary',
-              sizeClasses[size]
-            )}
-            style={{ backgroundImage: `url(${src})` }}
-            role="img"
-            aria-label={alt || name || 'User avatar'}
-          />
-        ) : (
-          <div
-            className={cn(
-              'flex items-center justify-center rounded-full border-2 border-primary bg-primary/10 text-primary font-bold',
-              sizeClasses[size],
-              size === 'sm' && 'text-xs',
-              size === 'md' && 'text-sm',
-              size === 'lg' && 'text-base'
-            )}
-          >
-            {initials || '?'}
-          </div>
-        )}
+      <div ref={ref} className={cn('relative inline-block', className)} {...props}>
+        <Avatar
+          src={src || ''}
+          alt={alt || name || 'User avatar'}
+          style={{ '--size': sizeClasses[size], '--border-radius': '50%' }}
+          className="border-2 border-primary"
+          fallback={
+            <div
+              className={cn(
+                'flex items-center justify-center w-full h-full bg-primary/10 text-primary font-bold',
+                size === 'sm' && 'text-xs',
+                size === 'md' && 'text-sm',
+                size === 'lg' && 'text-base'
+              )}
+            >
+              {initials || '?'}
+            </div>
+          }
+        />
         {showStatus && (
           <div
             className={cn(
-              'absolute bottom-0 right-0 rounded-full border-2 border-background',
+              'absolute bottom-0 right-0 rounded-full border-2 border-background z-10',
               statusSizeClasses[size],
               statusColorClasses[status]
             )}

@@ -7,7 +7,7 @@ const meta: Meta<typeof SectionHeader> = {
   parameters: {
     layout: 'centered',
   },
-  tags: ['autodocs'],
+  
   decorators: [
     (Story) => (
       <div className="w-[380px]">

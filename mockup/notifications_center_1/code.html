@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Notifications Center</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec5b",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1c2e24",
+                        "text-primary-light": "#0d1b12",
+                        "text-primary-dark": "#e7f3eb",
+                        "text-secondary-light": "#4c9a66",
+                        "text-secondary-dark": "#8fbfa0",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar hide for cleaner mobile look */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display antialiased transition-colors duration-200">
+<div class="relative flex h-full min-h-screen w-full flex-col max-w-md mx-auto overflow-x-hidden bg-background-light dark:bg-background-dark shadow-2xl">
+<!-- Top App Bar -->
+<header class="sticky top-0 z-50 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md border-b border-black/5 dark:border-white/5 pb-2">
+<div class="flex flex-col gap-2 px-4 pt-4 pb-2">
+<div class="flex items-center h-8 justify-end">
+<button class="flex items-center justify-end hover:opacity-80 transition-opacity focus:outline-none">
+<span class="text-primary text-sm font-bold leading-normal tracking-[0.015em]">Mark all read</span>
+</button>
+</div>
+<h1 class="text-text-primary-light dark:text-text-primary-dark tracking-tight text-[32px] font-bold leading-tight">Notifications</h1>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 flex flex-col pb-8">
+<!-- Section: Today -->
+<div class="flex flex-col">
+<div class="sticky top-[6.5rem] z-40 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm px-4 py-3 border-b border-dashed border-black/5 dark:border-white/5">
+<h3 class="text-text-primary-light dark:text-text-primary-dark text-sm font-bold uppercase tracking-wider opacity-80">Today</h3>
+</div>
+<!-- Notification Item 1 (Unread, Expiry) -->
+<div class="group relative overflow-hidden bg-primary/10 dark:bg-primary/5 border-b border-black/5 dark:border-white/5 transition-colors hover:bg-black/5 dark:hover:bg-white/5">
+<!-- Unread Indicator Dot -->
+<div class="absolute top-4 right-4 w-2.5 h-2.5 rounded-full bg-primary shadow-[0_0_8px_rgba(19,236,91,0.6)]"></div>
+<div class="flex gap-4 px-4 py-4 justify-between items-start">
+<div class="flex items-start gap-4 flex-1">
+<!-- Icon Container: Warning/Expiry -->
+<div class="flex items-center justify-center rounded-2xl bg-[#fff4f2] dark:bg-[#381e1e] text-[#e11d48] shrink-0 size-12 shadow-sm">
+<span class="material-symbols-outlined text-[24px]">warning</span>
+</div>
+<div class="flex flex-1 flex-col justify-center gap-1 pr-4">
+<p class="text-text-primary-light dark:text-text-primary-dark text-base font-bold leading-snug">Milk Expiring Soon</p>
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-sm font-medium leading-relaxed">Your 2% Milk expires in 2 days. Use it in a recipe?</p>
+</div>
+</div>
+<div class="shrink-0 pt-1"><p class="text-text-secondary-light dark:text-text-secondary-dark text-xs font-semibold leading-normal opacity-70">2h ago</p></div>
+</div>
+</div>
+<!-- Notification Item 2 (Shopping List) -->
+<div class="group relative bg-background-light dark:bg-background-dark border-b border-black/5 dark:border-white/5 transition-colors hover:bg-black/5 dark:hover:bg-white/5">
+<div class="flex gap-4 px-4 py-4 justify-between items-start">
+<div class="flex items-start gap-4 flex-1">
+<!-- Icon Container: Shopping -->
+<div class="flex items-center justify-center rounded-2xl bg-[#e7f3eb] dark:bg-[#153322] text-primary-dark dark:text-primary shrink-0 size-12 shadow-sm">
+<span class="material-symbols-outlined text-[24px]">shopping_cart</span>
+</div>
+<div class="flex flex-1 flex-col justify-center gap-1">
+<p class="text-text-primary-light dark:text-text-primary-dark text-base font-bold leading-snug">Dad added items</p>
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-sm font-medium leading-relaxed">Apples and Bread added to Weekly List.</p>
+</div>
+</div>
+<div class="shrink-0 pt-1"><p class="text-text-secondary-light dark:text-text-secondary-dark text-xs font-semibold leading-normal opacity-70">4h ago</p></div>
+</div>
+</div>
+</div>
+<!-- Section: Yesterday -->
+<div class="flex flex-col mt-2">
+<div class="sticky top-[6.5rem] z-40 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm px-4 py-3 border-b border-dashed border-black/5 dark:border-white/5">
+<h3 class="text-text-primary-light dark:text-text-primary-dark text-sm font-bold uppercase tracking-wider opacity-80">Yesterday</h3>
+</div>
+<!-- Notification Item 3 (Recipe) -->
+<div class="group relative bg-background-light dark:bg-background-dark border-b border-black/5 dark:border-white/5 transition-colors hover:bg-black/5 dark:hover:bg-white/5">
+<div class="flex gap-4 px-4 py-4 justify-between items-start">
+<div class="flex items-start gap-4 flex-1">
+<!-- Icon Container: Recipe -->
+<div class="flex items-center justify-center rounded-2xl bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 shrink-0 size-12 shadow-sm">
+<span class="material-symbols-outlined text-[24px]">skillet</span>
+</div>
+<div class="flex flex-1 flex-col justify-center gap-1">
+<p class="text-text-primary-light dark:text-text-primary-dark text-base font-bold leading-snug">Dinner Idea: Spicy Pasta</p>
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-sm font-medium leading-relaxed">You have all 5 ingredients needed. Ready in 20m.</p>
+</div>
+</div>
+<div class="shrink-0 pt-1"><p class="text-text-secondary-light dark:text-text-secondary-dark text-xs font-semibold leading-normal opacity-70">Yesterday</p></div>
+</div>
+<!-- Swipe Action Hint (Visual only, implies interactivity) -->
+<div class="absolute inset-y-0 right-0 w-1 bg-gradient-to-l from-black/5 to-transparent dark:from-white/5 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"></div>
+</div>
+</div>
+<!-- Section: Earlier -->
+<div class="flex flex-col mt-2">
+<div class="sticky top-[6.5rem] z-40 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-sm px-4 py-3 border-b border-dashed border-black/5 dark:border-white/5">
+<h3 class="text-text-primary-light dark:text-text-primary-dark text-sm font-bold uppercase tracking-wider opacity-80">Earlier</h3>
+</div>
+<!-- Notification Item 4 (Expired) -->
+<div class="group relative bg-background-light dark:bg-background-dark border-b border-black/5 dark:border-white/5 transition-colors hover:bg-black/5 dark:hover:bg-white/5">
+<div class="flex gap-4 px-4 py-4 justify-between items-start">
+<div class="flex items-start gap-4 flex-1">
+<!-- Icon Container: Trash/Expired -->
+<div class="flex items-center justify-center rounded-2xl bg-gray-100 dark:bg-gray-800 text-gray-500 dark:text-gray-400 shrink-0 size-12 shadow-sm">
+<span class="material-symbols-outlined text-[24px]">delete_outline</span>
+</div>
+<div class="flex flex-1 flex-col justify-center gap-1">
+<p class="text-text-primary-light dark:text-text-primary-dark text-base font-bold leading-snug opacity-80 line-through decoration-gray-400">Yogurt Expired</p>
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-sm font-medium leading-relaxed opacity-80">Please discard the Strawberry Yogurt from the fridge.</p>
+</div>
+</div>
+<div class="shrink-0 pt-1"><p class="text-text-secondary-light dark:text-text-secondary-dark text-xs font-semibold leading-normal opacity-70">Mon</p></div>
+</div>
+</div>
+<!-- Notification Item 5 (System) -->
+<div class="group relative bg-background-light dark:bg-background-dark border-b border-black/5 dark:border-white/5 transition-colors hover:bg-black/5 dark:hover:bg-white/5">
+<div class="flex gap-4 px-4 py-4 justify-between items-start">
+<div class="flex items-start gap-4 flex-1">
+<!-- Icon Container: System/Update -->
+<div class="flex items-center justify-center rounded-2xl bg-[#e7f3eb] dark:bg-[#153322] text-primary-dark dark:text-primary shrink-0 size-12 shadow-sm">
+<span class="material-symbols-outlined text-[24px]">tips_and_updates</span>
+</div>
+<div class="flex flex-1 flex-col justify-center gap-1">
+<p class="text-text-primary-light dark:text-text-primary-dark text-base font-bold leading-snug">Weekly Report</p>
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-sm font-medium leading-relaxed">You saved $15 this week by reducing food waste!</p>
+</div>
+</div>
+<div class="shrink-0 pt-1"><p class="text-text-secondary-light dark:text-text-secondary-dark text-xs font-semibold leading-normal opacity-70">Sun</p></div>
+</div>
+</div>
+</div>
+<!-- Empty State Illustration Placeholder (At bottom for demo, usually conditional) -->
+<div class="flex flex-col items-center justify-center py-12 px-8 opacity-40">
+<span class="material-symbols-outlined text-6xl mb-4 text-text-secondary-light dark:text-text-secondary-dark">check_circle</span>
+<p class="text-text-secondary-light dark:text-text-secondary-dark text-sm text-center font-medium">End of notifications history</p>
+</div>
+</main>
+<!-- Bottom Tab Bar (Contextual visual cue) -->
+<nav class="sticky bottom-0 z-50 bg-background-light/95 dark:bg-background-dark/95 border-t border-black/5 dark:border-white/5 backdrop-blur-md pb-safe">
+<div class="flex justify-around items-center h-16 px-2">
+<button class="flex flex-col items-center justify-center w-full h-full gap-1 text-text-secondary-light dark:text-text-secondary-dark hover:text-primary dark:hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[24px]">kitchen</span>
+<span class="text-[10px] font-bold">Kitchen</span>
+</button>
+<button class="flex flex-col items-center justify-center w-full h-full gap-1 text-text-secondary-light dark:text-text-secondary-dark hover:text-primary dark:hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[24px]">receipt_long</span>
+<span class="text-[10px] font-bold">List</span>
+</button>
+<button class="flex flex-col items-center justify-center w-full h-full gap-1 text-primary dark:text-primary transition-colors">
+<div class="relative">
+<span class="material-symbols-outlined text-[24px] fill-current">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 rounded-full bg-red-500 border border-background-light dark:border-background-dark"></span>
+</div>
+<span class="text-[10px] font-bold">Alerts</span>
+</button>
+<button class="flex flex-col items-center justify-center w-full h-full gap-1 text-text-secondary-light dark:text-text-secondary-dark hover:text-primary dark:hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[24px]">menu_book</span>
+<span class="text-[10px] font-bold">Recipes</span>
+</button>
+</div>
+<!-- iOS Home Indicator Safe Area -->
+<div class="h-1 bg-transparent"></div>
+</nav>
+</div>
+</body></html>

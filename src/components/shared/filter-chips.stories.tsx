@@ -31,7 +31,7 @@ const meta: Meta<typeof FilterChips> = {
   parameters: {
     layout: 'centered',
   },
-  tags: ['autodocs'],
+  
   decorators: [
     (Story) => (
       <div className="w-[380px]">

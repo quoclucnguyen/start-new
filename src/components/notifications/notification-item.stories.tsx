@@ -7,7 +7,7 @@ const meta: Meta<typeof NotificationItem> = {
   parameters: {
     layout: 'centered',
   },
-  tags: ['autodocs'],
+  
   decorators: [
     (Story) => (
       <div className="w-[400px] bg-background">

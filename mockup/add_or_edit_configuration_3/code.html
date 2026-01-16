@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Add Location Modal</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec5b",
+                        "primary-dark": "#0fc84d",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1a2c20",
+                        "text-main": "#0d1b12",
+                        "text-muted": "#4c9a66",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "2xl": "1rem", "full": "9999px"},
+                    boxShadow: {
+                        'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+                        'glow': '0 4px 20px -2px rgba(19, 236, 91, 0.3)',
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .hide-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        /* Smooth fade for backdrop */
+        .modal-backdrop {
+            animation: fadeIn 0.3s ease-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-gray-900/40 backdrop-blur-sm flex items-center justify-center min-h-screen p-4 font-display modal-backdrop text-text-main antialiased selection:bg-primary/30">
+<!-- Modal Card -->
+<div class="w-full max-w-[420px] bg-background-light dark:bg-background-dark rounded-2xl shadow-2xl overflow-hidden flex flex-col relative max-h-[90vh]">
+<!-- Header -->
+<div class="flex items-center justify-between px-6 py-5 border-b border-gray-200/50 dark:border-gray-800/50 bg-surface-light/80 dark:bg-surface-dark/80 backdrop-blur-md sticky top-0 z-10">
+<h2 class="text-xl font-bold tracking-tight text-text-main dark:text-white">Add New Location</h2>
+<button class="group p-2 -mr-2 rounded-full hover:bg-gray-100 dark:hover:bg-white/5 transition-colors">
+<span class="material-symbols-outlined text-gray-500 dark:text-gray-400 group-hover:text-text-main dark:group-hover:text-white transition-colors" style="font-size: 24px;">close</span>
+</button>
+</div>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto px-6 py-6 space-y-8 bg-background-light dark:bg-background-dark scroll-smooth">
+<!-- Name Input Section -->
+<div class="space-y-3">
+<label class="text-sm font-bold uppercase tracking-wider text-text-muted dark:text-gray-400" for="locationName">Name</label>
+<div class="relative group">
+<input class="w-full h-14 pl-5 pr-4 rounded-xl border-0 ring-1 ring-gray-200 dark:ring-gray-700 bg-surface-light dark:bg-surface-dark text-text-main dark:text-white focus:ring-2 focus:ring-primary focus:outline-none placeholder:text-gray-400 font-medium transition-all shadow-sm group-hover:ring-gray-300 dark:group-hover:ring-gray-600" id="locationName" placeholder="e.g., Pantry" type="text"/>
+</div>
+</div>
+<!-- Icon Picker Section -->
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<h3 class="text-sm font-bold uppercase tracking-wider text-text-muted dark:text-gray-400">Pick an Icon</h3>
+</div>
+<div class="grid grid-cols-4 gap-3">
+<!-- Selected Icon -->
+<button class="aspect-square flex flex-col items-center justify-center gap-1 rounded-2xl bg-primary text-white shadow-glow ring-2 ring-primary ring-offset-2 ring-offset-background-light dark:ring-offset-background-dark transition-all transform scale-100">
+<span class="material-symbols-outlined" style="font-size: 32px;">kitchen</span>
+<span class="text-[10px] font-bold uppercase tracking-wide opacity-90">Fridge</span>
+</button>
+<!-- Other Icons -->
+<button class="aspect-square flex flex-col items-center justify-center gap-1 rounded-2xl bg-surface-light dark:bg-surface-dark text-gray-500 dark:text-gray-400 hover:bg-white dark:hover:bg-white/10 hover:text-primary dark:hover:text-primary transition-all hover:shadow-soft group">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform" style="font-size: 28px;">ac_unit</span>
+</button>
+<button class="aspect-square flex flex-col items-center justify-center gap-1 rounded-2xl bg-surface-light dark:bg-surface-dark text-gray-500 dark:text-gray-400 hover:bg-white dark:hover:bg-white/10 hover:text-primary dark:hover:text-primary transition-all hover:shadow-soft group">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform" style="font-size: 28px;">shelves</span>
+</button>
+<button class="aspect-square flex flex-col items-center justify-center gap-1 rounded-2xl bg-surface-light dark:bg-surface-dark text-gray-500 dark:text-gray-400 hover:bg-white dark:hover:bg-white/10 hover:text-primary dark:hover:text-primary transition-all hover:shadow-soft group">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform" style="font-size: 28px;">nutrition</span>
+</button>
+<button class="aspect-square flex flex-col items-center justify-center gap-1 rounded-2xl bg-surface-light dark:bg-surface-dark text-gray-500 dark:text-gray-400 hover:bg-white dark:hover:bg-white/10 hover:text-primary dark:hover:text-primary transition-all hover:shadow-soft group">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform" style="font-size: 28px;">grocery</span>
+</button>
+<button class="aspect-square flex flex-col items-center justify-center gap-1 rounded-2xl bg-surface-light dark:bg-surface-dark text-gray-500 dark:text-gray-400 hover:bg-white dark:hover:bg-white/10 hover:text-primary dark:hover:text-primary transition-all hover:shadow-soft group">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform" style="font-size: 28px;">wine_bar</span>
+</button>
+<button class="aspect-square flex flex-col items-center justify-center gap-1 rounded-2xl bg-surface-light dark:bg-surface-dark text-gray-500 dark:text-gray-400 hover:bg-white dark:hover:bg-white/10 hover:text-primary dark:hover:text-primary transition-all hover:shadow-soft group">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform" style="font-size: 28px;">eco</span>
+</button>
+<button class="aspect-square flex flex-col items-center justify-center gap-1 rounded-2xl bg-surface-light dark:bg-surface-dark text-gray-500 dark:text-gray-400 hover:bg-white dark:hover:bg-white/10 hover:text-primary dark:hover:text-primary transition-all hover:shadow-soft group">
+<span class="material-symbols-outlined group-hover:scale-110 transition-transform" style="font-size: 28px;">bento</span>
+</button>
+</div>
+</div>
+<!-- Color Picker Section -->
+<div class="space-y-4">
+<h3 class="text-sm font-bold uppercase tracking-wider text-text-muted dark:text-gray-400">Color Code</h3>
+<div class="flex gap-4 overflow-x-auto pb-2 hide-scrollbar px-1">
+<!-- Selected Color -->
+<button class="w-12 h-12 rounded-full bg-blue-500 ring-2 ring-blue-500 ring-offset-2 ring-offset-background-light dark:ring-offset-background-dark flex-shrink-0 relative flex items-center justify-center transition-all shadow-sm group">
+<span class="material-symbols-outlined text-white text-xl font-bold">check</span>
+</button>
+<!-- Other Colors -->
+<button class="w-12 h-12 rounded-full bg-[#13ec5b] hover:scale-110 transition-all flex-shrink-0 shadow-sm hover:shadow-md ring-0 hover:ring-2 hover:ring-[#13ec5b] ring-offset-2 ring-offset-background-light dark:ring-offset-background-dark"></button>
+<button class="w-12 h-12 rounded-full bg-purple-500 hover:scale-110 transition-all flex-shrink-0 shadow-sm hover:shadow-md ring-0 hover:ring-2 hover:ring-purple-500 ring-offset-2 ring-offset-background-light dark:ring-offset-background-dark"></button>
+<button class="w-12 h-12 rounded-full bg-orange-500 hover:scale-110 transition-all flex-shrink-0 shadow-sm hover:shadow-md ring-0 hover:ring-2 hover:ring-orange-500 ring-offset-2 ring-offset-background-light dark:ring-offset-background-dark"></button>
+<button class="w-12 h-12 rounded-full bg-pink-500 hover:scale-110 transition-all flex-shrink-0 shadow-sm hover:shadow-md ring-0 hover:ring-2 hover:ring-pink-500 ring-offset-2 ring-offset-background-light dark:ring-offset-background-dark"></button>
+<button class="w-12 h-12 rounded-full bg-teal-500 hover:scale-110 transition-all flex-shrink-0 shadow-sm hover:shadow-md ring-0 hover:ring-2 hover:ring-teal-500 ring-offset-2 ring-offset-background-light dark:ring-offset-background-dark"></button>
+<button class="w-12 h-12 rounded-full bg-indigo-500 hover:scale-110 transition-all flex-shrink-0 shadow-sm hover:shadow-md ring-0 hover:ring-2 hover:ring-indigo-500 ring-offset-2 ring-offset-background-light dark:ring-offset-background-dark"></button>
+</div>
+</div>
+<!-- Settings Section -->
+<div class="flex items-center justify-between p-4 bg-surface-light dark:bg-surface-dark rounded-xl border border-gray-200 dark:border-gray-800 shadow-sm">
+<div class="flex flex-col gap-1">
+<span class="text-base font-bold text-text-main dark:text-white">Show in quick filters</span>
+<span class="text-xs text-text-muted dark:text-gray-400">Pin to top of inventory list</span>
+</div>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox" value=""/>
+<div class="w-12 h-7 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-gray-600 peer-checked:bg-primary shadow-inner"></div>
+</label>
+</div>
+<!-- Spacer for scroll -->
+<div class="h-2"></div>
+</div>
+<!-- Footer Actions -->
+<div class="p-6 border-t border-gray-200 dark:border-gray-800 bg-surface-light/90 dark:bg-surface-dark/90 backdrop-blur-md flex gap-4 sticky bottom-0">
+<button class="flex-1 px-4 py-3.5 text-base font-bold text-gray-600 dark:text-gray-300 bg-transparent hover:bg-gray-100 dark:hover:bg-white/5 border border-gray-200 dark:border-gray-700 rounded-xl transition-all">
+                Cancel
+            </button>
+<button class="flex-[2] px-4 py-3.5 text-base font-bold text-white bg-primary hover:bg-primary-dark rounded-xl shadow-glow transition-all transform active:scale-[0.98]">
+                Save Location
+            </button>
+</div>
+</div>
+</body></html>

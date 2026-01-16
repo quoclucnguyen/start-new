@@ -7,7 +7,7 @@ const meta: Meta<typeof RestockAlert> = {
   parameters: {
     layout: 'centered',
   },
-  tags: ['autodocs'],
+  
   decorators: [
     (Story) => (
       <div className="w-[380px]">

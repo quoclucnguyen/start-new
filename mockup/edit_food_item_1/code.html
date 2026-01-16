@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Edit Food Item</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec5b",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1c2e22",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "2xl": "1rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style>
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-black/60 font-display text-slate-900 dark:text-slate-50 antialiased overflow-hidden min-h-screen flex flex-col justify-end backdrop-blur-sm">
+<div class="w-full max-w-lg mx-auto bg-background-light dark:bg-background-dark rounded-t-[2rem] shadow-2xl flex flex-col h-[92vh] relative z-10 overflow-hidden animate-slide-up">
+<div class="w-full flex justify-center pt-3 pb-2 bg-background-light dark:bg-background-dark shrink-0 cursor-grab active:cursor-grabbing z-20">
+<div class="w-12 h-1.5 bg-slate-300 dark:bg-slate-600 rounded-full"></div>
+</div>
+<header class="flex items-center justify-between px-4 pb-4 bg-background-light dark:bg-background-dark shrink-0 z-20 border-b border-slate-200/50 dark:border-slate-800/50">
+<button aria-label="Close" class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-slate-200 dark:hover:bg-slate-800 transition-colors text-slate-600 dark:text-slate-400">
+<span class="material-symbols-outlined text-2xl">close</span>
+</button>
+<h1 class="text-lg font-bold text-slate-900 dark:text-white tracking-tight">Edit Item</h1>
+<button aria-label="Delete" class="flex items-center justify-center w-10 h-10 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20 text-red-500 transition-colors">
+<span class="material-symbols-outlined text-2xl">delete</span>
+</button>
+</header>
+<main class="flex-1 w-full overflow-y-auto no-scrollbar p-4 pb-32 gap-6 flex flex-col">
+<div class="flex flex-col items-center gap-4 py-2">
+<div class="relative group">
+<div class="w-28 h-28 rounded-2xl overflow-hidden shadow-sm bg-surface-light dark:bg-surface-dark flex items-center justify-center relative ring-4 ring-white dark:ring-slate-800">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="Fresh milk bottle on a minimal background" style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBzynFhUvGzlrMYIAZtUh0Ikw-uvRKum2nPpLXpww27twLBtp8uFqYIOIZEVs9Z_tE6bYdQW_li6vUVuMaySp-tnF6_oEHWa26tBO3Wa7RC8XL_WFajbZIosB3PsMzKTlxvoXwpD_HLNsb0AYHkghBC-5_BrlfhQahMWG0jIBQPNFeCGKo1W8Yz72igau68BFEFMHEK3RG2azNRHglCU3jjUaRBeyTfzrXsPAsoUOFxz_wRLbGcEcZ5Yp1iECQF0p-8-feY0Y5xCo8o');"></div>
+<div class="absolute inset-0 bg-black/30 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center cursor-pointer">
+<span class="material-symbols-outlined text-white text-3xl">edit</span>
+</div>
+</div>
+<button class="absolute -bottom-2 -right-2 w-8 h-8 bg-primary rounded-full flex items-center justify-center shadow-md text-slate-900 hover:scale-105 transition-transform">
+<span class="material-symbols-outlined text-sm font-bold">photo_camera</span>
+</button>
+</div>
+<div class="w-full text-center px-4">
+<input class="w-full text-center bg-transparent border-none focus:ring-0 text-2xl font-bold text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-600 p-0" placeholder="Item Name" type="text" value="Whole Milk"/>
+<p class="text-xs text-slate-500 dark:text-slate-400 mt-1">Added 3 days ago</p>
+</div>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark rounded-2xl p-4 shadow-sm border border-slate-100 dark:border-slate-800">
+<div class="flex items-center justify-between">
+<span class="text-slate-900 dark:text-white font-medium">Quantity</span>
+<div class="flex items-center gap-4 bg-slate-50 dark:bg-background-dark rounded-xl p-1">
+<button class="w-10 h-10 rounded-lg flex items-center justify-center bg-white dark:bg-surface-dark shadow-sm text-slate-900 dark:text-white hover:bg-slate-50 dark:hover:bg-slate-700 active:scale-95 transition-all">
+<span class="material-symbols-outlined">remove</span>
+</button>
+<div class="min-w-[4rem] text-center">
+<span class="text-xl font-bold text-slate-900 dark:text-white block leading-none">1</span>
+<span class="text-xs text-slate-500 dark:text-slate-400 font-medium">Bottle</span>
+</div>
+<button class="w-10 h-10 rounded-lg flex items-center justify-center bg-primary text-slate-900 shadow-sm shadow-primary/30 hover:bg-primary/90 active:scale-95 transition-all">
+<span class="material-symbols-outlined">add</span>
+</button>
+</div>
+</div>
+</div>
+<div class="bg-surface-light dark:bg-surface-dark rounded-2xl p-4 shadow-sm border border-slate-100 dark:border-slate-800 space-y-6">
+<div class="space-y-2">
+<label class="text-sm font-medium text-slate-700 dark:text-slate-300 ml-1">Expiration Date</label>
+<div class="relative">
+<input class="w-full h-12 pl-12 pr-4 bg-slate-50 dark:bg-background-dark border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent text-slate-900 dark:text-white font-medium" type="date" value="2023-10-24"/>
+<div class="absolute left-4 top-1/2 -translate-y-1/2 text-primary pointer-events-none">
+<span class="material-symbols-outlined">calendar_today</span>
+</div>
+<div class="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
+<span class="text-xs font-bold text-orange-500 bg-orange-100 dark:bg-orange-900/30 px-2 py-1 rounded-md">3 days left</span>
+</div>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-sm font-medium text-slate-700 dark:text-slate-300 ml-1">Storage Location</label>
+<div class="grid grid-cols-3 gap-2 p-1 bg-slate-50 dark:bg-background-dark rounded-xl">
+<button class="flex flex-col items-center justify-center py-3 rounded-lg bg-white dark:bg-surface-dark shadow-sm ring-1 ring-slate-200 dark:ring-slate-700 transition-all text-primary font-bold">
+<span class="material-symbols-outlined mb-1">kitchen</span>
+<span class="text-xs">Fridge</span>
+</button>
+<button class="flex flex-col items-center justify-center py-3 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-white/50 dark:hover:bg-white/5 transition-all">
+<span class="material-symbols-outlined mb-1">shelves</span>
+<span class="text-xs">Pantry</span>
+</button>
+<button class="flex flex-col items-center justify-center py-3 rounded-lg text-slate-500 dark:text-slate-400 hover:bg-white/50 dark:hover:bg-white/5 transition-all">
+<span class="material-symbols-outlined mb-1">ac_unit</span>
+<span class="text-xs">Freezer</span>
+</button>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-sm font-medium text-slate-700 dark:text-slate-300 ml-1">Category</label>
+<div class="relative">
+<select class="w-full h-12 pl-12 pr-10 bg-slate-50 dark:bg-background-dark border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent text-slate-900 dark:text-white appearance-none cursor-pointer">
+<option selected="" value="dairy">Dairy &amp; Eggs</option>
+<option value="produce">Produce</option>
+<option value="meat">Meat</option>
+<option value="bakery">Bakery</option>
+</select>
+<div class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 pointer-events-none">
+<span class="material-symbols-outlined">category</span>
+</div>
+<div class="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 pointer-events-none">
+<span class="material-symbols-outlined">expand_more</span>
+</div>
+</div>
+</div>
+<div class="space-y-2">
+<label class="text-sm font-medium text-slate-700 dark:text-slate-300 ml-1">Notes</label>
+<textarea class="w-full min-h-[100px] p-4 bg-slate-50 dark:bg-background-dark border-slate-200 dark:border-slate-700 rounded-xl focus:ring-2 focus:ring-primary focus:border-transparent text-slate-900 dark:text-white resize-none" placeholder="Add any notes about this item (e.g. opened yesterday)...">Opened yesterday, use for pancakes.</textarea>
+</div>
+</div>
+</main>
+<div class="absolute bottom-0 left-0 right-0 p-4 bg-surface-light/95 dark:bg-surface-dark/95 backdrop-blur-md border-t border-slate-100 dark:border-slate-800 z-30">
+<button class="w-full h-14 bg-primary hover:bg-primary/90 text-slate-900 text-lg font-bold rounded-xl shadow-lg shadow-primary/20 active:scale-[0.98] transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">check</span>
+                Save Changes
+            </button>
+</div>
+</div>
+
+</body></html>

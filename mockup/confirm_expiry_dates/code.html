@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Confirm Expiry Dates</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#13ec5b",
+                        "background-light": "#f6f8f6",
+                        "background-dark": "#102216",
+                        "surface-light": "#ffffff",
+                        "surface-dark": "#1a2e22",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        /* Custom scrollbar hiding for cleaner mobile look if needed */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 font-display transition-colors duration-200 antialiased overflow-hidden">
+<!-- Main Container (Simulating a full screen modal/sheet) -->
+<div class="relative flex flex-col h-screen w-full max-w-md mx-auto bg-background-light dark:bg-background-dark shadow-2xl overflow-hidden">
+<!-- Bottom Sheet Handle Area -->
+<div class="flex-none pt-3 pb-1 w-full flex justify-center items-center bg-background-light dark:bg-background-dark z-10">
+<div class="h-1.5 w-12 rounded-full bg-slate-300 dark:bg-slate-700"></div>
+</div>
+<!-- Header -->
+<div class="flex-none px-6 py-4 bg-background-light dark:bg-background-dark z-10">
+<div class="flex items-center justify-between mb-2">
+<h1 class="text-xl font-bold tracking-tight text-slate-900 dark:text-white">Confirm Expiry Dates</h1>
+<button class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-white/10 transition-colors">
+<span class="material-symbols-outlined text-slate-500 dark:text-slate-400 text-2xl">close</span>
+</button>
+</div>
+<p class="text-slate-500 dark:text-slate-400 text-sm font-medium leading-relaxed">
+                We've estimated shelf life based on your purchase history. Tap to edit.
+            </p>
+</div>
+<!-- Scrollable List Content -->
+<div class="flex-1 overflow-y-auto px-4 pb-32 space-y-4 no-scrollbar">
+<!-- Item Card 1: Milk -->
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl p-4 shadow-sm border border-slate-100 dark:border-white/5">
+<!-- Item Details Row -->
+<div class="flex items-start gap-4 mb-4">
+<div class="bg-center bg-no-repeat bg-cover rounded-lg size-16 shrink-0 bg-slate-100 dark:bg-white/5 relative overflow-hidden group" data-alt="A fresh bottle of whole milk against a soft background" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAuK-45cLqbIIAquEl__PLboo647x8URCxJ9W4lVaKw01ggeq3iNxvCh9PgVJRFmerNjMNmvhNH9foOLkyNctX5A1SgkDeiJiboGvgGvknKHSJ414ATwWq6X7TSouZG1ZWq7rv-ghmJA-5OC8R0Cvh2VtOIVTT1sddxze0hkWQWmIp4B8Jvu-7TE3gsH-IYSErCO7bjTizxt_BDpBYRwgOdUrj9vsfq-jLh5mQZ0zMrDWqrdZlADMe78IiqPOkQxQjsNvoI_XfxcJmf");'>
+<!-- Gradient overlay for text contrast if needed -->
+<div class="absolute inset-0 bg-black/5 dark:bg-white/5"></div>
+</div>
+<div class="flex-1 min-w-0 flex flex-col justify-center h-16">
+<div class="flex justify-between items-start">
+<h3 class="text-slate-900 dark:text-white text-base font-bold truncate pr-2">Whole Milk</h3>
+<button class="text-primary hover:text-green-600 dark:hover:text-green-400 transition-colors">
+<span class="material-symbols-outlined text-[20px]">edit_calendar</span>
+</button>
+</div>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="material-symbols-outlined text-primary text-[16px] fill-1">auto_awesome</span>
+<p class="text-primary text-sm font-medium truncate">Expires Oct 31 (7 days)</p>
+</div>
+</div>
+</div>
+<!-- Segmented Control -->
+<div class="flex p-1 rounded-lg bg-slate-100 dark:bg-black/20">
+<label class="flex-1 cursor-pointer group">
+<input checked="" class="peer sr-only" name="loc-milk" type="radio" value="fridge"/>
+<div class="flex items-center justify-center py-2 px-3 rounded-[0.35rem] text-sm font-medium text-slate-500 dark:text-slate-400 transition-all peer-checked:bg-primary peer-checked:text-slate-900 peer-checked:shadow-sm">
+                            Fridge
+                        </div>
+</label>
+<label class="flex-1 cursor-pointer group">
+<input class="peer sr-only" name="loc-milk" type="radio" value="pantry"/>
+<div class="flex items-center justify-center py-2 px-3 rounded-[0.35rem] text-sm font-medium text-slate-500 dark:text-slate-400 transition-all peer-checked:bg-primary peer-checked:text-slate-900 peer-checked:shadow-sm">
+                            Pantry
+                        </div>
+</label>
+<label class="flex-1 cursor-pointer group">
+<input class="peer sr-only" name="loc-milk" type="radio" value="freezer"/>
+<div class="flex items-center justify-center py-2 px-3 rounded-[0.35rem] text-sm font-medium text-slate-500 dark:text-slate-400 transition-all peer-checked:bg-primary peer-checked:text-slate-900 peer-checked:shadow-sm">
+                            Freezer
+                        </div>
+</label>
+</div>
+</div>
+<!-- Item Card 2: Pasta -->
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl p-4 shadow-sm border border-slate-100 dark:border-white/5">
+<!-- Item Details Row -->
+<div class="flex items-start gap-4 mb-4">
+<div class="bg-center bg-no-repeat bg-cover rounded-lg size-16 shrink-0 bg-slate-100 dark:bg-white/5" data-alt="Uncooked spaghetti pasta noodles texture close up" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDCVpmnGJcHzXlaQfEUL1LjK3Q2Bns3D2qXzpWm6XibY0wGXoLDCnYPlvi-r-HS1Ai5l8O4KsnyERYYeXE3bPfs67Nu7yx2E3gqHPIwGxjJRk0Vm_nCIQYntEX2-wVrcnd6yPwKUOB-z6YNPu2xvGldnkvWJobT8lpk2KIoBkgM7HcuQVPdJ4yDUxrhathJT6jVF9nsD6MhazNm1z_QIuitg1m2bMsybYJmUNdLVOKlwn5-EZFoyJCorx1gITYxDODd2j1qXJ9PMTB-");'>
+</div>
+<div class="flex-1 min-w-0 flex flex-col justify-center h-16">
+<div class="flex justify-between items-start">
+<h3 class="text-slate-900 dark:text-white text-base font-bold truncate pr-2">Spaghetti Pasta</h3>
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[20px]">edit_calendar</span>
+</button>
+</div>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="material-symbols-outlined text-primary text-[16px] fill-1">auto_awesome</span>
+<p class="text-slate-600 dark:text-slate-300 text-sm font-medium truncate">Expires Dec 12, 2025</p>
+</div>
+</div>
+</div>
+<!-- Segmented Control -->
+<div class="flex p-1 rounded-lg bg-slate-100 dark:bg-black/20">
+<label class="flex-1 cursor-pointer group">
+<input class="peer sr-only" name="loc-pasta" type="radio" value="fridge"/>
+<div class="flex items-center justify-center py-2 px-3 rounded-[0.35rem] text-sm font-medium text-slate-500 dark:text-slate-400 transition-all peer-checked:bg-primary peer-checked:text-slate-900 peer-checked:shadow-sm">
+                            Fridge
+                        </div>
+</label>
+<label class="flex-1 cursor-pointer group">
+<input checked="" class="peer sr-only" name="loc-pasta" type="radio" value="pantry"/>
+<div class="flex items-center justify-center py-2 px-3 rounded-[0.35rem] text-sm font-medium text-slate-500 dark:text-slate-400 transition-all peer-checked:bg-primary peer-checked:text-slate-900 peer-checked:shadow-sm">
+                            Pantry
+                        </div>
+</label>
+<label class="flex-1 cursor-pointer group">
+<input class="peer sr-only" name="loc-pasta" type="radio" value="freezer"/>
+<div class="flex items-center justify-center py-2 px-3 rounded-[0.35rem] text-sm font-medium text-slate-500 dark:text-slate-400 transition-all peer-checked:bg-primary peer-checked:text-slate-900 peer-checked:shadow-sm">
+                            Freezer
+                        </div>
+</label>
+</div>
+</div>
+<!-- Item Card 3: Avocados -->
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl p-4 shadow-sm border border-slate-100 dark:border-white/5">
+<!-- Item Details Row -->
+<div class="flex items-start gap-4 mb-4">
+<div class="bg-center bg-no-repeat bg-cover rounded-lg size-16 shrink-0 bg-slate-100 dark:bg-white/5" data-alt="Fresh green avocados on a wooden table" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBaKY0YDizVXmOY_KBAMdBitmhotL_G0x9KDhEPEgo4MsDfO9VQUKVn7-j6rPo1Up9OyJyr6mkDQTz6Vf4STVQb8Uz-GOsmea-K4MoecOlD42h0r-xnWsdANGnZ_EnHZ1eZYY1SQonGlmdgr2jjvXAD7Aq2jdELV6_fFIYMtYzEklXlMLk8EEr2qoBoHItlmR8R4BdIhpo7qlmWhxmfI0gpnhzB18mVAjBumfpYUJfd1aWw9lLafmyE4kEYzrWdkR2GeK9Nt37SJ1Jt");'>
+</div>
+<div class="flex-1 min-w-0 flex flex-col justify-center h-16">
+<div class="flex justify-between items-start">
+<h3 class="text-slate-900 dark:text-white text-base font-bold truncate pr-2">Avocados (3 Pack)</h3>
+<button class="text-primary hover:text-green-600 dark:hover:text-green-400 transition-colors">
+<span class="material-symbols-outlined text-[20px]">edit_calendar</span>
+</button>
+</div>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="material-symbols-outlined text-primary text-[16px] fill-1">auto_awesome</span>
+<p class="text-primary text-sm font-medium truncate">Expires Oct 29 (5 days)</p>
+</div>
+</div>
+</div>
+<!-- Segmented Control -->
+<div class="flex p-1 rounded-lg bg-slate-100 dark:bg-black/20">
+<label class="flex-1 cursor-pointer group">
+<input class="peer sr-only" name="loc-avocado" type="radio" value="fridge"/>
+<div class="flex items-center justify-center py-2 px-3 rounded-[0.35rem] text-sm font-medium text-slate-500 dark:text-slate-400 transition-all peer-checked:bg-primary peer-checked:text-slate-900 peer-checked:shadow-sm">
+                            Fridge
+                        </div>
+</label>
+<label class="flex-1 cursor-pointer group">
+<input checked="" class="peer sr-only" name="loc-avocado" type="radio" value="pantry"/>
+<div class="flex items-center justify-center py-2 px-3 rounded-[0.35rem] text-sm font-medium text-slate-500 dark:text-slate-400 transition-all peer-checked:bg-primary peer-checked:text-slate-900 peer-checked:shadow-sm">
+                            Pantry
+                        </div>
+</label>
+<label class="flex-1 cursor-pointer group">
+<input class="peer sr-only" name="loc-avocado" type="radio" value="freezer"/>
+<div class="flex items-center justify-center py-2 px-3 rounded-[0.35rem] text-sm font-medium text-slate-500 dark:text-slate-400 transition-all peer-checked:bg-primary peer-checked:text-slate-900 peer-checked:shadow-sm">
+                            Freezer
+                        </div>
+</label>
+</div>
+</div>
+<!-- Item Card 4: Chicken Breast -->
+<div class="bg-surface-light dark:bg-surface-dark rounded-xl p-4 shadow-sm border border-slate-100 dark:border-white/5">
+<!-- Item Details Row -->
+<div class="flex items-start gap-4 mb-4">
+<div class="bg-center bg-no-repeat bg-cover rounded-lg size-16 shrink-0 bg-slate-100 dark:bg-white/5" data-alt="Raw chicken breast fillets ready for cooking" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCwIhaEkBtSxmdcBRCRVSii4YGrnA3AnNEl6BRDqAjSia4r01uZ5nsi7zJxkWrWnv3DZ28VP_6wp-3cdzZW_FDaANaBJE2t_Rd6xx1vKQyuDjx5lIdUJquSTidfHM3Cf8_jSeqU9oNzAyQsZX1hxZ5VCk6TAw2hfdD7T89iN8tOuY7TPeLh8GK31gVEdWZjLghHTunH56McwAON23Cb5asQ1oxuIxPcZVfghXtcIELzptG670e_Dz00FLDfU9BjkO3WlIlSABQzpLNT");'>
+</div>
+<div class="flex-1 min-w-0 flex flex-col justify-center h-16">
+<div class="flex justify-between items-start">
+<h3 class="text-slate-900 dark:text-white text-base font-bold truncate pr-2">Chicken Breast</h3>
+<button class="text-primary hover:text-green-600 dark:hover:text-green-400 transition-colors">
+<span class="material-symbols-outlined text-[20px]">edit_calendar</span>
+</button>
+</div>
+<div class="flex items-center gap-1.5 mt-1">
+<span class="material-symbols-outlined text-primary text-[16px] fill-1">auto_awesome</span>
+<p class="text-primary text-sm font-medium truncate">Expires Oct 27 (3 days)</p>
+</div>
+</div>
+</div>
+<!-- Segmented Control -->
+<div class="flex p-1 rounded-lg bg-slate-100 dark:bg-black/20">
+<label class="flex-1 cursor-pointer group">
+<input checked="" class="peer sr-only" name="loc-chicken" type="radio" value="fridge"/>
+<div class="flex items-center justify-center py-2 px-3 rounded-[0.35rem] text-sm font-medium text-slate-500 dark:text-slate-400 transition-all peer-checked:bg-primary peer-checked:text-slate-900 peer-checked:shadow-sm">
+                            Fridge
+                        </div>
+</label>
+<label class="flex-1 cursor-pointer group">
+<input class="peer sr-only" name="loc-chicken" type="radio" value="pantry"/>
+<div class="flex items-center justify-center py-2 px-3 rounded-[0.35rem] text-sm font-medium text-slate-500 dark:text-slate-400 transition-all peer-checked:bg-primary peer-checked:text-slate-900 peer-checked:shadow-sm">
+                            Pantry
+                        </div>
+</label>
+<label class="flex-1 cursor-pointer group">
+<input class="peer sr-only" name="loc-chicken" type="radio" value="freezer"/>
+<div class="flex items-center justify-center py-2 px-3 rounded-[0.35rem] text-sm font-medium text-slate-500 dark:text-slate-400 transition-all peer-checked:bg-primary peer-checked:text-slate-900 peer-checked:shadow-sm">
+                            Freezer
+                        </div>
+</label>
+</div>
+</div>
+<div class="py-4 text-center">
+<button class="text-primary font-semibold text-sm hover:underline">
+                    Edit All Settings
+                </button>
+</div>
+</div>
+<!-- Sticky Footer -->
+<div class="absolute bottom-0 left-0 right-0 bg-background-light/95 dark:bg-background-dark/95 backdrop-blur-md border-t border-slate-100 dark:border-white/5 p-4 z-20">
+<button class="w-full bg-primary hover:bg-[#0fdc55] active:bg-[#0cc94d] text-slate-900 font-bold text-lg h-14 rounded-xl shadow-lg shadow-primary/20 transition-all transform active:scale-[0.99] flex items-center justify-center gap-2">
+<span>Add 4 Items to Inventory</span>
+<span class="material-symbols-outlined">check_circle</span>
+</button>
+</div>
+</div>
+</body></html>
