@@ -1,0 +1,155 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --font-display: "Plus Jakarta Sans", sans-serif;
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+  /* Custom app colors */
+  --color-surface: var(--surface);
+  --color-warning: var(--warning);
+  --color-success: var(--success);
+}
+
+:root {
+  --radius: 0.625rem;
+  /* Food Inventory App Theme - Light Mode */
+  --background: #f6f8f6;
+  --foreground: #0d1b12;
+  --card: #ffffff;
+  --card-foreground: #0d1b12;
+  --popover: #ffffff;
+  --popover-foreground: #0d1b12;
+  --primary: #13ec5b;
+  --primary-foreground: #0d1b12;
+  --secondary: #e7f3eb;
+  --secondary-foreground: #0d1b12;
+  --muted: #e7f3eb;
+  --muted-foreground: #4c9a66;
+  --accent: #e7f3eb;
+  --accent-foreground: #0d1b12;
+  --destructive: #e11d48;
+  --border: #e2e8e4;
+  --input: #e2e8e4;
+  --ring: #13ec5b;
+  --chart-1: #13ec5b;
+  --chart-2: #0fb847;
+  --chart-3: #f97316;
+  --chart-4: #eab308;
+  --chart-5: #ef4444;
+  --sidebar: #ffffff;
+  --sidebar-foreground: #0d1b12;
+  --sidebar-primary: #13ec5b;
+  --sidebar-primary-foreground: #0d1b12;
+  --sidebar-accent: #e7f3eb;
+  --sidebar-accent-foreground: #0d1b12;
+  --sidebar-border: #e2e8e4;
+  --sidebar-ring: #13ec5b;
+  /* Custom app colors */
+  --surface: #ffffff;
+  --warning: #f97316;
+  --success: #13ec5b;
+}
+
+.dark {
+  /* Food Inventory App Theme - Dark Mode */
+  --background: #102216;
+  --foreground: #e8f5e9;
+  --card: #1c2e24;
+  --card-foreground: #e8f5e9;
+  --popover: #1c2e24;
+  --popover-foreground: #e8f5e9;
+  --primary: #13ec5b;
+  --primary-foreground: #0d1b12;
+  --secondary: #1a3524;
+  --secondary-foreground: #e8f5e9;
+  --muted: #1a3524;
+  --muted-foreground: #8ebf9c;
+  --accent: #1a3524;
+  --accent-foreground: #e8f5e9;
+  --destructive: #f43f5e;
+  --border: rgba(255, 255, 255, 0.1);
+  --input: rgba(255, 255, 255, 0.15);
+  --ring: #13ec5b;
+  --chart-1: #13ec5b;
+  --chart-2: #0fb847;
+  --chart-3: #fb923c;
+  --chart-4: #facc15;
+  --chart-5: #f87171;
+  --sidebar: #1c2e24;
+  --sidebar-foreground: #e8f5e9;
+  --sidebar-primary: #13ec5b;
+  --sidebar-primary-foreground: #0d1b12;
+  --sidebar-accent: #1a3524;
+  --sidebar-accent-foreground: #e8f5e9;
+  --sidebar-border: rgba(255, 255, 255, 0.1);
+  --sidebar-ring: #13ec5b;
+  /* Custom app colors */
+  --surface: #1c2e24;
+  --warning: #fb923c;
+  --success: #13ec5b;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground font-display antialiased;
+  }
+}
+
+/* Utility classes from mockup */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Safe area for iOS */
+.pb-safe {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.pt-safe {
+  padding-top: env(safe-area-inset-top);
+}
