@@ -29,7 +29,7 @@ export const Default: Story = {
 export const WithValue: Story = {
   args: {
     placeholder: 'Search pantry, fridge...',
-    defaultValue: 'milk',
+    value: 'milk',
   },
 };
 

@@ -2,7 +2,6 @@ import * as React from 'react';
 import { cn } from '@/lib/utils';
 import { ScannerFrame } from './scanner-frame';
 import { ShutterButton } from './shutter-button';
-import { IconButton } from '@/components/ui/icon-button';
 
 interface CameraViewfinderProps extends React.HTMLAttributes<HTMLDivElement> {
   status?: 'scanning' | 'detected' | 'idle';

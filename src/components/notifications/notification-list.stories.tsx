@@ -128,7 +128,7 @@ export const Empty: Story = {
   args: {
     groups: [],
   },
-  render: (args) => (
+  render: () => (
     <div className="flex flex-col items-center justify-center h-full py-12">
       <span className="text-4xl mb-4">✓</span>
       <p className="text-muted-foreground text-sm">All caught up!</p>

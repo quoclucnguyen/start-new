@@ -3,38 +3,35 @@ import { cn } from '@/lib/utils';
 import { Input } from 'antd-mobile';
 import { Search, Mic } from 'lucide-react';
 
-export interface SearchInputProps extends Omit<React.InputHTMLAttributes<HTMLInputElement>, 'onChange'> {
+export interface SearchInputProps {
   value?: string;
   onChange?: (val: string) => void;
   onVoiceClick?: () => void;
   showVoiceButton?: boolean;
+  placeholder?: string;
+  className?: string;
 }
 
-const SearchInput = React.forwardRef<HTMLInputElement, SearchInputProps>(
-  ({ className, onVoiceClick, showVoiceButton = true, value, onChange, ...props }, ref) => {
-    // Adapter for ref if needed, but Input ref might be different. 
-    // antd-mobile Input ref exposes { focus, blur, clear, nativeElement }
-    // We'll cast it for now or just pass it.
-    
+const SearchInput = React.forwardRef<HTMLDivElement, SearchInputProps>(
+  ({ className, onVoiceClick, showVoiceButton = true, value, onChange, placeholder }, ref) => {
     return (
-      <div className={cn('flex w-full flex-1 items-stretch rounded-xl h-12 shadow-sm bg-card', className)}>
+      <div ref={ref} className={cn('flex w-full flex-1 items-stretch rounded-xl h-12 shadow-sm bg-card', className)}>
         <div className="flex items-center justify-center pl-4 rounded-l-xl text-primary">
           <Search size={20} />
         </div>
         <div className="flex-1 min-w-0">
           <Input
-            ref={ref as any}
             className="h-full px-2 text-base"
             style={{ 
               '--font-size': '16px',
               '--placeholder-color': 'var(--muted-foreground)',
               '--color': 'var(--foreground)',
               backgroundColor: 'transparent'
-            }}
+            } as React.CSSProperties}
+            placeholder={placeholder}
             value={value}
             onChange={onChange}
             clearable
-            {...props}
           />
         </div>
         {showVoiceButton && (
