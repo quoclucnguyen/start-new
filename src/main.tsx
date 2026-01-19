@@ -1,8 +1,13 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { unstableSetRender } from 'antd-mobile'
+import { retrieveLaunchParams } from '@tma.js/sdk-react'
 import './index.css'
 import App from './App.tsx'
+import { init } from '@/init.ts'
+
+// Import mock environment for development
+import './mockEnv.ts'
 
 // React 19 compatibility for antd-mobile v5
 // See: https://mobile.ant.design/guide/v5-for-19/
@@ -18,8 +23,25 @@ unstableSetRender((node, container) => {
   };
 });
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
-)
+try {
+  const launchParams = retrieveLaunchParams();
+  const debug =
+    (launchParams.tgWebAppStartParam || '').includes('debug') ||
+    import.meta.env.DEV;
+
+  await init({ debug }).then(() =>
+    createRoot(document.getElementById('root')!).render(
+      <StrictMode>
+        <App />
+      </StrictMode>
+    )
+  );
+} catch (e) {
+  console.error('Failed to initialize TMA:', e);
+  // Fallback: render app without TMA initialization
+  createRoot(document.getElementById('root')!).render(
+    <StrictMode>
+      <App />
+    </StrictMode>
+  );
+}

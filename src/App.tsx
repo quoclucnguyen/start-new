@@ -1,8 +1,10 @@
-import { createBrowserRouter, RouterProvider, Outlet } from 'react-router';
+import { createMemoryRouter, RouterProvider, Outlet } from 'react-router';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from '@/lib/query-client';
+import { AuthGuard } from '@/components/AuthGuard';
 import { InventoryDashboard } from './pages/InventoryDashboard';
 import { AddFoodItemPage } from './pages/AddFoodItemPage';
+import { LoginPage } from './pages/LoginPage';
 import './App.css';
 
 // Layout wrapper with AppShell context
@@ -10,10 +12,19 @@ function RootLayout() {
   return <Outlet />;
 }
 
-const router = createBrowserRouter([
+// Use MemoryRouter for Telegram Mini App (no browser history)
+const router = createMemoryRouter([
+  {
+    path: '/login',
+    element: <LoginPage />,
+  },
   {
     path: '/',
-    element: <RootLayout />,
+    element: (
+      <AuthGuard>
+        <RootLayout />
+      </AuthGuard>
+    ),
     children: [
       {
         index: true,

@@ -2,111 +2,100 @@
 
 ## Project Overview
 
-This is a **Food Inventory Tracker** mobile-first React application built with Vite, TypeScript, and Tailwind CSS v4. The app helps users manage kitchen inventory, track expiry dates, and reduce food waste.
+**Food Inventory Tracker** - mobile-first React app for managing kitchen inventory and tracking expiry dates. Uses a layered architecture with clear separation between API, store, and UI.
 
-## Tech Stack & Key Libraries
+## Tech Stack
 
-- **React 19** with React Compiler enabled (via `babel-plugin-react-compiler`)
-- **Tailwind CSS v4** using `@tailwindcss/vite` plugin (NOT v3 config style)
-- **antd-mobile v5** for mobile UI primitives (Cards, Tags, ProgressBar, etc.)
-- **shadcn/ui** components (New York style) in `src/components/ui/`
-- **lucide-react** for icons
-- **Zustand** for state management (store not yet implemented)
-- **react-router v7** for routing
-- **Storybook 10** for component development
+- **React 19** with React Compiler (`babel-plugin-react-compiler` in vite.config.ts)
+- **Tailwind CSS v4** - CSS-first config in `src/index.css` (NOT tailwind.config.js)
+- **TanStack Query** for server state (queries + mutations with optimistic updates)
+- **Zustand** for UI state (`src/store/ui-store.ts`)
+- **antd-mobile v5** + **shadcn/ui** components
+- **react-router v7**, **Storybook 10**
 
-## Architecture & File Organization
+## Architecture
 
 ```
 src/
+├── api/              # Data layer: types, API interface, React Query hooks
+│   ├── types.ts      # Domain types (FoodItem, ExpiryStatus, helpers)
+│   ├── food-items.api.ts    # IFoodItemsApi interface + localStorage mock
+│   ├── use-food-items.ts    # Query hooks (useFoodItems, useFoodItem)
+│   └── use-food-mutations.ts # Mutation hooks with optimistic updates
+├── store/            # Zustand stores (UI state only, not server data)
+│   └── ui-store.ts   # Filters, edit modal state, delete confirmation
 ├── components/
-│   ├── ui/           # shadcn/ui base components (Button, Card, Badge, etc.)
-│   ├── shared/       # Reusable app components (SearchInput, FilterChips, etc.)
+│   ├── ui/           # shadcn/ui (cva variants, forwardRef)
+│   ├── food/         # Domain components (FoodItemCard, FoodForm, pickers)
 │   ├── layout/       # AppShell, TopAppBar, BottomNavigation
-│   ├── food/         # Domain: FoodItemCard, QuantityStepper, StorageLocationPicker
-│   ├── shopping/     # Domain: Shopping list components
-│   ├── recipes/      # Domain: RecipeCard, IngredientTag
-│   ├── notifications/# Domain: NotificationItem, NotificationList
-│   └── scanner/      # Domain: CameraViewfinder, ScannerFrame, ShutterButton
-├── pages/            # Page-level components (InventoryDashboard)
-├── lib/utils.ts      # cn() utility for className merging
-└── store/            # Zustand stores (empty, awaiting implementation)
+│   └── shared/       # SearchInput, FilterChips, SectionHeader
+├── pages/            # Route components (InventoryDashboard, AddFoodItemPage)
+└── lib/              # utils.ts (cn), query-client.ts
 ```
 
-## Component Patterns
+## Data Flow Pattern
 
-### Creating Components
-- Use `React.forwardRef` pattern with explicit prop interfaces
-- Use `cn()` from `@/lib/utils` for conditional classNames
-- Co-locate Storybook stories: `component-name.stories.tsx` next to `component-name.tsx`
-- Export from domain `index.ts`, then from root `components/index.ts`
+1. **API Layer** (`src/api/`): Abstract interface + localStorage mock implementation
+2. **Query Hooks**: `useFoodItems()` for reads, `useAddFoodItem()`/`useUpdateFoodItem()` for writes
+3. **Optimistic Updates**: All mutations use `onMutate` → rollback on error → `invalidateQueries`
+4. **UI State**: Zustand only for filters/modals, never for server data
 
-Example structure:
 ```tsx
-import * as React from 'react';
-import { cn } from '@/lib/utils';
+// Correct pattern - TanStack Query for server data
+const { data: items } = useFoodItems();
+const addMutation = useAddFoodItem();
 
-interface MyComponentProps extends React.HTMLAttributes<HTMLDivElement> {
-  customProp: string;
-}
-
-const MyComponent = React.forwardRef<HTMLDivElement, MyComponentProps>(
-  ({ className, customProp, ...props }, ref) => (
-    <div ref={ref} className={cn('base-classes', className)} {...props} />
-  )
-);
-MyComponent.displayName = 'MyComponent';
-export { MyComponent };
+// Zustand for UI state only
+const { filters, setSearch, editingItemId } = useUIStore();
 ```
 
-### UI Component Conventions
-- **shadcn/ui components** (`src/components/ui/`): Use `class-variance-authority` for variants
-- **antd-mobile**: Wrap in AppShell's `ConfigProvider` for locale; customize via Tailwind
-- Combine both: shadcn for buttons/inputs, antd-mobile for mobile-specific UI (swipe, gestures)
+## Component Conventions
 
-## Styling
+**shadcn/ui components** (`src/components/ui/`):
+- Use `class-variance-authority` for variants
+- `React.forwardRef` with explicit prop interfaces
+- Export both component and variants: `export { Button, buttonVariants }`
 
-### Tailwind CSS v4 (Important!)
-- Uses CSS-first config in `src/index.css` with `@theme inline {}` block
-- Custom CSS variables defined in `:root` (see `--primary`, `--background`, etc.)
-- Color utilities: `bg-primary`, `text-muted-foreground`, `border-destructive`
-- App-specific colors: `--surface`, `--warning`, `--success`
+**Domain components** (`src/components/food/`, etc.):
+- Co-locate stories: `food-item-card.stories.tsx` next to `food-item-card.tsx`
+- Export from `index.ts`, then re-export from `src/components/index.ts`
+- Use `cn()` from `@/lib/utils` for className merging
 
-### Design Tokens
+## Styling (Tailwind v4)
+
+Config is CSS-first in `src/index.css`:
 ```css
---primary: #13ec5b;        /* Green accent */
---background: #f6f8f6;      /* Light gray-green */
---destructive: #e11d48;     /* Red for expiring items */
+@theme inline {
+  --color-primary: var(--primary);  /* Maps CSS vars to utilities */
+}
+:root {
+  --primary: #13ec5b;  /* Green accent */
+  --destructive: #e11d48;  /* Red for expiring */
+}
 ```
+Use: `bg-primary`, `text-destructive`, `text-muted-foreground`
 
-## Development Commands
+## Domain Types
+
+```ts
+type ExpiryStatus = 'expiring' | 'soon' | 'good' | 'fresh';  // Color-coded urgency
+type StorageLocation = 'fridge' | 'pantry' | 'freezer' | 'spices';
+type FoodCategory = 'fruits' | 'vegetables' | 'dairy' | 'meat' | 'drinks' | 'pantry' | 'other';
+```
+Use helpers: `getExpiryStatus(date)`, `getExpiryText(date)`
+
+## Commands
 
 ```bash
-npm run dev          # Start Vite dev server
-npm run storybook    # Start Storybook on port 6006
-npm run build        # TypeScript check + Vite build
-npm run lint         # ESLint
+npm run dev       # Vite dev server
+npm run storybook # Component development (port 6006)
+npm run build     # tsc -b && vite build
 ```
 
-## Mockups Reference
+## Key Files
 
-The `mockup/` folder contains HTML mockups with `code.html` and `screen.png` for each screen. Use these as design references when implementing pages:
-- `inventory_dashboard_1-4/` - Main dashboard variations
-- `add_food_item/`, `edit_food_item_1-5/` - Food item CRUD
-- `shopping_list_1-3/`, `scan_shopping_receipt/` - Shopping features
-- `recipe_suggestions/` - Recipe discovery
-- `notifications_center_1-2/` - Alerts and notifications
-
-## Import Aliases
-
-Use `@/` alias for all src imports (configured in `vite.config.ts` and `tsconfig.json`):
-```tsx
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
-```
-
-## Key Domain Concepts
-
-- **ExpiryStatus**: `'expiring' | 'soon' | 'good' | 'fresh'` - color-coded urgency levels
-- **Storage locations**: Fridge, Pantry, Freezer, Spices
-- **Food categories**: Fruits, Vegetables, Dairy, Meat, Drinks
+- [src/api/types.ts](src/api/types.ts) - All domain types and helper functions
+- [src/api/use-food-mutations.ts](src/api/use-food-mutations.ts) - Optimistic update pattern
+- [src/store/ui-store.ts](src/store/ui-store.ts) - Zustand store pattern
+- [src/index.css](src/index.css) - Tailwind v4 theme config
+- [mockup/](mockup/) - HTML mockups (`code.html`) for each screen design

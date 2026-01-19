@@ -8,13 +8,36 @@ export interface FoodItem {
   name: string;
   category: FoodCategory;
   storage: StorageLocation;
-  expiryDate: string | null; // ISO date string
+  expiryDate: string | null; // ISO date string (YYYY-MM-DD)
   quantity: number;
   unit: QuantityUnit;
   notes?: string;
   imageUrl?: string;
-  createdAt: string; // ISO date string
-  updatedAt: string; // ISO date string
+  purchaseDate?: string; // ISO date string (YYYY-MM-DD)
+  createdAt: string; // ISO datetime string
+  updatedAt: string; // ISO datetime string
+}
+
+/**
+ * Database row type for food_items table (snake_case)
+ */
+export interface DbFoodItem {
+  id: string;
+  user_id: string;
+  name: string;
+  quantity: number;
+  unit: string;
+  expiration_date: string | null;
+  category: string | null;
+  storage: string | null;
+  image_url: string | null;
+  created_at: string;
+  purchase_date: string | null;
+  notes: string | null;
+  updated_at: string;
+  last_modified: string;
+  deleted: boolean;
+  synced: boolean;
 }
 
 export interface CreateFoodItemInput {
@@ -26,6 +49,7 @@ export interface CreateFoodItemInput {
   unit: QuantityUnit;
   notes?: string;
   imageUrl?: string;
+  purchaseDate?: string;
 }
 
 export interface UpdateFoodItemInput {
@@ -38,6 +62,7 @@ export interface UpdateFoodItemInput {
   unit?: QuantityUnit;
   notes?: string;
   imageUrl?: string;
+  purchaseDate?: string;
 }
 
 // Helper function to calculate expiry status from date
