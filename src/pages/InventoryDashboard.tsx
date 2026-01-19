@@ -1,9 +1,8 @@
 import React from 'react';
 import { useNavigate } from 'react-router';
 import { AppShell } from '@/components/layout/app-shell';
-import { TopAppBar } from '@/components/layout/top-app-bar';
+import { DashboardTopBar } from '@/components/layout/dashboard-top-bar';
 import { BottomNavigation, type NavItem } from '@/components/layout/bottom-navigation';
-import { UserAvatar } from '@/components/shared/user-avatar';
 import { SearchInput } from '@/components/shared/search-input';
 import { FilterChips, type FilterChip } from '@/components/shared/filter-chips';
 import { SectionHeader } from '@/components/shared/section-header';
@@ -16,7 +15,6 @@ import { useUIStore } from '@/store';
 import type { FoodItem, FoodCategory, StorageLocation } from '@/api/types';
 import { SpinLoading } from 'antd-mobile';
 import { 
-  Bell, 
   ArrowUpDown, 
   LayoutDashboard, 
   ClipboardList, 
@@ -169,6 +167,7 @@ export const InventoryDashboard: React.FC = () => {
       <FoodItemCard
         key={item.id}
         name={item.name}
+        imageUrl={item.imageUrl}
         expiryText={`${item.quantity} ${item.unit} • ${expiryText}`}
         expiryStatus={status}
         percentLeft={status === 'expiring' ? 10 : status === 'soon' ? 25 : status === 'good' ? 50 : 80}
@@ -191,27 +190,10 @@ export const InventoryDashboard: React.FC = () => {
 
   return (
     <AppShell>
-      <TopAppBar
+      <DashboardTopBar
         title="My Kitchen"
         subtitle="Good Morning,"
-        leftAction={
-          <UserAvatar 
-            src="https://lh3.googleusercontent.com/aida-public/AB6AXuC6sye7sJfDtmO79TiyrXf9Knj41P9FSJgq3XVnH_NR1DFBzF3GCbf_sN_-ALJNUsNohWbg3foRnr0h1keTXjpGb_AUIHhFSC8gqX9rrvAmZ0stFIOhQlD6-BnVpTbN9C8l0ulYjGY3vY3Yj73xfrlyVtSinMV4foRBA-e6P6nRcrKg8rj4ZgsAT1mHDgUzoZKtBk8WJO_rvyBdMxXNVhopbO_e2itozSmV8lOmkPCWTc3BNGtLOTeoVBs-nzkytDcuZKwhNyIeQmGU" 
-            alt="User Profile" 
-            showStatus 
-          />
-        }
-        rightAction={
-          <IconButton className="relative">
-            <Bell size={24} />
-            {expiringSoonItems.length > 0 && (
-              <span className="absolute top-2 right-2 flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-red-500"></span>
-              </span>
-            )}
-          </IconButton>
-        }
+        notificationCount={expiringSoonItems.length}
       />
 
       <main className="flex-1 flex flex-col pb-28 px-4 pt-1 gap-6">

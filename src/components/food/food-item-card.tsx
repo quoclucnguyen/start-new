@@ -8,6 +8,7 @@ export type ExpiryStatus = 'expiring' | 'soon' | 'good' | 'fresh';
 export interface FoodItemCardProps extends React.HTMLAttributes<HTMLDivElement> {
   name: string;
   icon?: React.ReactNode;
+  imageUrl?: string | null;
   expiryText: string;
   expiryStatus: ExpiryStatus;
   percentLeft?: number;
@@ -63,7 +64,7 @@ const statusConfig: Record<ExpiryStatus, {
 };
 
 const FoodItemCard = React.forwardRef<HTMLDivElement, FoodItemCardProps>(
-  ({ className, name, icon, expiryText, expiryStatus, percentLeft, showBadge = false, onMoreClick, ...props }, ref) => {
+  ({ className, name, icon, imageUrl, expiryText, expiryStatus, percentLeft, showBadge = false, onMoreClick, ...props }, ref) => {
     const config = statusConfig[expiryStatus];
     
     return (
@@ -82,10 +83,18 @@ const FoodItemCard = React.forwardRef<HTMLDivElement, FoodItemCardProps>(
           
           <div className="flex items-center gap-4 z-10 relative">
             <div className={cn(
-              'flex items-center justify-center rounded-lg shrink-0 size-12',
-              config.iconBg
+              'flex items-center justify-center rounded-lg shrink-0 size-12 overflow-hidden',
+              !imageUrl && config.iconBg
             )}>
-              {icon || (
+              {imageUrl ? (
+                <img 
+                  src={imageUrl} 
+                  alt={name}
+                  className="size-full object-cover"
+                />
+              ) : icon ? (
+                icon
+              ) : (
                 <span className={cn('text-2xl', config.iconColor)}>🍎</span>
               )}
             </div>
