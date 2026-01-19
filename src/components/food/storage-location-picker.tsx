@@ -1,21 +1,23 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 import { Selector } from 'antd-mobile';
-
-export interface StorageLocation {
-  id: string;
-  name: string;
-  icon: React.ReactNode;
-}
+import type { StorageLocationConfig } from '@/api/types';
+import { useStorageLocations } from '@/api';
 
 interface StorageLocationPickerProps extends Omit<React.HTMLAttributes<HTMLDivElement>, 'onChange' | 'defaultValue'> {
-  locations: StorageLocation[];
+  /** Optional: provide locations directly instead of fetching from API */
+  locations?: StorageLocationConfig[];
   value?: string;
   onChange?: (id: string) => void;
 }
 
 const StorageLocationPicker = React.forwardRef<HTMLDivElement, StorageLocationPickerProps>(
-  ({ className, locations, value, onChange, ...props }, ref) => {
+  ({ className, locations: propLocations, value, onChange, ...props }, ref) => {
+    const { data: fetchedLocations = [] } = useStorageLocations();
+    
+    // Use provided locations or fetch from API
+    const locations = propLocations || fetchedLocations;
+
     return (
       <div
         ref={ref}
@@ -51,11 +53,4 @@ const StorageLocationPicker = React.forwardRef<HTMLDivElement, StorageLocationPi
 );
 StorageLocationPicker.displayName = 'StorageLocationPicker';
 
-// Default storage locations
-const defaultLocations: StorageLocation[] = [
-  { id: 'fridge', name: 'Fridge', icon: '🧊' },
-  { id: 'freezer', name: 'Freezer', icon: '❄️' },
-  { id: 'pantry', name: 'Pantry', icon: '🚪' },
-];
-
-export { StorageLocationPicker, defaultLocations };
+export { StorageLocationPicker };

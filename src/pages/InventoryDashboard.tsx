@@ -7,46 +7,20 @@ import { EmptyState } from '@/components/shared/empty-state';
 import { FoodItemCard } from '@/components/food/food-item-card';
 import { IconButton } from '@/components/ui/icon-button';
 import { EditFoodItemSheet } from './EditFoodItemSheet';
-import { useFoodItems, getExpiryStatus, getExpiryText } from '@/api';
+import { useFoodItems, useCategories, useStorageLocations, getExpiryStatus, getExpiryText } from '@/api';
 import { useUIStore } from '@/store';
-import type { FoodItem, FoodCategory, StorageLocation } from '@/api/types';
+import type { FoodItem, FoodCategory, StorageLocation, CategoryConfig } from '@/api/types';
 import { SpinLoading } from 'antd-mobile';
 import { 
   ArrowUpDown, 
-  Apple,
-  Carrot,
-  Milk,
-  Beef,
-  CupSoda,
   Package,
-  RefrigeratorIcon,
-  Warehouse,
-  Snowflake,
-  Salad,
 } from 'lucide-react';
-
-// Category to icon mapping
-const categoryIcons: Record<FoodCategory, React.ReactNode> = {
-  fruits: <Apple size={24} />,
-  vegetables: <Carrot size={24} />,
-  dairy: <Milk size={24} />,
-  meat: <Beef size={24} />,
-  drinks: <CupSoda size={24} />,
-  pantry: <Package size={24} />,
-  other: <Salad size={24} />,
-};
-
-// Storage filter icons
-const storageIcons: Record<StorageLocation, React.ReactNode> = {
-  fridge: <RefrigeratorIcon size={16} />,
-  pantry: <Warehouse size={16} />,
-  freezer: <Snowflake size={16} />,
-  spices: <Salad size={16} />,
-};
 
 export const InventoryDashboard: React.FC = () => {
   const navigate = useNavigate();
   const { data: items = [], isLoading, error } = useFoodItems();
+  const { data: categoriesData = [] } = useCategories();
+  const { data: storageLocationsData = [] } = useStorageLocations();
   
   const {
     filters,
@@ -57,24 +31,39 @@ export const InventoryDashboard: React.FC = () => {
     setEditingItemId,
   } = useUIStore();
 
-  // Category filters
-  const categories: FilterChip[] = [
-    { id: 'all', label: 'All' },
-    { id: 'fruits', label: 'Fruits' },
-    { id: 'vegetables', label: 'Vegetables' },
-    { id: 'dairy', label: 'Dairy' },
-    { id: 'meat', label: 'Meat' },
-    { id: 'drinks', label: 'Drinks' },
-  ];
+  // Create a lookup map for categories by id
+  const categoryMap = React.useMemo(() => {
+    return categoriesData.reduce((acc, cat) => {
+      acc[cat.id] = cat;
+      return acc;
+    }, {} as Record<string, CategoryConfig>);
+  }, [categoriesData]);
 
-  // Storage location filters
-  const storageLocations: FilterChip[] = [
-    { id: 'all', label: 'All', icon: <Package size={16} /> },
-    { id: 'fridge', label: 'Fridge', icon: storageIcons.fridge },
-    { id: 'pantry', label: 'Pantry', icon: storageIcons.pantry },
-    { id: 'freezer', label: 'Freezer', icon: storageIcons.freezer },
-    { id: 'spices', label: 'Spices', icon: storageIcons.spices },
-  ];
+  // Category filters - derived from settings
+  const categories: FilterChip[] = React.useMemo(() => {
+    const filterableCategories = categoriesData.filter((cat) => cat.showInFilters);
+    return [
+      { id: 'all', label: 'All' },
+      ...filterableCategories.map((cat) => ({
+        id: cat.id,
+        label: cat.name,
+        icon: <span>{cat.icon}</span>,
+      })),
+    ];
+  }, [categoriesData]);
+
+  // Storage location filters - derived from settings
+  const storageLocations: FilterChip[] = React.useMemo(() => {
+    const filterableLocations = storageLocationsData.filter((loc) => loc.showInFilters);
+    return [
+      { id: 'all', label: 'All', icon: <Package size={16} /> },
+      ...filterableLocations.map((loc) => ({
+        id: loc.id,
+        label: loc.name,
+        icon: <span>{loc.icon}</span>,
+      })),
+    ];
+  }, [storageLocationsData]);
 
   // Filter and sort items
   const filteredItems = React.useMemo(() => {
@@ -143,7 +132,8 @@ export const InventoryDashboard: React.FC = () => {
   const renderFoodItem = (item: FoodItem) => {
     const status = getExpiryStatus(item.expiryDate);
     const expiryText = getExpiryText(item.expiryDate);
-    const icon = categoryIcons[item.category];
+    const category = categoryMap[item.category];
+    const icon = category?.icon || '📦';
 
     return (
       <FoodItemCard
@@ -155,7 +145,7 @@ export const InventoryDashboard: React.FC = () => {
         percentLeft={status === 'expiring' ? 10 : status === 'soon' ? 25 : status === 'good' ? 50 : 80}
         showBadge={status === 'expiring' || status === 'fresh'}
         icon={
-          <span className={`
+          <span className={`text-2xl
             ${status === 'expiring' ? 'text-red-500' : ''}
             ${status === 'soon' ? 'text-orange-500' : ''}
             ${status === 'good' ? 'text-yellow-600' : ''}

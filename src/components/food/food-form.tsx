@@ -159,12 +159,6 @@ const FoodForm = React.forwardRef<FoodFormRef, FoodFormProps>(
           {/* Storage Location */}
           <Form.Item label="Storage Location">
             <StorageLocationPicker
-              locations={[
-                { id: 'fridge', name: 'Fridge', icon: '🧊' },
-                { id: 'freezer', name: 'Freezer', icon: '❄️' },
-                { id: 'pantry', name: 'Pantry', icon: '🚪' },
-                { id: 'spices', name: 'Spices', icon: '🧂' },
-              ]}
               value={values.storage}
               onChange={(val) => updateValue('storage', val as StorageLocation)}
             />

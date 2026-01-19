@@ -6,6 +6,7 @@ import { MainLayout } from "@/components/layout";
 import { InventoryDashboard } from "./pages/InventoryDashboard";
 import { AddFoodItemPage } from "./pages/AddFoodItemPage";
 import { LoginPage } from "./pages/LoginPage";
+import { SettingsPage } from "./pages/SettingsPage";
 import "./App.css";
 
 // Use MemoryRouter for Telegram Mini App (no browser history)
@@ -44,11 +45,7 @@ const router = createMemoryRouter([
       },
       {
         path: "settings",
-        element: (
-          <div className="p-4 text-center text-muted-foreground">
-            Settings (Coming Soon)
-          </div>
-        ),
+        element: <SettingsPage />,
       },
     ],
   },

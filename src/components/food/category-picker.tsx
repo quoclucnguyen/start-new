@@ -1,27 +1,24 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 import { Selector } from 'antd-mobile';
-import type { FoodCategory } from '@/api/types';
-import { Apple, Carrot, Milk, Beef, CupSoda, Package, MoreHorizontal } from 'lucide-react';
+import type { FoodCategory, CategoryConfig } from '@/api/types';
+import { useCategories } from '@/api';
 
 interface CategoryPickerProps {
   value?: FoodCategory;
   onChange?: (value: FoodCategory) => void;
   className?: string;
+  /** Optional: provide categories directly instead of fetching from API */
+  categories?: CategoryConfig[];
 }
 
-const categoryOptions: { value: FoodCategory; label: string; icon: React.ReactNode }[] = [
-  { value: 'fruits', label: 'Fruits', icon: <Apple size={16} /> },
-  { value: 'vegetables', label: 'Vegetables', icon: <Carrot size={16} /> },
-  { value: 'dairy', label: 'Dairy', icon: <Milk size={16} /> },
-  { value: 'meat', label: 'Meat', icon: <Beef size={16} /> },
-  { value: 'drinks', label: 'Drinks', icon: <CupSoda size={16} /> },
-  { value: 'pantry', label: 'Pantry', icon: <Package size={16} /> },
-  { value: 'other', label: 'Other', icon: <MoreHorizontal size={16} /> },
-];
-
 const CategoryPicker = React.forwardRef<HTMLDivElement, CategoryPickerProps>(
-  ({ value, onChange, className }, ref) => {
+  ({ value, onChange, className, categories: propCategories }, ref) => {
+    const { data: fetchedCategories = [] } = useCategories();
+    
+    // Use provided categories or fetch from API
+    const categories = propCategories || fetchedCategories;
+
     const handleChange = (values: string[]) => {
       if (values.length > 0) {
         onChange?.(values[0] as FoodCategory);
@@ -34,12 +31,12 @@ const CategoryPicker = React.forwardRef<HTMLDivElement, CategoryPickerProps>(
           <Selector
             value={value ? [value] : []}
             onChange={handleChange}
-            options={categoryOptions.map((opt) => ({
-              value: opt.value,
+            options={categories.map((cat) => ({
+              value: cat.id,
               label: (
                 <div className="flex items-center gap-1.5">
-                  {opt.icon}
-                  <span>{opt.label}</span>
+                  <span>{cat.icon}</span>
+                  <span>{cat.name}</span>
                 </div>
               ),
             }))}
@@ -61,4 +58,4 @@ const CategoryPicker = React.forwardRef<HTMLDivElement, CategoryPickerProps>(
 );
 CategoryPicker.displayName = 'CategoryPicker';
 
-export { CategoryPicker, categoryOptions };
+export { CategoryPicker };

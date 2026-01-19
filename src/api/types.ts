@@ -1,7 +1,57 @@
-export type StorageLocation = 'fridge' | 'pantry' | 'freezer' | 'spices';
-export type FoodCategory = 'fruits' | 'vegetables' | 'dairy' | 'meat' | 'drinks' | 'pantry' | 'other';
+// Changed from union types to string to support user-configurable categories/locations
+export type StorageLocation = string;
+export type FoodCategory = string;
 export type QuantityUnit = 'pieces' | 'kg' | 'g' | 'l' | 'ml' | 'bottles' | 'packs';
 export type ExpiryStatus = 'expiring' | 'soon' | 'good' | 'fresh';
+
+// ============================================================================
+// Category & Storage Location Configuration Types
+// ============================================================================
+
+export interface CategoryConfig {
+  id: string;
+  name: string;
+  icon: string; // emoji
+  color: string; // hex color
+  showInFilters: boolean;
+  sortOrder: number;
+  createdAt?: string;
+}
+
+export interface StorageLocationConfig {
+  id: string;
+  name: string;
+  icon: string; // emoji
+  color: string; // hex color
+  showInFilters: boolean;
+  sortOrder: number;
+  createdAt?: string;
+}
+
+// Database row types (snake_case)
+export interface DbCategory {
+  id: string;
+  name: string;
+  icon: string;
+  color: string;
+  show_in_filters: boolean;
+  sort_order: number;
+  created_at: string;
+}
+
+export interface DbStorageLocation {
+  id: string;
+  name: string;
+  icon: string;
+  color: string;
+  show_in_filters: boolean;
+  sort_order: number;
+  created_at: string;
+}
+
+// ============================================================================
+// Food Item Types
+// ============================================================================
 
 export interface FoodItem {
   id: string;

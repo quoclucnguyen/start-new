@@ -1,6 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react';
 import { useState } from 'react';
-import { StorageLocationPicker, defaultLocations, type StorageLocation } from './storage-location-picker';
+import { StorageLocationPicker } from './storage-location-picker';
+import type { StorageLocationConfig } from '@/api/types';
+
+// Default locations for stories
+const defaultLocations: StorageLocationConfig[] = [
+  { id: 'fridge', name: 'Fridge', icon: '🧊', color: '#06b6d4', showInFilters: true, sortOrder: 0 },
+  { id: 'freezer', name: 'Freezer', icon: '❄️', color: '#6366f1', showInFilters: true, sortOrder: 1 },
+  { id: 'pantry', name: 'Pantry', icon: '🚪', color: '#a855f7', showInFilters: true, sortOrder: 2 },
+];
 
 const meta: Meta<typeof StorageLocationPicker> = {
   title: 'Food/StorageLocationPicker',
@@ -64,13 +72,13 @@ export const PantrySelected: Story = {
 export const CustomLocations: Story = {
   render: function CustomPicker() {
     const [value, setValue] = useState('counter');
-    const customLocations: StorageLocation[] = [
-      { id: 'fridge', name: 'Fridge', icon: '🧊' },
-      { id: 'freezer', name: 'Freezer', icon: '❄️' },
-      { id: 'pantry', name: 'Pantry', icon: '🚪' },
-      { id: 'counter', name: 'Counter', icon: '🍌' },
-      { id: 'cellar', name: 'Cellar', icon: '🍷' },
-      { id: 'spice', name: 'Spice Rack', icon: '🌶️' },
+    const customLocations: StorageLocationConfig[] = [
+      { id: 'fridge', name: 'Fridge', icon: '🧊', color: '#06b6d4', showInFilters: true, sortOrder: 0 },
+      { id: 'freezer', name: 'Freezer', icon: '❄️', color: '#6366f1', showInFilters: true, sortOrder: 1 },
+      { id: 'pantry', name: 'Pantry', icon: '🚪', color: '#a855f7', showInFilters: true, sortOrder: 2 },
+      { id: 'counter', name: 'Counter', icon: '🍌', color: '#eab308', showInFilters: true, sortOrder: 3 },
+      { id: 'cellar', name: 'Cellar', icon: '🍷', color: '#dc2626', showInFilters: true, sortOrder: 4 },
+      { id: 'spice', name: 'Spice Rack', icon: '🌶️', color: '#f97316', showInFilters: true, sortOrder: 5 },
     ];
     return (
       <StorageLocationPicker
