@@ -6,8 +6,6 @@ import { confirmDelete } from '@/components/shared/confirmation-dialog';
 import { useFoodItem, useUpdateFoodItem, useDeleteFoodItem } from '@/api';
 import type { CreateFoodItemInput, UpdateFoodItemInput } from '@/api/types';
 import { Toast, SpinLoading } from 'antd-mobile';
-import { Trash2 } from 'lucide-react';
-import { IconButton } from '@/components/ui/icon-button';
 
 interface EditFoodItemSheetProps {
   itemId: string | null;
@@ -91,18 +89,6 @@ export const EditFoodItemSheet: React.FC<EditFoodItemSheetProps> = ({
         </div>
       ) : item ? (
         <>
-          {/* Delete button in header area */}
-          <div className="absolute top-4 right-4 z-10">
-            <IconButton
-              variant="ghost"
-              className="text-destructive hover:bg-destructive/10"
-              onClick={handleDelete}
-              disabled={isLoading}
-            >
-              <Trash2 size={20} />
-            </IconButton>
-          </div>
-
           <div className="px-4 pb-32">
             <FoodForm
               ref={formRef}

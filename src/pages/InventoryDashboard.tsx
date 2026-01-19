@@ -1,8 +1,5 @@
 import React from 'react';
 import { useNavigate } from 'react-router';
-import { AppShell } from '@/components/layout/app-shell';
-import { DashboardTopBar } from '@/components/layout/dashboard-top-bar';
-import { BottomNavigation, type NavItem } from '@/components/layout/bottom-navigation';
 import { SearchInput } from '@/components/shared/search-input';
 import { FilterChips, type FilterChip } from '@/components/shared/filter-chips';
 import { SectionHeader } from '@/components/shared/section-header';
@@ -16,11 +13,6 @@ import type { FoodItem, FoodCategory, StorageLocation } from '@/api/types';
 import { SpinLoading } from 'antd-mobile';
 import { 
   ArrowUpDown, 
-  LayoutDashboard, 
-  ClipboardList, 
-  Plus, 
-  Utensils, 
-  Settings,
   Apple,
   Carrot,
   Milk,
@@ -64,16 +56,6 @@ export const InventoryDashboard: React.FC = () => {
     editingItemId,
     setEditingItemId,
   } = useUIStore();
-
-  const [activeTab, setActiveTab] = React.useState('home');
-
-  // Navigation Items
-  const navItems: NavItem[] = [
-    { id: 'home', label: 'Home', icon: <LayoutDashboard size={24} /> },
-    { id: 'list', label: 'List', icon: <ClipboardList size={24} /> },
-    { id: 'recipes', label: 'Recipes', icon: <Utensils size={24} /> },
-    { id: 'settings', label: 'Settings', icon: <Settings size={24} /> },
-  ];
 
   // Category filters
   const categories: FilterChip[] = [
@@ -189,121 +171,95 @@ export const InventoryDashboard: React.FC = () => {
   };
 
   return (
-    <AppShell>
-      <DashboardTopBar
-        title="My Kitchen"
-        subtitle="Good Morning,"
-        notificationCount={expiringSoonItems.length}
-      />
-
-      <main className="flex-1 flex flex-col pb-28 px-4 pt-1 gap-6">
-        {/* Search and Sort */}
-        <div className="flex gap-3">
-          <SearchInput 
-            placeholder="Search pantry, fridge..." 
-            value={filters.search}
-            onChange={setSearch}
-          />
-          <IconButton className="h-12 w-12 rounded-xl border border-input bg-card">
-            <ArrowUpDown size={20} />
-          </IconButton>
-        </div>
-
-        {/* Categories */}
-        <FilterChips 
-          chips={categories} 
-          activeId={filters.category} 
-          onChipClick={(id) => setCategory(id as FoodCategory | 'all')} 
+    <div className="flex flex-col gap-6">
+      {/* Search and Sort */}
+      <div className="flex gap-3">
+        <SearchInput 
+          placeholder="Search pantry, fridge..." 
+          value={filters.search}
+          onChange={setSearch}
         />
-
-        {isLoading ? (
-          <div className="flex items-center justify-center py-12">
-            <SpinLoading color="primary" />
-          </div>
-        ) : error ? (
-          <EmptyState
-            title="Error loading items"
-            description="Something went wrong. Please try again."
-            icon={<Package size={48} className="text-muted-foreground" />}
-          />
-        ) : items.length === 0 ? (
-          <EmptyState
-            title="No items yet"
-            description="Add your first food item to start tracking your inventory."
-            icon={<Package size={48} className="text-muted-foreground" />}
-            action={
-              <button
-                onClick={handleAddClick}
-                className="mt-4 px-6 py-3 bg-primary text-primary-foreground rounded-xl font-medium"
-              >
-                Add First Item
-              </button>
-            }
-          />
-        ) : (
-          <>
-            {/* Expiring Soon */}
-            {expiringSoonItems.length > 0 && (
-              <section>
-                <SectionHeader 
-                  title="Expiring Soon" 
-                  action={
-                    <a href="#" className="text-sm font-semibold text-primary hover:text-green-600">
-                      View All
-                    </a>
-                  } 
-                />
-                <div className="flex flex-col gap-3">
-                  {expiringSoonItems.map(renderFoodItem)}
-                </div>
-              </section>
-            )}
-
-            {/* All Inventory */}
-            <section>
-              <SectionHeader title="Inventory" />
-              <div className="mb-4">
-                <FilterChips 
-                  chips={storageLocations} 
-                  activeId={filters.storage} 
-                  onChipClick={(id) => setStorage(id as StorageLocation | 'all')}
-                  variant="primary" 
-                />
-              </div>
-              
-              {filteredItems.length === 0 ? (
-                <EmptyState
-                  title="No items found"
-                  description="Try adjusting your filters or search query."
-                  icon={<Package size={32} className="text-muted-foreground" />}
-                />
-              ) : (
-                <div className="flex flex-col gap-3">
-                  {filteredItems.map(renderFoodItem)}
-                </div>
-              )}
-            </section>
-          </>
-        )}
-
-        <div className="h-4"></div>
-      </main>
-
-      {/* Floating Action Button */}
-      <div className="fixed bottom-24 right-4 z-50">
-        <button 
-          onClick={handleAddClick}
-          className="flex items-center justify-center h-14 w-14 rounded-full bg-primary shadow-lg shadow-primary/40 text-primary-foreground transform active:scale-95 transition-transform"
-        >
-          <Plus size={28} />
-        </button>
+        <IconButton className="h-12 w-12 rounded-xl border border-input bg-card">
+          <ArrowUpDown size={20} />
+        </IconButton>
       </div>
 
-      <BottomNavigation 
-        items={navItems} 
-        activeId={activeTab} 
-        onItemClick={setActiveTab} 
+      {/* Categories */}
+      <FilterChips 
+        chips={categories} 
+        activeId={filters.category} 
+        onChipClick={(id) => setCategory(id as FoodCategory | 'all')} 
       />
+
+      {isLoading ? (
+        <div className="flex items-center justify-center py-12">
+          <SpinLoading color="primary" />
+        </div>
+      ) : error ? (
+        <EmptyState
+          title="Error loading items"
+          description="Something went wrong. Please try again."
+          icon={<Package size={48} className="text-muted-foreground" />}
+        />
+      ) : items.length === 0 ? (
+        <EmptyState
+          title="No items yet"
+          description="Add your first food item to start tracking your inventory."
+          icon={<Package size={48} className="text-muted-foreground" />}
+          action={
+            <button
+              onClick={handleAddClick}
+              className="mt-4 px-6 py-3 bg-primary text-primary-foreground rounded-xl font-medium"
+            >
+              Add First Item
+            </button>
+          }
+        />
+      ) : (
+        <>
+          {/* Expiring Soon */}
+          {expiringSoonItems.length > 0 && (
+            <section>
+              <SectionHeader 
+                title="Expiring Soon" 
+                action={
+                  <a href="#" className="text-sm font-semibold text-primary hover:text-green-600">
+                    View All
+                  </a>
+                } 
+              />
+              <div className="flex flex-col gap-3">
+                {expiringSoonItems.map(renderFoodItem)}
+              </div>
+            </section>
+          )}
+
+          {/* All Inventory */}
+          <section>
+            <SectionHeader title="Inventory" />
+            <div className="mb-4">
+              <FilterChips 
+                chips={storageLocations} 
+                activeId={filters.storage} 
+                onChipClick={(id) => setStorage(id as StorageLocation | 'all')}
+                variant="primary" 
+              />
+            </div>
+            
+            {filteredItems.length === 0 ? (
+              <EmptyState
+                title="No items found"
+                description="Try adjusting your filters or search query."
+                icon={<Package size={32} className="text-muted-foreground" />}
+              />
+            ) : (
+              <div className="flex flex-col gap-3">
+                {filteredItems.map(renderFoodItem)}
+              </div>
+            )}
+          </section>
+        </>
+      )}
 
       {/* Edit Sheet */}
       <EditFoodItemSheet
@@ -311,6 +267,6 @@ export const InventoryDashboard: React.FC = () => {
         visible={!!editingItemId}
         onClose={() => setEditingItemId(null)}
       />
-    </AppShell>
+    </div>
   );
 };
