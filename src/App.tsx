@@ -5,6 +5,7 @@ import { AuthGuard } from "@/components/AuthGuard";
 import { MainLayout } from "@/components/layout";
 import { InventoryDashboard } from "./pages/InventoryDashboard";
 import { AddFoodItemPage } from "./pages/AddFoodItemPage";
+import { BarcodeScannerPage } from "./pages/BarcodeScannerPage";
 import { LoginPage } from "./pages/LoginPage";
 import { SettingsPage } from "./pages/SettingsPage";
 import "./App.css";
@@ -54,6 +55,14 @@ const router = createMemoryRouter([
     element: (
       <AuthGuard>
         <AddFoodItemPage />
+      </AuthGuard>
+    ),
+  },
+  {
+    path: "scan",
+    element: (
+      <AuthGuard>
+        <BarcodeScannerPage />
       </AuthGuard>
     ),
   },

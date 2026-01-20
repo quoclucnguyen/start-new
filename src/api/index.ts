@@ -11,6 +11,17 @@ export {
 
 export { categoriesApi, storageLocationsApi } from './settings.api';
 
+// OpenFoodFacts API
+export {
+  openFoodFactsApi,
+  useProductByBarcode,
+  prefetchProduct,
+  OPENFOODFACTS_QUERY_KEY,
+  type IOpenFoodFactsApi,
+  type ScannedProductData,
+  type OpenFoodFactsProduct,
+} from './openfoodfacts';
+
 // Query hooks
 export { useFoodItems, useFoodItem, FOOD_ITEMS_QUERY_KEY } from './use-food-items';
 
