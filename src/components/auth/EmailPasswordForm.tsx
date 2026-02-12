@@ -15,7 +15,7 @@ export function EmailPasswordForm({
   loading = false,
   error,
   clearError,
-}: EmailPasswordFormProps) {
+}: Readonly<EmailPasswordFormProps>) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
