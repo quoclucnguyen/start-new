@@ -5,16 +5,18 @@ import { getInitDataRaw, isInTelegramWebView } from '@/lib/tma';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { SpinLoading } from 'antd-mobile';
-import { Apple, LogIn, AlertCircle } from 'lucide-react';
+import { Apple, LogIn } from 'lucide-react';
+import { EmailPasswordForm } from '@/components/auth/EmailPasswordForm';
 
 export function LoginPage() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { user, loading, error, tmaLogin, clearError } = useAuthStore();
-  const [isAutoLogin, setIsAutoLogin] = useState(false);
+  const { user, loading, error, tmaLogin, emailLogin, clearError } = useAuthStore();
+  const [emailError, setEmailError] = useState<string | null>(null);
   const autoLoginAttemptedRef = useRef(false);
 
   const from = (location.state as { from?: Location })?.from?.pathname || '/';
+  const isTelegram = isInTelegramWebView();
 
   // Auto-login if inside Telegram
   useEffect(() => {
@@ -22,9 +24,8 @@ export function LoginPage() {
     if (!initDataRaw || user || loading || autoLoginAttemptedRef.current) return;
 
     autoLoginAttemptedRef.current = true;
-    setIsAutoLogin(true);
     tmaLogin(initDataRaw).catch(() => {
-      setIsAutoLogin(false);
+      // Auto-login failed, user will see the form
     });
   }, [user, loading, tmaLogin]);
 
@@ -35,15 +36,26 @@ export function LoginPage() {
     }
   }, [user, navigate, from]);
 
-  const handleLogin = async () => {
+  const handleTelegramLogin = async () => {
     clearError();
+    setEmailError(null);
     const initDataRaw = getInitDataRaw();
     if (initDataRaw) {
       await tmaLogin(initDataRaw);
     }
   };
 
-  const isTelegram = isInTelegramWebView();
+  const handleEmailLogin = async (email: string, password: string) => {
+    clearError();
+    setEmailError(null);
+    await emailLogin(email, password);
+  };
+
+  // Clear both error types when user interacts
+  const handleClearError = () => {
+    clearError();
+    setEmailError(null);
+  };
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-background p-4">
@@ -58,33 +70,48 @@ export function LoginPage() {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          {(loading || isAutoLogin) ? (
+          {loading ? (
             <div className="flex flex-col items-center gap-3 py-4">
               <SpinLoading color="primary" />
               <p className="text-sm text-muted-foreground">
                 {isTelegram ? 'Đang đăng nhập với Telegram...' : 'Đang xác thực...'}
               </p>
             </div>
-          ) : error ? (
-            <div className="space-y-3">
-              <div className="flex items-center gap-2 rounded-lg bg-destructive/10 p-3 text-sm text-destructive">
-                <AlertCircle className="h-4 w-4 shrink-0" />
-                <p>Đăng nhập thất bại. Vui lòng thử lại.</p>
-              </div>
-              <Button onClick={handleLogin} className="w-full" size="lg">
-                <LogIn className="mr-2 h-4 w-4" />
-                Thử lại
-              </Button>
-            </div>
-          ) : isTelegram ? (
-            <Button onClick={handleLogin} className="w-full" size="lg">
-              <LogIn className="mr-2 h-4 w-4" />
-              Đăng nhập với Telegram
-            </Button>
           ) : (
-            <div className="rounded-lg bg-muted p-4 text-center text-sm text-muted-foreground">
-              <p>Vui lòng mở ứng dụng trong Telegram để đăng nhập.</p>
-            </div>
+            <>
+              {/* Show Telegram login button only if in Telegram */}
+              {isTelegram && (
+                <Button
+                  onClick={handleTelegramLogin}
+                  className="w-full"
+                  size="lg"
+                  variant="outline"
+                >
+                  <LogIn className="mr-2 h-4 w-4" />
+                  Đăng nhập với Telegram
+                </Button>
+              )}
+
+              {/* Divider if showing both options */}
+              {isTelegram && (
+                <div className="relative my-4">
+                  <div className="absolute inset-0 flex items-center">
+                    <span className="w-full border-t" />
+                  </div>
+                  <div className="relative flex justify-center text-xs uppercase">
+                    <span className="bg-card px-2 text-muted-foreground">hoặc</span>
+                  </div>
+                </div>
+              )}
+
+              {/* Email/password form - always shown */}
+              <EmailPasswordForm
+                onSubmit={handleEmailLogin}
+                loading={loading}
+                error={emailError || error?.message || null}
+                clearError={handleClearError}
+              />
+            </>
           )}
         </CardContent>
       </Card>

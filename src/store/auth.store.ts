@@ -9,6 +9,7 @@ interface AuthStore {
   initialized: boolean;
   error: AuthError | null;
   tmaLogin: (initDataRaw?: string | null) => Promise<void>;
+  emailLogin: (email: string, password: string) => Promise<void>;
   checkAuth: () => Promise<void>;
   signOut: () => Promise<void>;
   clearError: () => void;
@@ -51,6 +52,24 @@ export const useAuthStore = create<AuthStore>((set) => {
           throw error;
         }
         set((s) => ({ ...s, initialized: true, loading: false }));
+      } catch (error) {
+        set({ error: error as AuthError, loading: false, initialized: true });
+        throw error;
+      }
+    },
+
+    emailLogin: async (email: string, password: string) => {
+      try {
+        set({ loading: true, error: null });
+        const { data, error } = await supabase.auth.signInWithPassword({
+          email,
+          password,
+        });
+        if (error) {
+          set({ error, loading: false });
+          throw error;
+        }
+        set({ user: data.user, loading: false, initialized: true, error: null });
       } catch (error) {
         set({ error: error as AuthError, loading: false, initialized: true });
         throw error;
