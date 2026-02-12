@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import { useAuthStore } from '@/store/auth.store';
 import { getInitDataRaw, isInTelegramWebView } from '@/lib/tma';
@@ -12,18 +12,20 @@ export function LoginPage() {
   const location = useLocation();
   const { user, loading, error, tmaLogin, clearError } = useAuthStore();
   const [isAutoLogin, setIsAutoLogin] = useState(false);
+  const autoLoginAttemptedRef = useRef(false);
 
   const from = (location.state as { from?: Location })?.from?.pathname || '/';
 
   // Auto-login if inside Telegram
   useEffect(() => {
     const initDataRaw = getInitDataRaw();
-    if (initDataRaw && !user && !loading) {
-      setIsAutoLogin(true);
-      tmaLogin(initDataRaw).catch(() => {
-        setIsAutoLogin(false);
-      });
-    }
+    if (!initDataRaw || user || loading || autoLoginAttemptedRef.current) return;
+
+    autoLoginAttemptedRef.current = true;
+    setIsAutoLogin(true);
+    tmaLogin(initDataRaw).catch(() => {
+      setIsAutoLogin(false);
+    });
   }, [user, loading, tmaLogin]);
 
   // Redirect if already logged in

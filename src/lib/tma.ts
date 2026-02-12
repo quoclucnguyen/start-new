@@ -1,3 +1,5 @@
+import { retrieveRawInitData } from '@tma.js/sdk-react';
+
 export type TmaExchangeResponse = {
   access_token: string;
   refresh_token: string;
@@ -24,6 +26,14 @@ export function getInitDataRaw(): string | null {
     if (tg?.initData && typeof tg.initData === 'string' && tg.initData.length > 0) {
       return tg.initData;
     }
+    try {
+      const rawInitData = retrieveRawInitData();
+      if (typeof rawInitData === 'string' && rawInitData.length > 0) {
+        return rawInitData;
+      }
+    } catch {
+      // Ignore if SDK launch params are unavailable.
+    }
     const p = new URLSearchParams(w.location.search);
     return p.get('tgWebAppData') || p.get('initData') || null;
   } catch {
@@ -35,7 +45,12 @@ export function getInitDataRaw(): string | null {
 export function isInTelegramWebView(): boolean {
   try {
     const w = window as unknown as { Telegram?: { WebApp?: unknown } };
-    return !!w?.Telegram?.WebApp;
+    if (w?.Telegram?.WebApp) return true;
+    try {
+      return !!retrieveRawInitData();
+    } catch {
+      return false;
+    }
   } catch {
     return false;
   }
