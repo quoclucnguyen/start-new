@@ -3,9 +3,10 @@ import { BottomSheet } from '@/components/shared/bottom-sheet';
 import { FixedBottomAction } from '@/components/shared/fixed-bottom-action';
 import { FoodForm, type FoodFormRef } from '@/components/food/food-form';
 import { confirmDelete } from '@/components/shared/confirmation-dialog';
-import { useFoodItem, useUpdateFoodItem, useDeleteFoodItem } from '@/api';
+import { useFoodItem, useUpdateFoodItem, useDeleteFoodItem, useAddShoppingListItem } from '@/api';
 import type { CreateFoodItemInput, UpdateFoodItemInput } from '@/api/types';
 import { Toast, SpinLoading } from 'antd-mobile';
+import { ShoppingCart } from 'lucide-react';
 
 interface EditFoodItemSheetProps {
   itemId: string | null;
@@ -22,6 +23,7 @@ export const EditFoodItemSheet: React.FC<EditFoodItemSheetProps> = ({
   const { data: item, isLoading: isLoadingItem } = useFoodItem(itemId);
   const updateFoodItem = useUpdateFoodItem();
   const deleteFoodItem = useDeleteFoodItem();
+  const addToShoppingList = useAddShoppingListItem();
 
   const handleSubmit = (values: CreateFoodItemInput) => {
     if (!itemId) return;
@@ -77,6 +79,35 @@ export const EditFoodItemSheet: React.FC<EditFoodItemSheetProps> = ({
 
   const isLoading = updateFoodItem.isPending || deleteFoodItem.isPending;
 
+  const handleAddToShoppingList = () => {
+    if (!item) return;
+
+    addToShoppingList.mutate(
+      {
+        name: item.name,
+        category: item.category,
+        quantity: item.quantity,
+        unit: item.unit,
+        notes: item.notes,
+        linkedFoodItemId: item.id,
+      },
+      {
+        onSuccess: () => {
+          Toast.show({
+            content: 'Added to shopping list!',
+            position: 'bottom',
+          });
+        },
+        onError: (error) => {
+          Toast.show({
+            content: error.message || 'Failed to add to shopping list',
+            position: 'bottom',
+          });
+        },
+      },
+    );
+  };
+
   return (
     <BottomSheet
       visible={visible}
@@ -96,6 +127,17 @@ export const EditFoodItemSheet: React.FC<EditFoodItemSheetProps> = ({
               onSubmit={handleSubmit}
               isLoading={isLoading}
             />
+
+            {/* Add to Shopping List */}
+            <button
+              type="button"
+              onClick={handleAddToShoppingList}
+              disabled={addToShoppingList.isPending}
+              className="mt-4 w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-border text-sm font-medium text-muted-foreground hover:bg-muted/50 active:scale-[0.98] transition-all disabled:opacity-50"
+            >
+              <ShoppingCart size={18} />
+              {addToShoppingList.isPending ? 'Adding...' : 'Add to Shopping List'}
+            </button>
           </div>
 
           <FixedBottomAction

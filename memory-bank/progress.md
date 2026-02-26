@@ -46,13 +46,35 @@
 
 ## What's Left to Build
 
-### ⏳ Planned Features (Not Started)
+### 📋 Shopping List (Planned - Implementation Plan Ready)
 
-#### Shopping List
+**Status:** Complete implementation plan available at [plan/shopping-list/plan.md](../plan/shopping-list/plan.md)
+
+**Features to implement:**
 - Create shopping list items
-- Mark items as "needed" or "purchased"
-- Link shopping items to inventory items
-- Quick-add to shopping from inventory
+- Mark items as "needed" or "purchased" (checked state)
+- Move purchased items to inventory (bulk action)
+- Quick-add to shopping list from inventory
+- Filter by category and checked status
+- Delete checked items
+
+**Technical scope:**
+- New types: `ShoppingListItem`, `CreateShoppingListItemInput`, `UpdateShoppingListItemInput`
+- New API: `shopping-list.api.ts` (interface + mock + Supabase implementations)
+- New hooks: `use-shopping-list.ts`, `use-shopping-list-mutations.ts`
+- New store: `shopping.store.ts` for UI state
+- New components: `ShoppingListPage`, `ShoppingForm`, `ShoppingEmptyState`, etc.
+- Database: `shopping_list` table with RLS policies
+
+**Existing components:**
+- `ShoppingListItem` - Already implemented
+- `RestockAlert` - Already implemented
+
+**Estimated effort:** 18-26 hours (2.5-3.5 days)
+
+### ⏳ Other Planned Features (Not Started)
+
+#### Recipe Suggestions
 
 #### Recipe Suggestions
 - Basic recipe database

@@ -1,6 +1,6 @@
 # Active Context
 
-**Last Updated:** 2025-02-26
+**Last Updated:** 2026-02-26
 
 ## Current Work Focus
 
@@ -32,7 +32,10 @@ The project is in active development with core inventory management functionalit
 ## Next Steps
 
 ### Immediate Priorities
-1. **Shopping List Feature** - Create shopping list CRUD with ability to mark items as "needed"
+1. **Shopping List Feature** - **PLAN COMPLETE** ([plan/shopping-list/plan.md](../plan/shopping-list/plan.md))
+   - Ready to implement: Shopping list CRUD with optimistic updates
+   - Features: Add items, mark checked, move to inventory, quick-add from inventory
+   - Estimated timeline: 18-26 hours (2.5-3.5 days)
 2. **Recipe Suggestions** - Basic algorithm to suggest recipes based on available ingredients
 3. **Expiry Notifications** - Implement push notifications for items approaching expiry
 

@@ -8,6 +8,7 @@ import { AddFoodItemPage } from "./pages/AddFoodItemPage";
 import { BarcodeScannerPage } from "./pages/BarcodeScannerPage";
 import { LoginPage } from "./pages/LoginPage";
 import { SettingsPage } from "./pages/SettingsPage";
+import { ShoppingListPage } from "@/components/shopping/shopping-list-page";
 import "./App.css";
 
 // Use MemoryRouter for Telegram Mini App (no browser history)
@@ -30,11 +31,7 @@ const router = createMemoryRouter([
       },
       {
         path: "list",
-        element: (
-          <div className="p-4 text-center text-muted-foreground">
-            Shopping List (Coming Soon)
-          </div>
-        ),
+        element: <ShoppingListPage />,
       },
       {
         path: "recipes",

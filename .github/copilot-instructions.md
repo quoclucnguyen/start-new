@@ -2,46 +2,55 @@
 
 ## Project Overview
 
-**Food Inventory Tracker** - mobile-first React app for managing kitchen inventory and tracking expiry dates. Uses a layered architecture with clear separation between API, store, and UI.
+**Food Inventory Manager** — Telegram Mini App for tracking kitchen inventory with expiry dates. React 19 + TypeScript + Supabase + TanStack Query. Mobile-first UI with antd-mobile + shadcn/ui-style components.
 
 ## Tech Stack
 
-- **React 19** with React Compiler (`babel-plugin-react-compiler` in vite.config.ts)
-- **Tailwind CSS v4** - CSS-first config in `src/index.css` (NOT tailwind.config.js)
+- **React 19** with React Compiler (`babel-plugin-react-compiler` in vite.config.ts) — `useMemo`/`useCallback`/`React.memo` are unnecessary
+- **Tailwind CSS v4** — CSS-first config in `src/index.css` (NOT tailwind.config.js)
 - **TanStack Query** for server state (queries + mutations with optimistic updates)
-- **Zustand** for UI state (`src/store/ui-store.ts`)
-- **antd-mobile v5** + **shadcn/ui** components
-- **react-router v7**, **Storybook 10**
+- **Zustand** for UI state only (`src/store/ui-store.ts`) — NEVER for server data
+- **antd-mobile v5** for domain components + **shadcn/ui** (`cva` + `forwardRef`) in `src/components/ui/`
+- **react-router v7** with `MemoryRouter` (TMA has no browser history)
+- **Supabase** for auth, Postgres DB, and Storage
+- **Storybook 10** with co-located stories
 
 ## Architecture
 
 ```
 src/
-├── api/              # Data layer: types, API interface, React Query hooks
-│   ├── types.ts      # Domain types (FoodItem, ExpiryStatus, helpers)
-│   ├── food-items.api.ts    # IFoodItemsApi interface + localStorage mock
-│   ├── use-food-items.ts    # Query hooks (useFoodItems, useFoodItem)
-│   └── use-food-mutations.ts # Mutation hooks with optimistic updates
-├── store/            # Zustand stores (UI state only, not server data)
-│   └── ui-store.ts   # Filters, edit modal state, delete confirmation
+├── api/              # Supabase CRUD, domain types, TanStack Query hooks
+│   ├── types.ts      # FoodItem, ExpiryStatus, helpers (getExpiryStatus, etc.)
+│   ├── food-items.api.ts    # IFoodItemsApi: supabase + mock, toggled by VITE_USE_MOCK_API
+│   ├── settings.api.ts      # Categories & storage locations (global, not user-scoped)
+│   ├── use-food-items.ts    # Query hooks: useFoodItems(), useFoodItem()
+│   ├── use-food-mutations.ts # Mutations with optimistic updates
+│   └── openfoodfacts/       # Barcode → product lookup
+├── store/            # Zustand (UI state only, not server data)
+│   ├── ui-store.ts   # Filters, edit modal, delete confirmation
+│   └── auth.store.ts # TMA + email auth, wraps Supabase session
 ├── components/
 │   ├── ui/           # shadcn/ui (cva variants, forwardRef)
-│   ├── food/         # Domain components (FoodItemCard, FoodForm, pickers)
+│   ├── food/         # FoodItemCard, FoodForm, pickers
 │   ├── layout/       # AppShell, TopAppBar, BottomNavigation
-│   └── shared/       # SearchInput, FilterChips, SectionHeader
-├── pages/            # Route components (InventoryDashboard, AddFoodItemPage)
-└── lib/              # utils.ts (cn), query-client.ts
+│   ├── shared/       # SearchInput, FilterChips, BottomSheet
+│   ├── scanner/      # Barcode/camera (quagga2)
+│   └── shopping/     # Shopping list
+├── pages/            # Route screens (InventoryDashboard, AddFoodItemPage, etc.)
+├── lib/              # Utils (cn, query-client, supabaseClient, tma, image-upload)
+└── App.tsx           # MemoryRouter routes
 ```
 
 ## Data Flow Pattern
 
-1. **API Layer** (`src/api/`): Abstract interface + localStorage mock implementation
-2. **Query Hooks**: `useFoodItems()` for reads, `useAddFoodItem()`/`useUpdateFoodItem()` for writes
-3. **Optimistic Updates**: All mutations use `onMutate` → rollback on error → `invalidateQueries`
-4. **UI State**: Zustand only for filters/modals, never for server data
+1. **API Layer** (`src/api/`): `IFoodItemsApi` interface with Supabase (prod) and localStorage (mock) implementations
+2. **DB ↔ Frontend mapping**: Supabase snake_case (`expiration_date`) → frontend camelCase (`expiryDate`) via `mapDbToFoodItem()` / `mapCreateInputToDb()`
+3. **Soft deletes**: `food_items.deleted = true`; all reads filter `.eq('deleted', false)`
+4. **Mutations**: Optimistic updates (`onMutate` → cache update → rollback on error → `invalidateQueries`)
+5. **Query keys**: `FOOD_ITEMS_QUERY_KEY = ['food-items'] as const`, appended with `userId`
 
 ```tsx
-// Correct pattern - TanStack Query for server data
+// Correct pattern — TanStack Query for server data
 const { data: items } = useFoodItems();
 const addMutation = useAddFoodItem();
 
@@ -49,53 +58,64 @@ const addMutation = useAddFoodItem();
 const { filters, setSearch, editingItemId } = useUIStore();
 ```
 
+## Code Style
+
+- **TypeScript strict** + `verbatimModuleSyntax` — use `import type` for type-only imports
+- **`erasableSyntaxOnly: true`** — no `enum`, use union types or `as const` objects
+- **2-space indent**; `PascalCase` component files, `use-*.ts` hooks, `*.store.ts` stores
+- **Imports**: always use `@/*` alias for `src/*`
+- **Stories**: co-locate as `component-name.stories.tsx`; barrel-export from domain folder `index.ts` → `src/components/index.ts`
+
 ## Component Conventions
 
-**shadcn/ui components** (`src/components/ui/`):
-- Use `class-variance-authority` for variants
-- `React.forwardRef` with explicit prop interfaces
-- Export both component and variants: `export { Button, buttonVariants }`
+**shadcn/ui** (`src/components/ui/`): `class-variance-authority` variants, `React.forwardRef`, export component + variants.
 
-**Domain components** (`src/components/food/`, etc.):
-- Co-locate stories: `food-item-card.stories.tsx` next to `food-item-card.tsx`
-- Export from `index.ts`, then re-export from `src/components/index.ts`
-- Use `cn()` from `@/lib/utils` for className merging
+**Domain components**: antd-mobile primitives (`Card`, `Tag`, `ProgressBar`), `cn()` from `@/lib/utils`, `lucide-react` icons.
 
 ## Styling (Tailwind v4)
 
-Config is CSS-first in `src/index.css`:
+CSS-first config in `src/index.css` — **no `tailwind.config.js`**:
 ```css
 @theme inline {
-  --color-primary: var(--primary);  /* Maps CSS vars to utilities */
+  --color-primary: var(--primary);
 }
-:root {
-  --primary: #13ec5b;  /* Green accent */
-  --destructive: #e11d48;  /* Red for expiring */
-}
+:root { --primary: #13ec5b; --destructive: #e11d48; }
 ```
-Use: `bg-primary`, `text-destructive`, `text-muted-foreground`
+Utilities: `bg-primary`, `text-destructive`, `text-muted-foreground`, `bg-surface`, `font-display`.
+Custom: `.no-scrollbar`, `.pb-safe` / `.pt-safe` (iOS safe area).
 
 ## Domain Types
 
 ```ts
-type ExpiryStatus = 'expiring' | 'soon' | 'good' | 'fresh';  // Color-coded urgency
-type StorageLocation = 'fridge' | 'pantry' | 'freezer' | 'spices';
-type FoodCategory = 'fruits' | 'vegetables' | 'dairy' | 'meat' | 'drinks' | 'pantry' | 'other';
+type ExpiryStatus = 'expiring' | 'soon' | 'good' | 'fresh';
+type StorageLocation = string;  // User-configurable via settings
+type FoodCategory = string;     // User-configurable via settings
+type QuantityUnit = 'pieces' | 'kg' | 'g' | 'l' | 'ml' | 'bottles' | 'packs';
 ```
-Use helpers: `getExpiryStatus(date)`, `getExpiryText(date)`
+Helpers: `getExpiryStatus(date)`, `getDaysUntilExpiry(date)`, `getExpiryText(date)`
+
+## Auth Flow
+
+1. **TMA**: `getInitDataRaw()` → POST to Supabase Edge Function `/functions/v1/tma-exchange` → JWT
+2. **Email**: `supabase.auth.signInWithPassword()`
+3. **State**: `useAuthStore` (Zustand) subscribes to `onAuthStateChange`
+4. **Route guard**: `AuthGuard` wraps authenticated routes
 
 ## Commands
 
 ```bash
 npm run dev       # Vite dev server
-npm run storybook # Component development (port 6006)
 npm run build     # tsc -b && vite build
+npm run lint      # ESLint
+npm run storybook # Component dev (port 6006)
 ```
 
 ## Key Files
 
-- [src/api/types.ts](src/api/types.ts) - All domain types and helper functions
+- [src/api/types.ts](src/api/types.ts) - Domain types and helper functions
 - [src/api/use-food-mutations.ts](src/api/use-food-mutations.ts) - Optimistic update pattern
 - [src/store/ui-store.ts](src/store/ui-store.ts) - Zustand store pattern
+- [src/store/auth.store.ts](src/store/auth.store.ts) - Auth state management
 - [src/index.css](src/index.css) - Tailwind v4 theme config
-- [mockup/](mockup/) - HTML mockups (`code.html`) for each screen design
+- [src/App.tsx](src/App.tsx) - MemoryRouter routes
+- [mockup/](mockup/) - HTML reference mockups for each screen

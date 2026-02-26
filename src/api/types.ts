@@ -115,6 +115,70 @@ export interface UpdateFoodItemInput {
   purchaseDate?: string;
 }
 
+// ============================================================================
+// Shopping List Types
+// ============================================================================
+
+export interface ShoppingListItem {
+  id: string;
+  userId: string;
+  name: string;
+  category: FoodCategory;
+  quantity: number;
+  unit: QuantityUnit;
+  notes?: string;
+  checked: boolean;
+  linkedFoodItemId?: string;
+  createdAt: string;
+  updatedAt: string;
+  purchasedAt?: string;
+}
+
+export interface CreateShoppingListItemInput {
+  name: string;
+  category: FoodCategory;
+  quantity: number;
+  unit: QuantityUnit;
+  notes?: string;
+  linkedFoodItemId?: string;
+}
+
+export interface UpdateShoppingListItemInput {
+  id: string;
+  name?: string;
+  category?: FoodCategory;
+  quantity?: number;
+  unit?: QuantityUnit;
+  notes?: string;
+  checked?: boolean;
+  linkedFoodItemId?: string;
+}
+
+/**
+ * Database row type for shopping_list table (snake_case)
+ */
+export interface DbShoppingListItem {
+  id: string;
+  user_id: string;
+  name: string;
+  category: string;
+  quantity: number;
+  unit: string;
+  notes: string | null;
+  checked: boolean;
+  linked_food_item_id: string | null;
+  created_at: string;
+  updated_at: string;
+  last_modified: string;
+  purchased_at: string | null;
+  deleted: boolean;
+  synced: boolean;
+}
+
+// ============================================================================
+// Expiry Helpers
+// ============================================================================
+
 // Helper function to calculate expiry status from date
 export function getExpiryStatus(expiryDate: string | null): ExpiryStatus {
   if (!expiryDate) return 'fresh';

@@ -28,6 +28,23 @@ export { useFoodItems, useFoodItem, FOOD_ITEMS_QUERY_KEY } from './use-food-item
 // Mutation hooks
 export { useAddFoodItem, useUpdateFoodItem, useDeleteFoodItem } from './use-food-mutations';
 
+// Shopping list
+export {
+  shoppingListApi,
+  type IShoppingListApi,
+} from './shopping-list.api';
+
+export { useShoppingList, useShoppingListItem, SHOPPING_LIST_QUERY_KEY } from './use-shopping-list';
+
+export {
+  useAddShoppingListItem,
+  useUpdateShoppingListItem,
+  useToggleShoppingItemChecked,
+  useDeleteShoppingListItem,
+  useDeleteCheckedItems,
+  useMovePurchasedToInventory,
+} from './use-shopping-list-mutations';
+
 // Settings hooks
 export {
   useCategories,

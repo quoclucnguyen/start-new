@@ -1,9 +1,12 @@
 import * as React from 'react';
-import { Outlet, useNavigate } from 'react-router';
+import { Outlet, useNavigate, useLocation } from 'react-router';
 import { AppShell } from './app-shell';
 import { DashboardTopBar } from './dashboard-top-bar';
 import { MainBottomNav } from './main-bottom-nav';
 import { Plus } from 'lucide-react';
+
+/** Routes that provide their own FAB */
+const ROUTES_WITH_OWN_FAB = ['/list'];
 
 interface MainLayoutProps {
   /** Show floating action button */
@@ -30,6 +33,9 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
   notificationCount = 0,
 }) => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const shouldShowFab = showFab && !ROUTES_WITH_OWN_FAB.includes(location.pathname);
 
   const handleFabClick = () => {
     if (typeof onFabClick === 'string') {
@@ -48,7 +54,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
       </main>
 
       {/* Floating Action Button */}
-      {showFab && (
+      {shouldShowFab && (
         <div className="fixed bottom-24 right-4 z-50">
           <button
             onClick={handleFabClick}

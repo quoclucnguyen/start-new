@@ -2,24 +2,97 @@
 
 A modern food inventory management Telegram Mini App built with React, TypeScript, and Supabase. Track your food items, receive expiry notifications, manage shopping lists, and get recipe suggestions based on your inventory.
 
-## 🚀 Features
+## 🚀 Feature Checklist
 
-### Core Functionality
-- **📦 Inventory Dashboard** - View and manage all your food items with expiry tracking
-- **➕ Add Food Items** - Quickly add new items with photos, categories, and expiry dates
-- **✏️ Edit Food Items** - Update item details, quantities, and dates
-- **🔔 Smart Notifications** - Get alerted when items are expiring soon or running low
-- **🛒 Shopping Lists** - Track items you need to purchase (Coming Soon)
-- **🍳 Recipe Suggestions** - Get recipe ideas based on your available ingredients (Coming Soon)
-- **📸 Receipt Scanning** - Scan shopping receipts to automatically add items (Planned)
-- **⚙️ Custom Configuration** - Configure categories, storage locations, and preferences
+### ✅ Completed Features
 
-### Technical Features
-- **🔐 Telegram Authentication** - Seamless login using Telegram Mini App SDK
-- **📱 Mobile-First Design** - Optimized for Telegram Mini App experience
-- **🌐 Offline-Ready** - Local data storage with Supabase sync
-- **🎨 Modern UI** - Built with Ant Design Mobile components and Tailwind CSS
-- **⚡ Fast Performance** - React Compiler and TanStack Query for optimal performance
+#### Core Inventory Management
+- [x] **📦 Inventory Dashboard** - View all food items with expiry tracking
+- [x] **➕ Add Food Items** - Add new items with photos, categories, and expiry dates
+- [x] **✏️ Edit Food Items** - Update item details, quantities, and dates
+- [x] **🗑️ Delete Food Items** - Remove items from inventory with confirmation
+- [x] **📷 Image Upload** - Capture or upload photos with compression
+- [x] **🏷️ Quantity Management** - Track quantities with multiple unit types
+
+#### Search & Organization
+- [x] **🔍 Real-time Search** - Find items by name instantly
+- [x] **📂 Category Filter** - Filter by custom categories
+- [x] **📍 Storage Filter** - Filter by storage locations
+- [x] **🔄 Sort Options** - Sort by expiry date, name, or category
+- [x] **🎯 Status Filtering** - Filter by expiry status (expiring/soon/good/fresh)
+
+#### Expiry Tracking
+- [x] **⏰ Automatic Status Calculation** - Color-coded expiry indicators
+- [x] **🔴 Expiring (≤1 day)** - Critical items highlighted in red
+- [x] **🟠 Soon (≤3 days)** - Warning items in orange
+- [x] **🟡 Good (≤7 days)** - Safe items in yellow
+- [x] **🟢 Fresh (>7 days)** - Fresh items in green
+
+#### Authentication
+- [x] **🔐 Telegram Mini App Login** - Seamless authentication via TMA SDK
+- [x] **📧 Email/Password Login** - Alternative auth for non-Telegram users
+- [x] **🔄 Auto-Login** - Automatic TMA login when available
+- [x] **🛡️ Route Protection** - AuthGuard for protected routes
+
+#### Configuration
+- [x] **⚙️ Custom Categories** - User-defined names, icons, colors
+- [x] **🏠 Custom Storage Locations** - User-defined locations with icons
+- [x] **💾 Settings Persistence** - Configuration saved and retrieved
+- [x] **🎨 Filter Visibility** - Show/hide categories in filters
+
+#### Barcode Scanning
+- [x] **📸 Camera Scanner** - Quagga2 barcode detection
+- [x] **🌐 OpenFoodFacts Integration** - Product lookup by barcode
+- [x] **🔄 Auto-Fill Form** - Populate product data from scan
+
+#### UI/UX
+- [x] **📱 Mobile-First Design** - Touch-friendly interactions
+- [x] **🎨 Modern UI** - Ant Design Mobile + Tailwind CSS
+- [x] **⚡ Fast Performance** - React Compiler + TanStack Query
+- [x] **📐 Responsive Layout** - Works on various screen sizes
+- [x] **🧭 Bottom Navigation** - Main app navigation
+- [x] **📖 Storybook Docs** - Component documentation
+
+### 🚧 In Progress / Partial
+
+#### Shopping List
+- [x] **🛒 Shopping List Page** - Add, view, and manage shopping items
+- [x] **✅ Mark as Purchased** - Check items and move to inventory
+- [x] **💾 Persistence** - Shopping list stored via Supabase/local mock API
+- [ ] **🔗 Quick-Add from Inventory** - Add inventory items directly to shopping list
+- [ ] **🧪 Full QA Pass** - Optimistic update/rollback/mobile/storybook verification
+
+#### Smart Features
+- [ ] **🔔 Smart Notifications** - Alerts for expiring items (UI ready, backend needed)
+- [ ] **🌐 Offline Support** - Local data with sync (partially implemented)
+
+### ⏳ Planned Features
+
+#### Recipe Suggestions
+- [ ] **🍳 Recipe Database** - Collection of recipes
+- [ ] **🔗 Ingredient Matching** - Match recipes to inventory
+- [ ] **📋 Missing Ingredients** - Show what's needed for each recipe
+- [ ] **📖 Recipe Details** - Step-by-step cooking instructions
+
+#### Receipt Scanning
+- [ ] **📸 Receipt Capture** - Scan or upload receipt images
+- [ ] **🔍 OCR Processing** - Extract text from receipts
+- [ ] **🧠 Item Parsing** - Identify items from receipt text
+- [ ] **➕ Batch Add** - Add multiple items at once
+
+#### Advanced Features
+- [ ] **👨‍👩‍👧 Family Sharing** - Share inventory with family members
+- [ ] **📊 Analytics & Insights** - Usage patterns and recommendations
+- [ ] **🎤 Voice Input** - Add items via voice commands
+- [ ] **📤 Export/Import** - Backup and restore inventory data
+- [ ] **📑 Inventory Reports** - Summary and statistics
+
+#### Technical Improvements
+- [ ] **🗄️ Supabase Backend** - Replace localStorage with real database
+- [ ] **🧪 Testing Suite** - Unit, integration, and E2E tests
+- [ ] **🛡️ Error Boundaries** - Graceful error handling
+- [ ] **📦 Service Worker** - Offline caching and PWA support
+- [ ] **🔔 Push Notifications** - Native Telegram notifications
 
 ## 🛠️ Tech Stack
 
@@ -245,16 +318,19 @@ VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 - **Mockups** - UI designs in `mockup/` directory
 - **API Types** - TypeScript types in `src/api/types.ts`
 
-## 🔮 Planned Features
+## 🔮 Development Roadmap
 
-- [ ] Shopping list management
-- [ ] Recipe suggestions based on inventory
-- [ ] Receipt scanning and OCR
-- [ ] Family sharing and collaboration
-- [ ] Advanced analytics and insights
-- [ ] Barcode scanning
-- [ ] Voice input for adding items
-- [ ] Export/import inventory data
+For a detailed breakdown of what's been implemented and what's coming next, see the **[Feature Checklist](#-feature-checklist)** section above.
+
+### Current Focus
+- Shopping list implementation
+- Recipe suggestions engine
+- Supabase backend migration
+
+### Upcoming Priorities
+- Receipt scanning with OCR
+- Family sharing features
+- Comprehensive testing suite
 
 ## 📄 License
 
