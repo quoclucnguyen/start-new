@@ -78,3 +78,14 @@ export {
   useDuplicateRecipe,
   useDeleteRecipe,
 } from './use-recipes-management-mutations';
+
+// Recipe Suggestions
+export {
+  useRecipeSuggestions,
+  useRecipeSuggestionDetail,
+  RECIPE_SUGGESTIONS_QUERY_KEY,
+} from './use-recipe-suggestions';
+
+export { useAddMissingToShoppingList } from './use-recipe-suggestion-mutations';
+
+export { matchRecipes, getTopExpiringIngredient, normalizeForMatching } from './recipe-matcher';

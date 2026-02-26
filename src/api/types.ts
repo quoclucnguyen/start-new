@@ -303,6 +303,46 @@ export interface DbRecipeStep {
 }
 
 // ============================================================================
+// Recipe Suggestion Types
+// ============================================================================
+
+export interface MatchedIngredient {
+  recipeIngredientId: string;
+  recipeIngredientName: string;
+  foodItemId: string;
+  foodItemName: string;
+  quantitySufficient: boolean;
+}
+
+export interface MissingIngredient {
+  recipeIngredientId: string;
+  name: string;
+  quantity?: number;
+  unit?: string;
+}
+
+export interface RecipeSuggestion {
+  recipeId: string;
+  matchPercentage: number;      // 0..100
+  matchedIngredients: MatchedIngredient[];
+  missingIngredients: MissingIngredient[];
+  expiringIngredientsUsed: string[]; // Food item IDs
+}
+
+export interface RecipeSuggestionItem {
+  recipe: Recipe;
+  suggestion: RecipeSuggestion;
+}
+
+export interface RecipeSuggestionFilters {
+  search?: string;
+  maxCookTimeMinutes?: number;
+  tags?: string[];
+  difficulty?: RecipeDifficulty | 'all';
+  suggestedOnly?: boolean;
+}
+
+// ============================================================================
 // Expiry Helpers
 // ============================================================================
 
