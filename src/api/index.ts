@@ -60,3 +60,21 @@ export {
   CATEGORIES_QUERY_KEY,
   STORAGE_LOCATIONS_QUERY_KEY,
 } from './use-settings';
+
+// Recipe Management
+export {
+  recipesManagementApi,
+  normalizeIngredientName,
+  type IRecipesManagementApi,
+} from './recipes-management.api';
+
+export { useRecipesList, useRecipeById, RECIPES_MANAGEMENT_QUERY_KEY } from './use-recipes-management';
+
+export {
+  useCreateRecipe,
+  useUpdateRecipe,
+  useReplaceRecipeIngredients,
+  useReplaceRecipeSteps,
+  useDuplicateRecipe,
+  useDeleteRecipe,
+} from './use-recipes-management-mutations';

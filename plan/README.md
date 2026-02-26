@@ -4,6 +4,44 @@ This directory contains detailed implementation plans for project features.
 
 ## Available Plans
 
+### [recipe-management/](./recipe-management/plan.md)
+**Status:** In Progress (Core implemented, quality/integration pending)
+**Created:** 2026-02-26
+
+Implementation plan for the Recipe Management feature including:
+- Recipe CRUD (create/edit/delete/duplicate)
+- Ingredient and step editor flows
+- User-owned recipes + system recipes access model
+- Supabase schema with RLS + soft delete pattern
+- Integration contract for Recipe Suggestions
+
+**Key Features:**
+- [ ] Manage recipe database
+- [ ] Manage ingredients and instructions
+- [ ] Persist user recipes in Supabase/mock API
+- [ ] Feed Recipe Suggestions from managed data
+
+---
+
+### [recipe-suggestions/](./recipe-suggestions/plan.md)
+**Status:** Planned (Architecture and checklist defined, implementation not started)
+**Created:** 2026-02-26
+
+Implementation plan for the Recipe Suggestions feature including:
+- Recipe catalog data model (recipes, ingredients, steps)
+- Deterministic ingredient matching algorithm
+- Missing-ingredient integration with Shopping List
+- Mobile-friendly recipe detail flow
+- Supabase schema + RLS policies + migration plan
+
+**Key Features:**
+- [ ] Recipe database
+- [ ] Ingredient matching to inventory
+- [ ] Missing ingredients per recipe
+- [ ] Recipe detail with step-by-step instructions
+
+---
+
 ### [shopping-list/](./shopping-list/plan.md)
 **Status:** In Progress (Core implemented, integration/testing pending)
 **Created:** 2026-02-26

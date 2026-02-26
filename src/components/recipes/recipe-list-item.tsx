@@ -1,0 +1,152 @@
+import * as React from 'react';
+import { cn } from '@/lib/utils';
+import { Card } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { IconButton } from '@/components/ui/icon-button';
+import { Clock, ChefHat, MoreVertical } from 'lucide-react';
+import { ActionSheet } from 'antd-mobile';
+import type { Recipe, RecipeDifficulty } from '@/api/types';
+
+interface RecipeListItemProps extends React.HTMLAttributes<HTMLDivElement> {
+  recipe: Recipe;
+  onEdit?: (id: string) => void;
+  onDuplicate?: (id: string) => void;
+  onDelete?: (id: string) => void;
+}
+
+const difficultyColors: Record<RecipeDifficulty, string> = {
+  easy: 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300',
+  medium: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300',
+  hard: 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300',
+};
+
+const difficultyLabels: Record<RecipeDifficulty, string> = {
+  easy: 'Easy',
+  medium: 'Medium',
+  hard: 'Hard',
+};
+
+const RecipeListItem = React.forwardRef<HTMLDivElement, RecipeListItemProps>(
+  ({ className, recipe, onEdit, onDuplicate, onDelete, ...props }, ref) => {
+    const isSystemRecipe = recipe.source === 'system';
+
+    const handleActions = () => {
+      const actions = [];
+
+      if (!isSystemRecipe && onEdit) {
+        actions.push({
+          text: 'Edit',
+          key: 'edit',
+          onClick: () => onEdit(recipe.id),
+        });
+      }
+
+      if (onDuplicate) {
+        actions.push({
+          text: 'Duplicate',
+          key: 'duplicate',
+          onClick: () => onDuplicate(recipe.id),
+        });
+      }
+
+      if (!isSystemRecipe && onDelete) {
+        actions.push({
+          text: 'Delete',
+          key: 'delete',
+          danger: true,
+          onClick: () => onDelete(recipe.id),
+        });
+      }
+
+      ActionSheet.show({ actions });
+    };
+
+    const totalTime = recipe.cookTimeMinutes + (recipe.prepTimeMinutes ?? 0);
+
+    return (
+      <Card
+        ref={ref}
+        className={cn('p-4 flex gap-3 items-start', className)}
+        {...props}
+      >
+        {/* Image thumbnail */}
+        {recipe.imageUrl ? (
+          <div
+            className="w-16 h-16 rounded-xl bg-cover bg-center flex-shrink-0"
+            style={{ backgroundImage: `url(${recipe.imageUrl})` }}
+          />
+        ) : (
+          <div className="w-16 h-16 rounded-xl bg-muted flex items-center justify-center flex-shrink-0">
+            <ChefHat className="size-6 text-muted-foreground" />
+          </div>
+        )}
+
+        {/* Content */}
+        <div className="flex-1 min-w-0">
+          <div className="flex items-start justify-between gap-2">
+            <h3 className="font-bold text-base leading-tight truncate">{recipe.title}</h3>
+            <IconButton
+              variant="ghost"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleActions();
+              }}
+            >
+              <MoreVertical className="size-4" />
+            </IconButton>
+          </div>
+
+          {recipe.description && (
+            <p className="text-sm text-muted-foreground mt-0.5 line-clamp-1">
+              {recipe.description}
+            </p>
+          )}
+
+          <div className="flex items-center gap-2 mt-2 flex-wrap">
+            <span className="flex items-center gap-1 text-xs text-muted-foreground">
+              <Clock className="size-3" />
+              {totalTime} min
+            </span>
+            <span
+              className={cn(
+                'px-1.5 py-0.5 rounded text-xs font-medium',
+                difficultyColors[recipe.difficulty],
+              )}
+            >
+              {difficultyLabels[recipe.difficulty]}
+            </span>
+            {recipe.servings > 0 && (
+              <span className="text-xs text-muted-foreground">
+                {recipe.servings} serving{recipe.servings !== 1 ? 's' : ''}
+              </span>
+            )}
+            {isSystemRecipe && (
+              <Badge variant="outline" className="text-[10px] px-1.5 py-0">
+                System
+              </Badge>
+            )}
+          </div>
+
+          {recipe.tags.length > 0 && (
+            <div className="flex gap-1 mt-2 flex-wrap">
+              {recipe.tags.slice(0, 3).map((tag) => (
+                <Badge key={tag} variant="secondary" className="text-[10px] px-1.5 py-0">
+                  {tag}
+                </Badge>
+              ))}
+              {recipe.tags.length > 3 && (
+                <span className="text-[10px] text-muted-foreground">
+                  +{recipe.tags.length - 3}
+                </span>
+              )}
+            </div>
+          )}
+        </div>
+      </Card>
+    );
+  },
+);
+RecipeListItem.displayName = 'RecipeListItem';
+
+export { RecipeListItem };

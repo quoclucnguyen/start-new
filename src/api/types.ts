@@ -176,6 +176,133 @@ export interface DbShoppingListItem {
 }
 
 // ============================================================================
+// Recipe Management Types
+// ============================================================================
+
+export type RecipeDifficulty = 'easy' | 'medium' | 'hard';
+export type RecipeVisibility = 'private' | 'shared';
+export type RecipeSource = 'system' | 'user';
+
+export interface Recipe {
+  id: string;
+  userId: string | null;         // null for system recipes
+  title: string;
+  description?: string;
+  imageUrl?: string;
+  cookTimeMinutes: number;
+  prepTimeMinutes?: number;
+  servings: number;
+  difficulty: RecipeDifficulty;
+  tags: string[];
+  visibility: RecipeVisibility;
+  source: RecipeSource;
+  createdAt: string;
+  updatedAt: string;
+  deleted: boolean;
+}
+
+export interface RecipeIngredient {
+  id: string;
+  recipeId: string;
+  name: string;
+  normalizedName: string;
+  quantity?: number;
+  unit?: string;
+  optional: boolean;
+  sortOrder: number;
+}
+
+export interface RecipeStep {
+  id: string;
+  recipeId: string;
+  stepNumber: number;
+  instruction: string;
+  estimatedMinutes?: number;
+}
+
+export interface RecipeDetail extends Recipe {
+  ingredients: RecipeIngredient[];
+  steps: RecipeStep[];
+}
+
+export interface CreateRecipeInput {
+  title: string;
+  description?: string;
+  imageUrl?: string;
+  cookTimeMinutes: number;
+  prepTimeMinutes?: number;
+  servings: number;
+  difficulty: RecipeDifficulty;
+  tags?: string[];
+  visibility?: RecipeVisibility;
+  ingredients: Array<{
+    name: string;
+    quantity?: number;
+    unit?: string;
+    optional?: boolean;
+  }>;
+  steps: Array<{
+    instruction: string;
+    estimatedMinutes?: number;
+  }>;
+}
+
+export interface UpdateRecipeInput {
+  id: string;
+  title?: string;
+  description?: string;
+  imageUrl?: string;
+  cookTimeMinutes?: number;
+  prepTimeMinutes?: number;
+  servings?: number;
+  difficulty?: RecipeDifficulty;
+  tags?: string[];
+  visibility?: RecipeVisibility;
+}
+
+// Database row types for recipes (snake_case)
+export interface DbRecipe {
+  id: string;
+  user_id: string | null;
+  title: string;
+  description: string | null;
+  image_url: string | null;
+  cook_time_minutes: number;
+  prep_time_minutes: number | null;
+  servings: number;
+  difficulty: string;
+  tags: string[] | null;
+  visibility: string;
+  source: string;
+  created_at: string;
+  updated_at: string;
+  last_modified: string;
+  deleted: boolean;
+  synced: boolean;
+}
+
+export interface DbRecipeIngredient {
+  id: string;
+  recipe_id: string;
+  name: string;
+  normalized_name: string;
+  quantity: number | null;
+  unit: string | null;
+  optional: boolean;
+  sort_order: number;
+  created_at: string;
+}
+
+export interface DbRecipeStep {
+  id: string;
+  recipe_id: string;
+  step_number: number;
+  instruction: string;
+  estimated_minutes: number | null;
+  created_at: string;
+}
+
+// ============================================================================
 // Expiry Helpers
 // ============================================================================
 
