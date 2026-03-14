@@ -6,7 +6,7 @@ import { useRecentMealLogs, useVenues } from '@/api/diary';
 import { MEAL_TYPE_LABELS, MEAL_TYPE_ICONS } from '@/api/diary/types';
 import type { MealType } from '@/api/diary/types';
 import { MealLogCard } from '@/components/diary/meal-log-card';
-import { SectionHeader } from '@/components/shared';
+import { EmptyState, SectionHeader } from '@/components/shared';
 import { VenueStatusBadge } from '@/components/diary/venue-status-badge';
 
 const MEAL_TYPES: MealType[] = ['delivery', 'dine_in', 'ready_made'];
@@ -17,6 +17,15 @@ export const DiaryDashboard: React.FC = () => {
   const { data: venues } = useVenues();
 
   const favoriteVenues = venues?.filter((v) => v.status === 'favorite') ?? [];
+  const suggestedVenues = React.useMemo(() => {
+    if (!venues || !recentLogs) return [];
+
+    const recentVenueIds = new Set(recentLogs.map((log) => log.venueId).filter(Boolean));
+
+    return venues
+      .filter((venue) => !recentVenueIds.has(venue.id) && venue.status !== 'blacklisted')
+      .slice(0, 3);
+  }, [recentLogs, venues]);
 
   return (
     <div className="flex flex-col gap-6 py-2">
@@ -56,23 +65,35 @@ export const DiaryDashboard: React.FC = () => {
         />
         <div className="flex flex-col gap-2 mt-2">
           {logsLoading ? (
-            <div className="flex justify-center py-8">
-              <DotLoading color="primary" />
+            <div className="flex flex-col gap-3 py-2">
+              {Array.from({ length: 2 }, (_, index) => (
+                <div
+                  key={index}
+                  className="animate-pulse rounded-xl border border-border/40 bg-secondary/60 p-4"
+                >
+                  <div className="mb-3 h-4 w-24 rounded bg-muted/60" />
+                  <div className="mb-2 h-5 w-36 rounded bg-muted/60" />
+                  <div className="h-3 w-28 rounded bg-muted/60" />
+                </div>
+              ))}
+              <div className="flex justify-center pt-2">
+                <DotLoading color="primary" />
+              </div>
             </div>
           ) : recentLogs && recentLogs.length > 0 ? (
             recentLogs.map((log) => (
               <MealLogCard
                 key={log.id}
                 log={log}
-                onClick={() => navigate(`/diary/history`)}
+                onClick={() => navigate(`/diary/history?mealLogId=${log.id}`)}
               />
             ))
           ) : (
-            <div className="flex flex-col items-center py-8 text-muted-foreground">
-              <Clock size={32} className="mb-2 opacity-50" />
-              <p className="text-sm">No meals logged yet</p>
-              <p className="text-xs mt-1">Tap a button above to log your first meal</p>
-            </div>
+            <EmptyState
+              icon={<Clock size={32} className="opacity-50" />}
+              title="No meals logged yet"
+              description="Tap a quick log button above to add your first meal."
+            />
           )}
         </div>
       </section>
@@ -97,6 +118,30 @@ export const DiaryDashboard: React.FC = () => {
                   {venue.address && (
                     <p className="text-xs text-muted-foreground truncate">{venue.address}</p>
                   )}
+                </div>
+                <VenueStatusBadge status={venue.status} />
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {suggestedVenues.length > 0 && (
+        <section>
+          <SectionHeader title="Try Again Soon" />
+          <div className="flex flex-col gap-2 mt-2">
+            {suggestedVenues.map((venue) => (
+              <button
+                key={venue.id}
+                type="button"
+                onClick={() => navigate(`/diary/log?venue=${venue.id}`)}
+                className="flex items-center justify-between rounded-xl border border-border/50 bg-secondary px-4 py-3 text-left active:bg-muted transition-colors"
+              >
+                <div>
+                  <p className="font-medium text-foreground">{venue.name}</p>
+                  <p className="text-xs text-muted-foreground">
+                    Quick log another meal from this venue
+                  </p>
                 </div>
                 <VenueStatusBadge status={venue.status} />
               </button>

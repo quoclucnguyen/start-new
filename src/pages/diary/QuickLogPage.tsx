@@ -48,9 +48,9 @@ export const QuickLogPage: React.FC = () => {
           : undefined,
       },
       {
-        onSuccess: () => {
+        onSuccess: (createdLog) => {
           Toast.show({ icon: 'success', content: 'Meal logged!' });
-          navigate(-1);
+          navigate(`/diary/history?mealLogId=${createdLog.id}`);
         },
         onError: () => {
           Toast.show({ icon: 'fail', content: 'Failed to log meal' });

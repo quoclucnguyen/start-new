@@ -5,7 +5,7 @@ import { ArrowLeft, MapPin, Plus } from 'lucide-react';
 import { AppShell } from '@/components/layout/app-shell';
 import { TopAppBar } from '@/components/layout/top-app-bar';
 import { IconButton } from '@/components/ui/icon-button';
-import { SectionHeader } from '@/components/shared';
+import { EmptyState, SectionHeader } from '@/components/shared';
 import { VenueStatusBadge } from '@/components/diary/venue-status-badge';
 import { MealLogCard } from '@/components/diary/meal-log-card';
 import { RatingInput } from '@/components/diary/rating-input';
@@ -185,9 +185,10 @@ export const VenueDetailPage: React.FC = () => {
                 <DishRow key={item.id} item={item} />
               ))
             ) : (
-              <p className="text-sm text-muted-foreground py-4 text-center">
-                No dishes yet
-              </p>
+              <EmptyState
+                title="No dishes yet"
+                description="Add a dish to start building memory for this venue."
+              />
             )}
           </div>
         </section>
@@ -197,11 +198,18 @@ export const VenueDetailPage: React.FC = () => {
           <SectionHeader title="Visit History" />
           <div className="flex flex-col gap-2 mt-2">
             {venueLogs.length > 0 ? (
-              venueLogs.map((log) => <MealLogCard key={log.id} log={log} />)
+              venueLogs.map((log) => (
+                <MealLogCard
+                  key={log.id}
+                  log={log}
+                  onClick={() => navigate(`/diary/history?mealLogId=${log.id}`)}
+                />
+              ))
             ) : (
-              <p className="text-sm text-muted-foreground py-4 text-center">
-                No visits yet
-              </p>
+              <EmptyState
+                title="No visits yet"
+                description="Use the button below to log your first meal at this venue."
+              />
             )}
           </div>
         </section>

@@ -26,6 +26,29 @@ export const MealLogCard: React.FC<MealLogCardProps> = ({
   onMoreClick,
   className,
 }) => {
+  const dishesSummary = React.useMemo(() => {
+    if (!log.items || log.items.length === 0) {
+      return null;
+    }
+
+    const labels = log.items
+      .filter((item) => item.itemName.trim().length > 0)
+      .map((item) => {
+        const quantity = item.quantity > 1 ? `${item.quantity}× ` : '';
+        return `${quantity}${item.itemName}`;
+      });
+
+    if (labels.length === 0) {
+      return null;
+    }
+
+    const visibleItems = labels.slice(0, 2);
+    const remaining = labels.length - visibleItems.length;
+    return remaining > 0
+      ? `${visibleItems.join(' • ')} • +${remaining} món`
+      : visibleItems.join(' • ');
+  }, [log.items]);
+
   return (
     <Card
       className={cn('rounded-lg border-l-4', borderColorMap[log.mealType], className)}
@@ -54,6 +77,12 @@ export const MealLogCard: React.FC<MealLogCardProps> = ({
           {log.notes && (
             <p className="text-sm text-muted-foreground line-clamp-1 mt-1">
               {log.notes}
+            </p>
+          )}
+
+          {dishesSummary && (
+            <p className="text-sm text-foreground/80 line-clamp-1 mt-1">
+              Ăn: {dishesSummary}
             </p>
           )}
 

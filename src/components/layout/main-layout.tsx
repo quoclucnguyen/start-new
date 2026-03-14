@@ -8,11 +8,6 @@ import { Plus } from 'lucide-react';
 /** Routes that provide their own FAB */
 const ROUTES_WITH_OWN_FAB = ['/list'];
 
-/** Route-specific FAB targets */
-const ROUTE_FAB_TARGETS: Partial<Record<string, string>> = {
-  '/diary': '/diary/log',
-};
-
 interface MainLayoutProps {
   /** Show floating action button */
   showFab?: boolean;
@@ -42,7 +37,7 @@ export const MainLayout: React.FC<MainLayoutProps> = ({
 
   const shouldShowFab = showFab && !ROUTES_WITH_OWN_FAB.includes(location.pathname);
 
-  const fabTarget = ROUTE_FAB_TARGETS[location.pathname] ?? onFabClick;
+  const fabTarget = location.pathname.startsWith('/diary') ? '/diary/log' : onFabClick;
 
   const handleFabClick = () => {
     if (typeof fabTarget === 'string') {

@@ -123,7 +123,7 @@ export const supabaseMealLogsApi: IMealLogsApi = {
     const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from('meal_logs')
-      .select('*, venues(*)')
+      .select('*, venues(*), meal_item_entries(*)')
       .eq('user_id', userId)
       .eq('deleted', false)
       .order('logged_at', { ascending: false });
@@ -132,7 +132,8 @@ export const supabaseMealLogsApi: IMealLogsApi = {
       console.error('Supabase meal_logs getAll error:', error);
       throw new Error(error.message);
     }
-    return (data as (DbMealLog & { venues: DbVenue | null })[]).map(mapDbToMealLog);
+    return (data as (DbMealLog & { venues: DbVenue | null; meal_item_entries?: DbMealItemEntry[] })[])
+      .map(mapDbToMealLog);
   },
 
   async getById(id: string, userId: string): Promise<MealLog | null> {
@@ -221,7 +222,7 @@ export const supabaseMealLogsApi: IMealLogsApi = {
     const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from('meal_logs')
-      .select('*, venues(*)')
+      .select('*, venues(*), meal_item_entries(*)')
       .eq('user_id', userId)
       .eq('deleted', false)
       .order('logged_at', { ascending: false })
@@ -231,7 +232,8 @@ export const supabaseMealLogsApi: IMealLogsApi = {
       console.error('Supabase meal_logs getRecent error:', error);
       throw new Error(error.message);
     }
-    return (data as (DbMealLog & { venues: DbVenue | null })[]).map(mapDbToMealLog);
+    return (data as (DbMealLog & { venues: DbVenue | null; meal_item_entries?: DbMealItemEntry[] })[])
+      .map(mapDbToMealLog);
   },
 };
 
@@ -265,12 +267,16 @@ function saveLogs(items: MealLog[]): void {
 export const mockMealLogsApi: IMealLogsApi = {
   async getAll(): Promise<MealLog[]> {
     await delay();
-    return getStoredLogs();
+    return getStoredLogs().map((log) => ({
+      ...log,
+      items: log.items ?? [],
+    }));
   },
 
   async getById(id: string): Promise<MealLog | null> {
     await delay();
-    return getStoredLogs().find(l => l.id === id) ?? null;
+    const log = getStoredLogs().find(l => l.id === id) ?? null;
+    return log ? { ...log, items: log.items ?? [] } : null;
   },
 
   async create(input: CreateMealLogInput): Promise<MealLog> {
@@ -312,7 +318,12 @@ export const mockMealLogsApi: IMealLogsApi = {
 
   async getRecent(_userId: string, limit: number = 5): Promise<MealLog[]> {
     await delay();
-    return getStoredLogs().slice(0, limit);
+    return getStoredLogs()
+      .slice(0, limit)
+      .map((log) => ({
+        ...log,
+        items: log.items ?? [],
+      }));
   },
 };
 

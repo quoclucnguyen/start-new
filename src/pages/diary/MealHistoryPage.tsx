@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useSearchParams } from 'react-router';
 import { DotLoading } from 'antd-mobile';
 import { Search, SlidersHorizontal } from 'lucide-react';
 import { useMealLogs } from '@/api/diary';
@@ -6,8 +7,10 @@ import { groupLogsByDate, getDateGroupLabel, formatCost } from '@/api/diary/type
 import type { MealType } from '@/api/diary/types';
 import { useDiaryStore } from '@/store';
 import { MealLogCard } from '@/components/diary/meal-log-card';
+import { MealLogDetailSheet } from '@/pages/diary/MealLogDetailSheet';
 import { FilterChips } from '@/components/shared';
 import { SectionHeader } from '@/components/shared';
+import { EmptyState } from '@/components/shared';
 
 const mealTypeFilters = [
   { id: 'all', label: 'All' },
@@ -17,8 +20,32 @@ const mealTypeFilters = [
 ];
 
 export const MealHistoryPage: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const { data: allLogs, isLoading } = useMealLogs();
-  const { filters, setSearch, setMealType, setSort } = useDiaryStore();
+  const {
+    filters,
+    editingMealLogId,
+    setSearch,
+    setMealType,
+    setSort,
+    setEditingMealLogId,
+  } = useDiaryStore();
+
+  React.useEffect(() => {
+    const mealLogId = searchParams.get('mealLogId');
+    if (mealLogId && editingMealLogId !== mealLogId) {
+      setEditingMealLogId(mealLogId);
+    }
+  }, [editingMealLogId, searchParams, setEditingMealLogId]);
+
+  const handleCloseDetail = React.useCallback(() => {
+    setEditingMealLogId(null);
+    if (searchParams.get('mealLogId')) {
+      const next = new URLSearchParams(searchParams);
+      next.delete('mealLogId');
+      setSearchParams(next, { replace: true });
+    }
+  }, [searchParams, setEditingMealLogId, setSearchParams]);
 
   // Filter
   const filteredLogs = React.useMemo(() => {
@@ -103,25 +130,52 @@ export const MealHistoryPage: React.FC = () => {
 
       {/* Logs grouped by date */}
       {isLoading ? (
-        <div className="flex justify-center py-12">
-          <DotLoading color="primary" />
+        <div className="flex flex-col gap-3 py-2">
+          {Array.from({ length: 3 }, (_, index) => (
+            <div
+              key={index}
+              className="animate-pulse rounded-xl border border-border/40 bg-secondary/60 p-4"
+            >
+              <div className="mb-3 h-4 w-24 rounded bg-muted/60" />
+              <div className="mb-2 h-5 w-36 rounded bg-muted/60" />
+              <div className="h-3 w-28 rounded bg-muted/60" />
+            </div>
+          ))}
+          <div className="flex justify-center pt-2">
+            <DotLoading color="primary" />
+          </div>
         </div>
       ) : sortedDateKeys.length === 0 ? (
-        <div className="flex flex-col items-center py-12 text-muted-foreground">
-          <p className="text-sm">No meals found</p>
-        </div>
+        <EmptyState
+          title="No meals found"
+          description={
+            filters.search || filters.mealType !== 'all'
+              ? 'Try changing your search or filters.'
+              : 'Start logging meals to build your diary history.'
+          }
+        />
       ) : (
         sortedDateKeys.map((dateKey) => (
           <section key={dateKey}>
             <SectionHeader title={getDateGroupLabel(dateKey)} />
             <div className="flex flex-col gap-2 mt-1">
               {grouped[dateKey].map((log) => (
-                <MealLogCard key={log.id} log={log} />
+                <MealLogCard
+                  key={log.id}
+                  log={log}
+                  onClick={() => setEditingMealLogId(log.id)}
+                />
               ))}
             </div>
           </section>
         ))
       )}
+
+      <MealLogDetailSheet
+        mealLogId={editingMealLogId}
+        visible={!!editingMealLogId}
+        onClose={handleCloseDetail}
+      />
     </div>
   );
 };
