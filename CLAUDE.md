@@ -13,8 +13,6 @@ npm run dev              # Start Vite dev server
 npm run build            # TypeScript check + Vite production build
 npm run preview          # Preview production build
 npm run lint             # Run ESLint
-npm run storybook        # Start Storybook dev server (port 6006)
-npm run build-storybook  # Build Storybook for production
 ```
 
 ## Tech Stack Notes
@@ -84,11 +82,9 @@ src/
 - Use `class-variance-authority` for variants
 - `React.forwardRef` with explicit prop interfaces
 - Export both component and variants: `export { Button, buttonVariants }`
-- Co-locate Storybook stories: `button.stories.tsx` next to `button.tsx`
 
 ### Domain Components
 
-- Co-locate stories: `food-item-card.stories.tsx` next to `food-item-card.tsx`
 - Use `cn()` from `@/lib/utils` for className merging
 
 ## Authentication Flow

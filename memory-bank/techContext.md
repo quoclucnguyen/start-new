@@ -23,7 +23,7 @@
 - **React Router 7.12.0** - Client-side routing with MemoryRouter for TMA
 
 ### Backend Integration
-- **Supabase 2.48.0** - Authentication, database, real-time (future)
+- **Supabase 2.48.0** - Authentication and active database integration across inventory/shopping/recipes/settings
 - **@tma.js/sdk-react 3.0.8** - Telegram Mini App SDK integration
 
 ### External APIs
@@ -34,7 +34,6 @@
 - **pica 9.0.1** - High-quality image compression
 
 ### Development Tools
-- **Storybook 10.1.11** - Component documentation and testing
 - **ESLint 9.39.1** - Code linting
 - **typescript-eslint 8.46.4** - TypeScript-aware linting
 - **babel-plugin-react-compiler 1.0.0** - React Compiler optimization
@@ -62,7 +61,6 @@ See `.env.sample` for reference.
 ### Running Development Server
 ```bash
 npm run dev          # Starts Vite dev server on default port
-npm run storybook    # Starts Storybook on port 6006
 ```
 
 ### Building
@@ -102,7 +100,6 @@ npm run lint         # Run ESLint on all TypeScript files
 - TypeScript recommended rules
 - React Hooks rules
 - React Refresh for Vite
-- Storybook plugin for .stories.* files
 
 ## Technical Constraints
 
@@ -121,11 +118,11 @@ npm run lint         # Run ESLint on all TypeScript files
 - **Image Compression**: All images compressed client-side before upload
 - **Query Caching**: 5-minute default stale time, OpenFoodFacts cached for 7 days
 - **Optimistic Updates**: All mutations use optimistic updates for perceived performance
-- **Code Splitting**: Storybook builds separate from main app
 
 ### Data Limitations
-- **localStorage**: Limited to ~5MB, will migrate to Supabase
-- **Base64 Images**: Stored in localStorage during development
+- **localStorage**: Limited to ~5MB (still used in mock mode for several domains)
+- **Mixed runtime mode**: Some APIs toggle mock/supabase via `VITE_USE_MOCK_API`, while settings currently use direct Supabase
+- **Base64 Images**: Stored in localStorage in mock-mode development
 - **Barcode Scanning**: Quality varies by device camera and lighting
 
 ## Dependency Patterns
@@ -152,11 +149,6 @@ npm run lint         # Run ESLint on all TypeScript files
 
 ## Tool Usage Patterns
 
-### Storybook
-- Create `.stories.tsx` files alongside components
-- Use for component development and documentation
-- Run separately from main app: `npm run storybook`
-
 ### Git
 - Project uses standard Git workflow
 - See recent commits via `git log` for development history
@@ -168,7 +160,7 @@ npm run lint         # Run ESLint on all TypeScript files
 
 ## Known Issues & Limitations
 
-1. **localStorage API**: Current implementation will need complete rewrite for Supabase
+1. **Mixed data-source behavior**: Mock mode is not uniformly applied across all domains
 2. **Barcode Scanning**: Quagga2 can be unreliable in poor lighting or with certain barcode types
 3. **Image Compression**: pica can be slow on lower-end devices
 4. **MemoryRouter**: Can't share deep links to specific screens

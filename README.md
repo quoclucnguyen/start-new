@@ -51,7 +51,6 @@ A modern food inventory management Telegram Mini App built with React, TypeScrip
 - [x] **⚡ Fast Performance** - React Compiler + TanStack Query
 - [x] **📐 Responsive Layout** - Works on various screen sizes
 - [x] **🧭 Bottom Navigation** - Main app navigation
-- [x] **📖 Storybook Docs** - Component documentation
 
 ### 🚧 In Progress / Partial
 
@@ -60,7 +59,7 @@ A modern food inventory management Telegram Mini App built with React, TypeScrip
 - [x] **✅ Mark as Purchased** - Check items and move to inventory
 - [x] **💾 Persistence** - Shopping list stored via Supabase/local mock API
 - [ ] **🔗 Quick-Add from Inventory** - Add inventory items directly to shopping list
-- [ ] **🧪 Full QA Pass** - Optimistic update/rollback/mobile/storybook verification
+- [ ] **🧪 Full QA Pass** - Optimistic update/rollback/mobile verification
 
 #### Smart Features
 - [ ] **🔔 Smart Notifications** - Alerts for expiring items (UI ready, backend needed)
@@ -116,7 +115,6 @@ A modern food inventory management Telegram Mini App built with React, TypeScrip
 - **Telegram Mini App SDK** - Integration with Telegram platform
 
 ### Development Tools
-- **Storybook** - Component documentation and testing
 - **ESLint** - Code linting and style enforcement
 - **TypeScript ESLint** - Type-aware linting rules
 - **Git** - Version control
@@ -249,10 +247,6 @@ npm run preview          # Preview production build
 
 # Code Quality
 npm run lint             # Run ESLint
-
-# Storybook
-npm run storybook        # Start Storybook dev server
-npm run build-storybook  # Build Storybook for production
 ```
 
 ## 🎯 Key Components
@@ -305,16 +299,15 @@ VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 
 ## 🚦 Development Workflow
 
-1. **Component Development** - Create components with Storybook stories
+1. **Component Development** - Build and iterate components directly in app screens
 2. **State Management** - Use Zustand for global state, React Query for server state
 3. **API Integration** - Create API functions and React Query hooks
-4. **Testing** - Test components in Storybook, verify in dev mode
+4. **Testing** - Verify in dev mode
 5. **Type Safety** - Leverage TypeScript throughout
 6. **Code Review** - Follow ESLint rules and best practices
 
 ## 📚 Documentation
 
-- **Storybook** - Component documentation: `npm run storybook`
 - **Mockups** - UI designs in `mockup/` directory
 - **API Types** - TypeScript types in `src/api/types.ts`
 

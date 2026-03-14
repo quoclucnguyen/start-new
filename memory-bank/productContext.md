@@ -9,8 +9,8 @@ Food waste is a significant global issue. Households throw away billions of doll
 1. **"What's in my fridge?"** - Users can quickly see all items without digging through their kitchen
 2. **"Is this still good?"** - Clear expiry status (expiring/soon/good/fresh) prevents eating unsafe food
 3. **"I forgot I had this"** - Visual inventory with photos and search reduces forgotten items
-4. **"What do I need to buy?"** - Shopping list feature will track low-stock items
-5. **"What can I make?"** - Recipe suggestions will utilize existing inventory
+4. **"What do I need to buy?"** - Shopping list tracking supports planned and purchased items
+5. **"What can I make?"** - Recipe suggestions use current inventory and show missing ingredients
 
 ## How It Should Work
 
@@ -54,6 +54,22 @@ Food waste is a significant global issue. Households throw away billions of doll
 3. Tap item for details or edit
 4. Use search to find specific items
 5. Use filters to show specific categories or storage locations
+
+### Managing Shopping List
+
+1. Open **List** tab from bottom navigation
+2. Add items with quantity/category in a bottom sheet form
+3. Mark items as purchased using checkbox toggle
+4. Move checked items into inventory or clear checked items
+5. Review grouped items by category for faster shopping flow
+
+### Getting Recipe Suggestions
+
+1. Open **Recipes** tab to see suggested recipes
+2. Review match percentage and missing ingredients per recipe
+3. Open recipe detail to inspect ingredients and steps
+4. Add missing ingredients directly to shopping list
+5. Optionally manage custom recipes in recipe management screen
 
 ### Configuration Management
 

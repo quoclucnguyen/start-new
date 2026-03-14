@@ -1,6 +1,6 @@
 # Progress
 
-**Last Updated:** 2025-02-26
+**Last Updated:** 2026-03-14
 
 ## What Works
 
@@ -30,12 +30,25 @@
 - **OpenFoodFacts API**: Product data lookup by barcode
 - **Auto-Fill Form**: Barcode scan populates product name and category
 
+#### Shopping List
+- **Shopping List Page**: `/list` route integrated into main navigation
+- **Shopping Item CRUD (UI + API)**: Add, toggle checked, delete single, delete checked
+- **Move Purchased to Inventory**: Checked shopping items can be created as inventory items
+- **Optimistic Updates**: Shopping mutations use optimistic cache updates + rollback
+- **Category-grouped Display**: Unchecked items grouped by category; checked section separated
+
+#### Recipe Features
+- **Recipe Suggestions Page**: `/recipes` route implemented
+- **Recipe Management Page**: `/recipes/manage` route implemented for user recipe CRUD flows
+- **Recipe Matching Engine**: Match inventory to recipe ingredients with match percentage + missing list
+- **Seed + User Recipe Merge**: Suggestion flow includes seed recipes when DB data is limited
+- **Add Missing Ingredients to Shopping List**: Mutation flow available from suggestions
+
 #### UI/UX
 - **Mobile-First Design**: Touch-friendly interactions, large tap targets
 - **Responsive Layout**: Works on various screen sizes
 - **Color-Coded Expiry**: Visual indicators (red/orange/yellow/green)
 - **Bottom Navigation**: Main app navigation pattern
-- **Storybook Documentation**: Component stories for development
 
 #### Technical Foundation
 - **TypeScript Coverage**: Full type safety across codebase
@@ -46,41 +59,22 @@
 
 ## What's Left to Build
 
-### 📋 Shopping List (Planned - Implementation Plan Ready)
+### 📋 Shopping List (Follow-up)
 
-**Status:** Complete implementation plan available at [plan/shopping-list/plan.md](../plan/shopping-list/plan.md)
+**Status:** Core feature implemented; follow-up polish remains.
 
-**Features to implement:**
-- Create shopping list items
-- Mark items as "needed" or "purchased" (checked state)
-- Move purchased items to inventory (bulk action)
-- Quick-add to shopping list from inventory
-- Filter by category and checked status
-- Delete checked items
-
-**Technical scope:**
-- New types: `ShoppingListItem`, `CreateShoppingListItemInput`, `UpdateShoppingListItemInput`
-- New API: `shopping-list.api.ts` (interface + mock + Supabase implementations)
-- New hooks: `use-shopping-list.ts`, `use-shopping-list-mutations.ts`
-- New store: `shopping.store.ts` for UI state
-- New components: `ShoppingListPage`, `ShoppingForm`, `ShoppingEmptyState`, etc.
-- Database: `shopping_list` table with RLS policies
-
-**Existing components:**
-- `ShoppingListItem` - Already implemented
-- `RestockAlert` - Already implemented
-
-**Estimated effort:** 18-26 hours (2.5-3.5 days)
+**Remaining work:**
+- Quick-add from inventory directly into shopping list
+- Full QA pass (optimistic rollback edge cases, mobile interaction polish, in-app flow verification)
 
 ### ⏳ Other Planned Features (Not Started)
 
 #### Recipe Suggestions
 
-#### Recipe Suggestions
-- Basic recipe database
-- Match recipes to available inventory
-- Show "missing ingredients" for each recipe
-- Recipe detail view with instructions
+#### Recipe Suggestions / Management (Follow-up)
+- More robust recipe dataset and curation workflow
+- Better ranking/tuning for suggestion relevance
+- Additional UX polish for recipe detail and management flows
 
 #### Receipt Scanning
 - Capture or upload receipt image
@@ -103,9 +97,8 @@
 ### 🔧 Technical Improvements Needed
 
 #### Supabase Backend Migration
-- [ ] Create Supabase tables (food_items, categories, storage_locations, settings)
-- [ ] Implement Supabase API client
-- [ ] Replace localStorage mock with real API calls
+- [ ] Ensure all domains consistently support intended runtime mode (mock vs Supabase)
+- [ ] Harden DB schema and policies for recipes/shopping domains
 - [ ] Migrate existing data (if any)
 - [ ] Test real-time sync functionality
 
@@ -130,9 +123,9 @@
 
 ## Current Status
 
-### Project Phase: **Active Development - MVP Complete**
+### Project Phase: **Active Development - Multi-Feature App**
 
-The core inventory management functionality is complete and functional. The app is in a good state for user testing and feedback on the main workflow.
+The app now includes inventory, shopping, and recipe modules in active use. Core user flows are implemented; current focus is reliability, consistency, and production hardening.
 
 ### Stable Areas
 - Inventory CRUD operations
@@ -141,11 +134,12 @@ The core inventory management functionality is complete and functional. The app 
 - User configuration (categories, storage locations)
 - Search, filter, and sort functionality
 - Barcode scanning with OpenFoodFacts integration
+- Shopping list core flow (add/check/delete/move to inventory)
+- Recipe suggestion and recipe management core flow
 
 ### Areas Needing Work
-- Shopping list feature (next priority)
-- Recipe suggestions (secondary priority)
-- Backend migration (blocking production deployment)
+- Shopping + recipe UX/QA polish
+- Backend hardening (blocking production deployment)
 - Testing coverage (quality improvement)
 - Offline support (user experience improvement)
 
@@ -159,9 +153,10 @@ The core inventory management functionality is complete and functional. The app 
 
 ### Technical Debt
 1. **localStorage API**: Temporary implementation that needs Supabase migration
-2. **No error boundaries**: Errors can crash entire app
-3. **Limited error messages**: Generic error handling doesn't help users debug
-4. **No form validation feedback**: Users might not know why form submission fails
+2. **Mixed data-source strategy**: Some modules support mock/supabase toggle, settings uses direct Supabase
+3. **No error boundaries**: Errors can crash entire app
+4. **Limited error messages**: Generic error handling doesn't help users debug
+5. **No form validation feedback**: Users might not know why form submission fails
 
 ## Evolution of Project Decisions
 
@@ -192,8 +187,8 @@ The core inventory management functionality is complete and functional. The app 
 ## Development Priorities
 
 ### Next Sprint (Recommended)
-1. Implement shopping list feature
-2. Add basic recipe suggestions
+1. Polish shopping list UX (quick-add from inventory + QA)
+2. Improve recipe suggestion/management UX and ranking
 3. Improve error handling and loading states
 
 ### Following Sprint

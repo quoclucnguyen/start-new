@@ -6,7 +6,7 @@
 
 ## Core Purpose
 
-A mobile-first Telegram Mini App for tracking kitchen inventory with automatic expiry date tracking. Help users reduce food waste by monitoring what they have, when it expires, and what they need to buy.
+A mobile-first Telegram Mini App for tracking kitchen inventory with expiry date awareness, shopping planning, and recipe support. Help users reduce food waste by monitoring what they have, when it expires, what they need to buy, and how to use available ingredients.
 
 ## Primary Goals
 
@@ -27,11 +27,12 @@ A mobile-first Telegram Mini App for tracking kitchen inventory with automatic e
 - ✅ Email/password authentication
 - ✅ Barcode scanning with OpenFoodFacts integration
 - ✅ Responsive mobile UI with antd-mobile components
+- ✅ Shopping list management (add/check/delete/move to inventory)
+- ✅ Recipe suggestions matched against inventory
+- ✅ Recipe management (create/edit/duplicate/delete user recipes)
 
 ## Planned Features
 
-- ⏳ Shopping list management
-- ⏳ Recipe suggestions based on available inventory
 - ⏳ Receipt scanning with OCR
 - ⏳ Family sharing and collaboration
 - ⏳ Advanced analytics and insights

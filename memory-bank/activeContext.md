@@ -1,111 +1,87 @@
 # Active Context
 
-**Last Updated:** 2026-02-26
+**Last Updated:** 2026-03-14
 
 ## Current Work Focus
 
-The project is in active development with core inventory management functionality complete. The most recent work involved:
+The app has moved beyond inventory-only MVP into **multi-domain functionality** with active modules for:
 
-1. **Barcode Scanning Integration** - Added `@ericblade/quagga2` for barcode scanning with OpenFoodFacts API integration
-2. **Email/Password Authentication** - Implemented alternative auth method alongside Telegram login
-3. **User-Configurable Categories & Storage** - Migrated from hardcoded union types to user-configurable strings with emoji and color customization
-4. **Image Upload with Compression** - Added pica-based image compression before upload
+1. **Inventory tracking** (stable)
+2. **Shopping list management** (implemented and wired to navigation)
+3. **Recipe suggestions + recipe management** (implemented with seed + user recipes)
+
+Recent development has focused on expanding data models and UI flows while keeping the same architecture conventions: TanStack Query for server state, Zustand for UI state, and Supabase/localStorage dual API support where configured.
+
+## Recent Maintenance Update
+
+- Removed Storybook from project tooling and scripts.
+- Removed `.stories.tsx` files and `.storybook/` config.
+- Updated project docs/guidelines to reflect **manual in-app validation** (`npm run lint && npm run build` + manual flows) instead of Storybook-based review.
+- Memory bank files are being aligned with this new baseline.
 
 ## Recent Changes
 
-### Authentication System
-- Implemented dual auth: Telegram Mini App SDK + email/password fallback
-- `useAuthStore` manages auth state with Supabase
-- Auto-login via `getInitDataRaw()` when available
-- See [src/store/auth.store.ts](../src/store/auth.store.ts) and [src/lib/tma.ts](../src/lib/tma.ts)
+### Shopping List
+- Shopping list data model and API are implemented in `src/api/shopping-list.api.ts`
+- Query + mutation hooks are implemented with optimistic updates:
+  - `useShoppingList()`
+  - `useAddShoppingListItem()`
+  - `useToggleShoppingItemChecked()`
+  - `useDeleteCheckedItems()`
+  - `useMovePurchasedToInventory()`
+- Route `/list` is active and rendered by `ShoppingListPage`
+- UX includes grouped display by category, checked/unchecked sections, and bottom-sheet form
 
-### Data Architecture Evolution
-- **Changed:** `FoodCategory` and `StorageLocation` from union types to `string` type
-- **Why:** Support user-configurable categories/locations instead of hardcoded values
-- **Impact:** All components now expect dynamic configuration from settings API
+### Recipe Suggestions + Management
+- `/recipes` renders **RecipeSuggestionsPage**
+- `/recipes/manage` renders **RecipeManagementPage**
+- Matching flow implemented through `useRecipeSuggestions()` and `recipe-matcher`
+- Suggestion flow merges user recipes with seed recipes (`SEED_RECIPES`) and computes:
+  - match percentage
+  - missing ingredients
+  - top expiring ingredient hero
+- Recipe CRUD/duplicate/delete logic is implemented in `recipes-management.api.ts` + management hooks
 
-### Barcode Scanner
-- Integrated Quagga2 for barcode detection
-- OpenFoodFacts API fetches product data by barcode
-- See [src/components/scanner/](../src/components/scanner/) and [src/api/openfoodfacts/](../src/api/openfoodfacts/)
-
-## Next Steps
-
-### Immediate Priorities
-1. **Shopping List Feature** - **PLAN COMPLETE** ([plan/shopping-list/plan.md](../plan/shopping-list/plan.md))
-   - Ready to implement: Shopping list CRUD with optimistic updates
-   - Features: Add items, mark checked, move to inventory, quick-add from inventory
-   - Estimated timeline: 18-26 hours (2.5-3.5 days)
-2. **Recipe Suggestions** - Basic algorithm to suggest recipes based on available ingredients
-3. **Expiry Notifications** - Implement push notifications for items approaching expiry
-
-### Technical Debt
-- Consider migration strategy from localStorage mock API to real Supabase backend
-- Add error boundaries for better error handling
-- Implement proper loading states for all async operations
-- Add unit tests for critical business logic
+### Routing & Navigation
+- MemoryRouter route tree now includes nested recipes routes:
+  - `/recipes` (suggestions)
+  - `/recipes/manage` (management)
+- Bottom nav still maps `recipes` tab to `/recipes`
 
 ## Active Decisions
 
-### Using localStorage as Mock API
-- **Decision:** `foodItemsApi` currently uses localStorage for persistence
-- **Reasoning:** Allows frontend development without backend dependency
-- **Future:** Migrate to Supabase backend when ready for production
+### Data Source Strategy Is Mixed by Domain
+- `food-items.api.ts`, `shopping-list.api.ts`, and `recipes-management.api.ts` support env-driven mock mode (`VITE_USE_MOCK_API`)
+- `settings.api.ts` currently uses Supabase directly (no mock switch)
+- Implication: full offline/mock behavior is not yet uniform across all domains
 
-### TanStack Query for All Server State
-- **Decision:** Use TanStack Query exclusively for data fetching, Zustand only for UI state
-- **Reasoning:** Clear separation of concerns, automatic caching, optimistic updates
-- **Pattern:** All mutations implement `onMutate` → rollback → `invalidateQueries`
+### Soft Delete Remains Standard for Core Entities
+- Food items, shopping list items, and recipes use `deleted = true` filtering patterns in Supabase implementations
 
-### MemoryRouter for TMA Compatibility
-- **Decision:** Use `createMemoryRouter` instead of `createBrowserRouter`
-- **Reasoning:** Telegram Mini Apps don't have browser history
-- **Impact:** All navigation uses imperative router.navigate() rather than URL changes
+### Query-First Data Access
+- Query keys remain domain-scoped and user-scoped at call site
+- Mutations preserve optimistic update → rollback → invalidate pattern for responsive UX
 
-## Important Patterns
+## Next Steps
 
-### Component Export Pattern
-```tsx
-// Domain components co-locate stories
-// components/food/food-item-card.tsx
-// components/food/food-item-card.stories.tsx
+1. **Unify mock/supabase strategy across settings and all domains** (if full mock mode is expected)
+2. **Close UX gaps**:
+   - quick-add from inventory to shopping list
+   - complete QA pass for shopping and recipe flows
+3. **Improve reliability**:
+   - error boundaries
+   - clearer error messaging and loading states
+4. **Production readiness**:
+   - backend/schema hardening
+   - test coverage
 
-// Export from components/index.ts
-export * from './food';
-```
+## Current Risks / Watch Items
 
-### Optimistic Update Pattern
-```tsx
-// All mutations follow this pattern:
-onMutate: async (variables) => {
-  await queryClient.cancelQueries({ queryKey });
-  const previousData = queryClient.getQueryData(queryKey);
-  queryClient.setQueryData(queryKey, optimisticData);
-  return { previousData, queryKey };
-},
-onError: (_err, _variables, context) => {
-  context && queryClient.setQueryData(context.queryKey, context.previousData);
-},
-onSettled: () => {
-  queryClient.invalidateQueries({ queryKey });
-},
-```
+- Mixed data source behavior can cause confusing dev/test outcomes in mock mode
+- Barcode scanning and client-side image compression remain device-dependent performance hotspots
+- MemoryRouter remains correct for Telegram Mini App, but still limits deep linking/sharing
 
-## Project Insights
+## Working Notes
 
-### What Works Well
-- TanStack Query's optimistic updates make the app feel fast and responsive
-- Zustand's simplicity makes UI state management straightforward
-- antd-mobile components provide good mobile UX out of the box
-- Tailwind v4's CSS-first config is cleaner than JS-based config
-
-### Pain Points
-- Barcode scanning quality varies by device and lighting conditions
-- Image compression can be slow on lower-end devices
-- localStorage API will need complete rewrite for Supabase migration
-- MemoryRouter makes deep linking and sharing difficult
-
-### Learning Points
-- User-configurable categories/locations adds significant complexity but improves UX
-- Expiry status calculation (`getExpiryStatus`) is used everywhere - central helper was crucial
-- Mobile-first design requires larger touch targets than desktop defaults
+- Route and navigation structure now reflect a broader product scope than early memory docs.
+- Memory bank entries should treat shopping list and recipe features as implemented modules, not just planned items.

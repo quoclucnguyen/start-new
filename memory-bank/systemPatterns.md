@@ -33,7 +33,7 @@ The application follows a **layered architecture** with clear separation between
 │                   Data Sources                              │
 │  ┌────────────────┐  ┌────────────────┐  ┌───────────────┐ │
 │  │  localStorage  │  │  Supabase      │  │ OpenFoodFacts │ │
-│  │  (Mock API)    │  │  (Future)      │  │  API          │ │
+│  │  (Mock APIs)   │  │  (Active)      │  │  API          │ │
 │  └────────────────┘  └────────────────┘  └───────────────┘ │
 └─────────────────────────────────────────────────────────────┘
 ```
@@ -108,11 +108,9 @@ onSettled: () => {
 src/components/
 ├── ui/              # Base components (Button, Input, Card, etc.)
 │   ├── button.tsx
-│   ├── button.stories.tsx
 │   └── index.ts     # Exports Button + buttonVariants
 ├── food/            # Domain-specific components
 │   ├── food-item-card.tsx
-│   ├── food-item-card.stories.tsx
 │   └── index.ts
 ├── layout/          # Layout structure
 ├── shared/          # Cross-domain reusable components
@@ -120,7 +118,6 @@ src/components/
 ```
 
 **Patterns:**
-- Co-locate Storybook stories with components
 - Use `class-variance-authority` for component variants
 - `React.forwardRef` for composable components
 - Barrel exports (`index.ts`) for clean imports
@@ -156,12 +153,38 @@ src/components/
 /login                    # Public login page
 /                         # Protected layout wrapper
   ├─ /                    # Inventory dashboard (default)
-  ├─ /list                # Shopping list (coming soon)
-  ├─ /recipes             # Recipes (coming soon)
+  ├─ /list                # Shopping list page
+  ├─ /recipes             # Recipe suggestions page
+  │   └─ /manage          # Recipe management page
   └─ /settings            # Settings page
 /add                      # Add food item page (protected)
 /scan                     # Barcode scanner page (protected)
 ```
+
+### 7. Multi-Domain API Pattern
+
+The same API + hooks + optimistic mutation pattern is now used across domains:
+
+- `food-items.api.ts` + `use-food-items.ts` + `use-food-mutations.ts`
+- `shopping-list.api.ts` + `use-shopping-list.ts` + `use-shopping-list-mutations.ts`
+- `recipes-management.api.ts` + `use-recipes-management.ts` + `use-recipes-management-mutations.ts`
+
+Each domain keeps:
+- DB/app mapping helpers (snake_case ↔ camelCase)
+- user-scoped query keys
+- optimistic UI updates where appropriate
+
+### 8. Recipe Suggestion Composition Pattern
+
+Recipe suggestions are built by composing multiple inputs:
+
+1. Fetch recipes (user + system/seed fallback)
+2. Fetch current inventory
+3. Run matcher (`recipe-matcher.ts`) to compute match/missing data
+4. Apply client-side filters
+5. Compute hero context (top expiring ingredient)
+
+This keeps suggestion logic centralized in data hooks rather than spread across UI components.
 
 ## Component Relationships
 

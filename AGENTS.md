@@ -10,11 +10,9 @@ Food Inventory Manager — a **Telegram Mini App** for tracking kitchen inventor
 npm run dev              # Vite dev server
 npm run build            # tsc -b && vite build (run before every PR)
 npm run lint             # ESLint (run before every PR)
-npm run storybook        # Component dev on port 6006
-npm run build-storybook  # Static Storybook build
 ```
 
-No test framework is configured. Validate with `npm run lint && npm run build` and manual Storybook review.
+No test framework is configured. Validate with `npm run lint && npm run build` and manual in-app review.
 
 ## Architecture
 
@@ -31,7 +29,7 @@ src/
 │   ├── ui-store.ts           # Filters, edit modal, delete confirmation
 │   └── auth.store.ts         # TMA + email auth state, wraps Supabase session
 ├── components/
-│   ├── ui/         # shadcn/ui-style: cva variants, forwardRef, co-located stories
+│   ├── ui/         # shadcn/ui-style: cva variants, forwardRef
 │   ├── food/       # FoodItemCard, FoodForm, pickers
 │   ├── layout/     # AppShell, TopAppBar, BottomNavigation
 │   ├── shared/     # SearchInput, FilterChips, BottomSheet
@@ -63,7 +61,6 @@ src/
 - **2-space indent**; consistent with surrounding code
 - Components: `PascalCase` files (`FoodItemCard.tsx`), hooks: `use-*.ts`, stores: `*.store.ts`
 - Imports: always use `@/*` alias for `src/*`
-- Stories: co-locate as `component-name.stories.tsx` next to source
 
 ## Data Flow Pattern
 

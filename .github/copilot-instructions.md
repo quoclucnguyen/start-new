@@ -13,7 +13,6 @@
 - **antd-mobile v5** for domain components + **shadcn/ui** (`cva` + `forwardRef`) in `src/components/ui/`
 - **react-router v7** with `MemoryRouter` (TMA has no browser history)
 - **Supabase** for auth, Postgres DB, and Storage
-- **Storybook 10** with co-located stories
 
 ## Architecture
 
@@ -64,7 +63,6 @@ const { filters, setSearch, editingItemId } = useUIStore();
 - **`erasableSyntaxOnly: true`** — no `enum`, use union types or `as const` objects
 - **2-space indent**; `PascalCase` component files, `use-*.ts` hooks, `*.store.ts` stores
 - **Imports**: always use `@/*` alias for `src/*`
-- **Stories**: co-locate as `component-name.stories.tsx`; barrel-export from domain folder `index.ts` → `src/components/index.ts`
 
 ## Component Conventions
 
@@ -107,7 +105,6 @@ Helpers: `getExpiryStatus(date)`, `getDaysUntilExpiry(date)`, `getExpiryText(dat
 npm run dev       # Vite dev server
 npm run build     # tsc -b && vite build
 npm run lint      # ESLint
-npm run storybook # Component dev (port 6006)
 ```
 
 ## Key Files
