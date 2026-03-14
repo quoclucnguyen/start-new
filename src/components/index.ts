@@ -10,6 +10,7 @@ export * from './shopping';
 export * from './recipes';
 export * from './notifications';
 export * from './scanner';
+export * from './diary';
 
 // Shared Components
 export * from './shared';

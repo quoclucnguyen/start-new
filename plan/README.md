@@ -64,6 +64,29 @@ Complete implementation plan for the Shopping List feature including:
 
 ---
 
+### [food-diary/](./food-diary/plan.md)
+**Status:** Planned
+**Created:** 2026-03-14
+
+Implementation plan for the Food Diary / Personal Foodie CRM feature including:
+- Meal logging with progressive disclosure (quick log → detailed CRM fields)
+- Venue memory (restaurant/delivery CRM with "món tủ", ratings, price tracking)
+- Analytics dashboard (spending, visit frequency, favorites)
+- Discovery engine (forgotten gems, random suggestions, nudge system)
+- Automation (OCR receipt scan, transaction parsing, geolocation, data export)
+
+**Phases:**
+- **MVP A** — Quick log + Venue/dish memory (core)
+- **MVP B** — Deep CRM + light analytics
+- **MVP C** — Advanced discovery + nudge engine
+- **MVP D** — Automation (OCR, transaction parsing, export, geolocation)
+
+**Key Files:**
+- [plan.md](./food-diary/plan.md) — Full implementation plan
+- [checklist.md](./food-diary/checklist.md) — Task-by-task checklist
+
+---
+
 ## Plan Template
 
 When creating a new feature plan, include:

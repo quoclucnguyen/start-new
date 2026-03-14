@@ -4,6 +4,7 @@ import { BottomNavigation, type NavItem } from './bottom-navigation';
 import { 
   LayoutDashboard, 
   ClipboardList, 
+  UtensilsCrossed,
   Utensils, 
   Settings 
 } from 'lucide-react';
@@ -12,6 +13,7 @@ import {
 const defaultNavItems: NavItem[] = [
   { id: 'home', label: 'Home', icon: <LayoutDashboard size={24} />, href: '/' },
   { id: 'list', label: 'List', icon: <ClipboardList size={24} />, href: '/list' },
+  { id: 'diary', label: 'Diary', icon: <UtensilsCrossed size={24} />, href: '/diary' },
   { id: 'recipes', label: 'Recipes', icon: <Utensils size={24} />, href: '/recipes' },
   { id: 'settings', label: 'Settings', icon: <Settings size={24} />, href: '/settings' },
 ];
@@ -20,6 +22,7 @@ const defaultNavItems: NavItem[] = [
 const pathToTabId: Record<string, string> = {
   '/': 'home',
   '/list': 'list',
+  '/diary': 'diary',
   '/recipes': 'recipes',
   '/settings': 'settings',
 };

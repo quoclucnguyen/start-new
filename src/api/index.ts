@@ -89,3 +89,6 @@ export {
 export { useAddMissingToShoppingList } from './use-recipe-suggestion-mutations';
 
 export { matchRecipes, getTopExpiringIngredient, normalizeForMatching } from './recipe-matcher';
+
+// Food Diary
+export * from './diary';
