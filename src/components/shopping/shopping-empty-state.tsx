@@ -21,9 +21,9 @@ const ShoppingEmptyState = React.forwardRef<HTMLDivElement, ShoppingEmptyStatePr
         <div className="flex h-20 w-20 items-center justify-center rounded-full bg-primary/10 mb-5">
           <ShoppingCart className="h-10 w-10 text-primary" />
         </div>
-        <h3 className="text-xl font-bold mb-2">Your shopping list is empty</h3>
+        <h3 className="text-xl font-bold mb-2">Danh sách mua sắm trống</h3>
         <p className="text-sm text-muted-foreground max-w-[260px] mb-6">
-          Add items you need to buy and check them off as you shop.
+          Thêm món bạn cần mua và đánh dấu khi đã mua xong.
         </p>
         <Button
           color="primary"
@@ -33,7 +33,7 @@ const ShoppingEmptyState = React.forwardRef<HTMLDivElement, ShoppingEmptyStatePr
         >
           <div className="flex items-center gap-2 px-2">
             <Plus size={18} />
-            Add First Item
+            Thêm món đầu tiên
           </div>
         </Button>
       </div>

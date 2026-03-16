@@ -1,87 +1,79 @@
 # Active Context
 
-**Last Updated:** 2026-03-14
+**Last Updated:** 2026-03-16
 
 ## Current Work Focus
 
-The app has moved beyond inventory-only MVP into **multi-domain functionality** with active modules for:
+The product is now a **4-domain app** running in one Telegram Mini App shell:
 
-1. **Inventory tracking** (stable)
-2. **Shopping list management** (implemented and wired to navigation)
-3. **Recipe suggestions + recipe management** (implemented with seed + user recipes)
+1. **Inventory** (stable core)
+2. **Shopping list** (implemented)
+3. **Recipes** (suggestions + management implemented)
+4. **Food Diary / Foodie CRM** (MVP A implemented)
 
-Recent development has focused on expanding data models and UI flows while keeping the same architecture conventions: TanStack Query for server state, Zustand for UI state, and Supabase/localStorage dual API support where configured.
-
-## Recent Maintenance Update
-
-- Removed Storybook from project tooling and scripts.
-- Removed `.stories.tsx` files and `.storybook/` config.
-- Updated project docs/guidelines to reflect **manual in-app validation** (`npm run lint && npm run build` + manual flows) instead of Storybook-based review.
-- Memory bank files are being aligned with this new baseline.
+Current focus has shifted from feature scaffolding to **integration consistency, QA polish, and reliability hardening**.
 
 ## Recent Changes
 
-### Shopping List
-- Shopping list data model and API are implemented in `src/api/shopping-list.api.ts`
-- Query + mutation hooks are implemented with optimistic updates:
-  - `useShoppingList()`
-  - `useAddShoppingListItem()`
-  - `useToggleShoppingItemChecked()`
-  - `useDeleteCheckedItems()`
-  - `useMovePurchasedToInventory()`
-- Route `/list` is active and rendered by `ShoppingListPage`
-- UX includes grouped display by category, checked/unchecked sections, and bottom-sheet form
+### Food Diary MVP A Landed
+- Added diary domain data model + APIs + hooks under `src/api/diary/`
+- Added Supabase schema for diary tables in `supabase/database/diary-tables.sql`:
+  - `venues`
+  - `menu_items`
+  - `meal_logs`
+  - `meal_item_entries`
+- Added diary UI/store/pages:
+  - `src/store/diary.store.ts`
+  - `src/components/diary/*`
+  - `src/pages/diary/*`
 
-### Recipe Suggestions + Management
-- `/recipes` renders **RecipeSuggestionsPage**
-- `/recipes/manage` renders **RecipeManagementPage**
-- Matching flow implemented through `useRecipeSuggestions()` and `recipe-matcher`
-- Suggestion flow merges user recipes with seed recipes (`SEED_RECIPES`) and computes:
-  - match percentage
-  - missing ingredients
-  - top expiring ingredient hero
-- Recipe CRUD/duplicate/delete logic is implemented in `recipes-management.api.ts` + management hooks
+### Routing & Navigation Expanded
+- Main route tree includes `/diary` (dashboard) and `/diary/history`
+- Standalone protected routes include `/diary/log` and `/diary/venue/:id`
+- Bottom navigation now has 5 tabs: Home, List, Diary, Recipes, Settings
+- Main FAB behavior is context-aware (`/diary/*` routes target `/diary/log`)
 
-### Routing & Navigation
-- MemoryRouter route tree now includes nested recipes routes:
-  - `/recipes` (suggestions)
-  - `/recipes/manage` (management)
-- Bottom nav still maps `recipes` tab to `/recipes`
+### Existing Domains Remain Active
+- Shopping list and recipe flows remain implemented and connected to navigation
+- Architecture conventions remain unchanged: TanStack Query for server state, Zustand for UI-only state
 
 ## Active Decisions
 
-### Data Source Strategy Is Mixed by Domain
-- `food-items.api.ts`, `shopping-list.api.ts`, and `recipes-management.api.ts` support env-driven mock mode (`VITE_USE_MOCK_API`)
-- `settings.api.ts` currently uses Supabase directly (no mock switch)
-- Implication: full offline/mock behavior is not yet uniform across all domains
+### Data Source Strategy Is Still Mixed
+- Diary, inventory, shopping, and recipes support `VITE_USE_MOCK_API`
+- `settings.api.ts` still uses direct Supabase
+- Result: mock-mode behavior is not fully uniform across all domains
 
-### Soft Delete Remains Standard for Core Entities
-- Food items, shopping list items, and recipes use `deleted = true` filtering patterns in Supabase implementations
+### Soft Delete Pattern Is Domain-Selective
+- Soft delete (`deleted = true`) is used for core entities (food items, shopping items, recipes, venues/menu logs)
+- `meal_item_entries` currently use direct row operations (no deleted flag)
 
-### Query-First Data Access
-- Query keys remain domain-scoped and user-scoped at call site
-- Mutations preserve optimistic update → rollback → invalidate pattern for responsive UX
+### Query-First Access Pattern Continues
+- Domain-scoped query keys + user-scoped key segments
+- Mutations continue optimistic update → rollback on error → invalidate on settle
 
 ## Next Steps
 
-1. **Unify mock/supabase strategy across settings and all domains** (if full mock mode is expected)
-2. **Close UX gaps**:
-   - quick-add from inventory to shopping list
-   - complete QA pass for shopping and recipe flows
-3. **Improve reliability**:
-   - error boundaries
-   - clearer error messaging and loading states
-4. **Production readiness**:
-   - backend/schema hardening
-   - test coverage
+1. **Close diary functional gaps**
+   - Persist dish-entry edits from `MealLogDetailSheet` through `meal_item_entries` APIs (currently only meal-log fields update)
+2. **Cross-domain polish**
+   - Quick-add inventory → shopping list
+   - QA sweep on shopping, recipes, and diary mobile flows
+3. **Reliability hardening**
+   - Error boundaries
+   - Better loading/error UX
+4. **Production readiness**
+   - Schema/RLS hardening and validation
+   - Test coverage strategy
 
 ## Current Risks / Watch Items
 
-- Mixed data source behavior can cause confusing dev/test outcomes in mock mode
-- Barcode scanning and client-side image compression remain device-dependent performance hotspots
-- MemoryRouter remains correct for Telegram Mini App, but still limits deep linking/sharing
+- Mixed mock/supabase behavior can still cause confusing dev/test outcomes
+- Diary meal detail sheet currently edits local dish form state without persistence wiring
+- Documentation drift exists in some planning/checklist docs compared with implemented code
+- Barcode scanning and image compression remain device-dependent hotspots
 
 ## Working Notes
 
-- Route and navigation structure now reflect a broader product scope than early memory docs.
-- Memory bank entries should treat shopping list and recipe features as implemented modules, not just planned items.
+- Memory bank should now treat Food Diary as implemented MVP A, not future-only planning.
+- Route/navigation and module architecture now clearly represent a multi-domain product.

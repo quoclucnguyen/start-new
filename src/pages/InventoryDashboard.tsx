@@ -43,7 +43,7 @@ export const InventoryDashboard: React.FC = () => {
   const categories: FilterChip[] = React.useMemo(() => {
     const filterableCategories = categoriesData.filter((cat) => cat.showInFilters);
     return [
-      { id: 'all', label: 'All' },
+      { id: 'all', label: 'Tất cả' },
       ...filterableCategories.map((cat) => ({
         id: cat.id,
         label: cat.name,
@@ -56,7 +56,7 @@ export const InventoryDashboard: React.FC = () => {
   const storageLocations: FilterChip[] = React.useMemo(() => {
     const filterableLocations = storageLocationsData.filter((loc) => loc.showInFilters);
     return [
-      { id: 'all', label: 'All', icon: <Package size={16} /> },
+      { id: 'all', label: 'Tất cả', icon: <Package size={16} /> },
       ...filterableLocations.map((loc) => ({
         id: loc.id,
         label: loc.name,
@@ -164,8 +164,8 @@ export const InventoryDashboard: React.FC = () => {
     <div className="flex flex-col gap-6">
       {/* Search and Sort */}
       <div className="flex gap-3">
-        <SearchInput 
-          placeholder="Search pantry, fridge..." 
+        <SearchInput
+          placeholder="Tìm tủ lạnh, tủ đựng thức ăn..."
           value={filters.search}
           onChange={setSearch}
         />
@@ -187,21 +187,21 @@ export const InventoryDashboard: React.FC = () => {
         </div>
       ) : error ? (
         <EmptyState
-          title="Error loading items"
-          description="Something went wrong. Please try again."
+          title="Lỗi khi tải món"
+          description="Có lỗi xảy ra. Vui lòng thử lại."
           icon={<Package size={48} className="text-muted-foreground" />}
         />
       ) : items.length === 0 ? (
         <EmptyState
-          title="No items yet"
-          description="Add your first food item to start tracking your inventory."
+          title="Chưa có món nào"
+          description="Thêm món đầu tiên để bắt đầu theo dõi."
           icon={<Package size={48} className="text-muted-foreground" />}
           action={
             <button
               onClick={handleAddClick}
               className="mt-4 px-6 py-3 bg-primary text-primary-foreground rounded-xl font-medium"
             >
-              Add First Item
+              Thêm món đầu tiên
             </button>
           }
         />
@@ -210,13 +210,13 @@ export const InventoryDashboard: React.FC = () => {
           {/* Expiring Soon */}
           {expiringSoonItems.length > 0 && (
             <section>
-              <SectionHeader 
-                title="Expiring Soon" 
+              <SectionHeader
+                title="Sắp hết hạn"
                 action={
                   <a href="#" className="text-sm font-semibold text-primary hover:text-green-600">
-                    View All
+                    Xem tất cả
                   </a>
-                } 
+                }
               />
               <div className="flex flex-col gap-3">
                 {expiringSoonItems.map(renderFoodItem)}
@@ -226,7 +226,7 @@ export const InventoryDashboard: React.FC = () => {
 
           {/* All Inventory */}
           <section>
-            <SectionHeader title="Inventory" />
+            <SectionHeader title="Kho" />
             <div className="mb-4">
               <FilterChips 
                 chips={storageLocations} 
@@ -238,8 +238,8 @@ export const InventoryDashboard: React.FC = () => {
             
             {filteredItems.length === 0 ? (
               <EmptyState
-                title="No items found"
-                description="Try adjusting your filters or search query."
+                title="Không tìm thấy món nào"
+                description="Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm."
                 icon={<Package size={32} className="text-muted-foreground" />}
               />
             ) : (

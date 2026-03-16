@@ -17,10 +17,10 @@ const ConfirmationDialog: React.FC<ConfirmationDialogProps> = ({
   visible,
   onConfirm,
   onCancel,
-  title = 'Confirm Delete',
-  message = 'Are you sure you want to delete this item? This action cannot be undone.',
-  confirmText = 'Delete',
-  cancelText = 'Cancel',
+  title = 'Xác nhận xóa',
+  message = 'Bạn có chắc muốn xóa món này? Hành động này không thể hoàn tác.',
+  confirmText = 'Xóa',
+  cancelText = 'Hủy',
   confirmDestructive = true,
 }) => {
   React.useEffect(() => {
@@ -53,12 +53,12 @@ export async function confirmDelete(
       title: (
         <div className="flex items-center gap-2">
           <AlertTriangle className="size-5 text-destructive" />
-          <span>Delete Item</span>
+          <span>Xóa món</span>
         </div>
       ),
-      content: `Are you sure you want to delete "${itemName}"? This action cannot be undone.`,
-      confirmText: 'Delete',
-      cancelText: 'Cancel',
+      content: `Bạn có chắc muốn xóa "${itemName}"? Hành động này không thể hoàn tác.`,
+      confirmText: 'Xóa',
+      cancelText: 'Hủy',
       onConfirm: () => resolve(true),
       onCancel: () => resolve(false),
     });

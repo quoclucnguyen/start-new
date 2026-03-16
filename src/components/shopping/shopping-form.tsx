@@ -76,9 +76,9 @@ const ShoppingForm = React.forwardRef<ShoppingFormRef, ShoppingFormProps>(
       <div className={cn('flex flex-col gap-6', className)}>
         <Form form={form} layout="vertical" disabled={isLoading}>
           {/* Item Name */}
-          <Form.Item label="Item Name" required>
+          <Form.Item label="Tên món" required>
             <Input
-              placeholder="e.g., Bananas, Milk, Eggs"
+              placeholder="ví dụ: Chuối, Sữa, Trứng"
               value={values.name}
               onChange={(val) => updateValue('name', val)}
               className="h-14! rounded-xl!"
@@ -86,7 +86,7 @@ const ShoppingForm = React.forwardRef<ShoppingFormRef, ShoppingFormProps>(
           </Form.Item>
 
           {/* Category */}
-          <Form.Item label="Category">
+          <Form.Item label="Danh mục">
             <CategoryPicker
               value={values.category}
               onChange={(val) => updateValue('category', val)}
@@ -94,7 +94,7 @@ const ShoppingForm = React.forwardRef<ShoppingFormRef, ShoppingFormProps>(
           </Form.Item>
 
           {/* Quantity */}
-          <Form.Item label="Quantity">
+          <Form.Item label="Số lượng">
             <div className="flex items-center gap-4">
               <QuantityStepper
                 value={values.quantity}
@@ -110,9 +110,9 @@ const ShoppingForm = React.forwardRef<ShoppingFormRef, ShoppingFormProps>(
           </Form.Item>
 
           {/* Notes */}
-          <Form.Item label="Notes (optional)">
+          <Form.Item label="Ghi chú (tùy chọn)">
             <TextArea
-              placeholder="Brand preference, specific size, etc."
+              placeholder="Yêu thích thương hiệu, kích thước cụ thể, v.v."
               value={values.notes}
               onChange={(val) => updateValue('notes', val)}
               rows={2}

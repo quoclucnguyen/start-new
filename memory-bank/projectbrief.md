@@ -2,11 +2,11 @@
 
 **Project:** Food Inventory Manager - Telegram Mini App
 **Created:** 2025-02-26
-**Status:** Active Development
+**Status:** Active Development (Multi-domain)
 
 ## Core Purpose
 
-A mobile-first Telegram Mini App for tracking kitchen inventory with expiry date awareness, shopping planning, and recipe support. Help users reduce food waste by monitoring what they have, when it expires, what they need to buy, and how to use available ingredients.
+A mobile-first Telegram Mini App for managing food decisions across home and eating-out contexts: kitchen inventory with expiry awareness, shopping planning, recipe support, and a personal food diary/CRM for venues and dishes.
 
 ## Primary Goals
 
@@ -14,7 +14,7 @@ A mobile-first Telegram Mini App for tracking kitchen inventory with expiry date
 2. **Expiry Awareness** - Clear visual indicators for items expiring soon (expiring/soon/good/fresh status)
 3. **Mobile-First Experience** - Optimized for Telegram Mini App platform with touch-friendly UI
 4. **Smart Authentication** - Seamless Telegram login with email/password fallback
-5. **Offline-Ready** - Local data storage with Supabase sync when online
+5. **Food Decision Support** - Help users plan what to buy, cook, and re-order/eat again
 
 ## Core Features (Implemented)
 
@@ -30,10 +30,12 @@ A mobile-first Telegram Mini App for tracking kitchen inventory with expiry date
 - ✅ Shopping list management (add/check/delete/move to inventory)
 - ✅ Recipe suggestions matched against inventory
 - ✅ Recipe management (create/edit/duplicate/delete user recipes)
+- ✅ Food Diary module (quick meal logs, venue memory, dish tracking, meal history)
 
 ## Planned Features
 
 - ⏳ Receipt scanning with OCR
+- ⏳ Diary analytics and smart suggestions (forgotten gems, nudges)
 - ⏳ Family sharing and collaboration
 - ⏳ Advanced analytics and insights
 - ⏳ Push notifications for expiring items
@@ -44,6 +46,7 @@ A mobile-first Telegram Mini App for tracking kitchen inventory with expiry date
 - Home cooks who want to reduce food waste
 - Families managing shared kitchen inventory
 - Individuals who track groceries and meal planning
+- Food enthusiasts who want to remember good/bad venues and dishes
 - Telegram users seeking convenient mobile-first experience
 
 ## Success Metrics

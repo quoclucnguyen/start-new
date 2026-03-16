@@ -371,13 +371,13 @@ export function getDaysUntilExpiry(expiryDate: string | null): number | null {
 
 // Helper to format expiry text
 export function getExpiryText(expiryDate: string | null): string {
-  if (!expiryDate) return 'No expiry date';
-  
+  if (!expiryDate) return 'Không có ngày hết hạn';
+
   const days = getDaysUntilExpiry(expiryDate);
-  if (days === null) return 'No expiry date';
-  
-  if (days < 0) return `Expired ${Math.abs(days)} days ago`;
-  if (days === 0) return 'Expires today';
-  if (days === 1) return 'Expires in 1 day';
-  return `Expires in ${days} days`;
+  if (days === null) return 'Không có ngày hết hạn';
+
+  if (days < 0) return `Đã hết hạn ${Math.abs(days)} ngày`;
+  if (days === 0) return 'Hết hạn hôm nay';
+  if (days === 1) return 'Hết hạn sau 1 ngày';
+  return `Hết hạn sau ${days} ngày`;
 }

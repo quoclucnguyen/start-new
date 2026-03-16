@@ -43,7 +43,7 @@ The application follows a **layered architecture** with clear separation between
 ### 1. Dual State Management Strategy
 
 **TanStack Query** for server state:
-- Handles all CRUD operations for food items and settings
+- Handles CRUD/query operations across inventory, shopping, recipes, and diary domains
 - Provides automatic caching, background refetching, and optimistic updates
 - Query keys follow pattern: `[ENTITY_NAME, userId?, ...params]`
 
@@ -154,11 +154,15 @@ src/components/
 /                         # Protected layout wrapper
   ├─ /                    # Inventory dashboard (default)
   ├─ /list                # Shopping list page
+  ├─ /diary               # Food diary dashboard
+  │   └─ /history         # Meal history
   ├─ /recipes             # Recipe suggestions page
   │   └─ /manage          # Recipe management page
   └─ /settings            # Settings page
 /add                      # Add food item page (protected)
 /scan                     # Barcode scanner page (protected)
+/diary/log                # Quick meal log page (protected)
+/diary/venue/:id          # Venue detail page (protected)
 ```
 
 ### 7. Multi-Domain API Pattern
@@ -168,6 +172,7 @@ The same API + hooks + optimistic mutation pattern is now used across domains:
 - `food-items.api.ts` + `use-food-items.ts` + `use-food-mutations.ts`
 - `shopping-list.api.ts` + `use-shopping-list.ts` + `use-shopping-list-mutations.ts`
 - `recipes-management.api.ts` + `use-recipes-management.ts` + `use-recipes-management-mutations.ts`
+- `diary/*` APIs + query hooks + mutation hooks (`venues`, `meal-logs`, `menu-items`, `meal-item-entries`)
 
 Each domain keeps:
 - DB/app mapping helpers (snake_case ↔ camelCase)
@@ -185,6 +190,17 @@ Recipe suggestions are built by composing multiple inputs:
 5. Compute hero context (top expiring ingredient)
 
 This keeps suggestion logic centralized in data hooks rather than spread across UI components.
+
+### 9. Diary Module Composition Pattern
+
+Diary flows are composed by linking venue memory + meal logs + optional dish entries:
+
+1. `useRecentMealLogs()` powers diary dashboard recents
+2. `useVenues()` provides favorites + venue lookup
+3. `useMealLogs()` + `groupLogsByDate()` drives history timeline
+4. `MealLogDetailSheet` edits meal-log fields and prepares dish-entry state
+
+Pattern intent: keep query/mutation orchestration in hooks and thin pages for rendering + interaction.
 
 ## Component Relationships
 
@@ -261,7 +277,7 @@ export function getExpiryStatus(expiryDate: string | null): ExpiryStatus {
 ```tsx
 User selects photo
         ↓
-image-upload.ts: Compress with pica (max 1024px)
+image-upload.ts: Compress with pica (max 800px, JPEG 0.8)
         ↓
 Convert to base64
         ↓

@@ -30,14 +30,14 @@ export const AddFoodItemPage: React.FC = () => {
     addFoodItem.mutate(values, {
       onSuccess: () => {
         Toast.show({
-          content: 'Item added successfully!',
+          content: 'Đã thêm món thành công!',
           position: 'bottom',
         });
         navigate('/');
       },
       onError: (error) => {
         Toast.show({
-          content: error.message || 'Failed to add item',
+          content: error.message || 'Thêm món thất bại',
           position: 'bottom',
         });
       },
@@ -60,16 +60,16 @@ export const AddFoodItemPage: React.FC = () => {
   return (
     <AppShell>
       <TopAppBar
-        title="Add Food Item"
+        title="Thêm món"
         leftAction={
           <IconButton onClick={handleCancel}>
             <X size={24} />
           </IconButton>
         }
         rightAction={
-          <IconButton 
+          <IconButton
             onClick={handleScanBarcode}
-            title="Scan barcode"
+            title="Quét mã vạch"
             className="hover:bg-primary/10 active:bg-primary/20"
           >
             <ScanBarcode size={24} />
@@ -81,18 +81,18 @@ export const AddFoodItemPage: React.FC = () => {
         {scannedBarcode && !prefillData && (
           <div className="mb-4 p-3 rounded-lg bg-amber-500/10 border border-amber-500/30">
             <p className="text-sm text-amber-600">
-              Product not found for barcode: <code className="font-mono">{scannedBarcode}</code>
+              Không tìm thấy sản phẩm cho mã vạch: <code className="font-mono">{scannedBarcode}</code>
             </p>
             <p className="text-xs text-muted-foreground mt-1">
-              Please enter the details manually.
+              Vui lòng nhập thông tin thủ công.
             </p>
           </div>
         )}
-        
+
         {prefillData && (
           <div className="mb-4 p-3 rounded-lg bg-primary/10 border border-primary/30">
             <p className="text-sm text-primary">
-              ✓ Product found! Details have been prefilled.
+              ✓ Đã tìm thấy sản phẩm! Thông tin đã được điền sẵn.
             </p>
           </div>
         )}
@@ -106,10 +106,10 @@ export const AddFoodItemPage: React.FC = () => {
       </main>
 
       <FixedBottomAction
-        primaryLabel="Save Item"
+        primaryLabel="Lưu món"
         primaryOnClick={handleSave}
         primaryLoading={addFoodItem.isPending}
-        secondaryLabel="Cancel"
+        secondaryLabel="Hủy"
         secondaryOnClick={handleCancel}
       />
     </AppShell>

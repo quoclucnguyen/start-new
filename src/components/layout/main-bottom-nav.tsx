@@ -11,11 +11,11 @@ import {
 
 // Default navigation items for the app
 const defaultNavItems: NavItem[] = [
-  { id: 'home', label: 'Home', icon: <LayoutDashboard size={24} />, href: '/' },
-  { id: 'list', label: 'List', icon: <ClipboardList size={24} />, href: '/list' },
-  { id: 'diary', label: 'Diary', icon: <UtensilsCrossed size={24} />, href: '/diary' },
-  { id: 'recipes', label: 'Recipes', icon: <Utensils size={24} />, href: '/recipes' },
-  { id: 'settings', label: 'Settings', icon: <Settings size={24} />, href: '/settings' },
+  { id: 'home', label: 'Trang chủ', icon: <LayoutDashboard size={24} />, href: '/' },
+  { id: 'list', label: 'Danh sách', icon: <ClipboardList size={24} />, href: '/list' },
+  { id: 'diary', label: 'Nhật ký', icon: <UtensilsCrossed size={24} />, href: '/diary' },
+  { id: 'recipes', label: 'Công thức', icon: <Utensils size={24} />, href: '/recipes' },
+  { id: 'settings', label: 'Cài đặt', icon: <Settings size={24} />, href: '/settings' },
 ];
 
 // Map paths to tab IDs

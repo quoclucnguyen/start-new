@@ -38,19 +38,19 @@ const RecipeManagementPage: React.FC<RecipeManagementPageProps> = ({ className }
 
   const handleDelete = async (id: string) => {
     const recipe = recipes.find((r) => r.id === id);
-    const confirmed = await confirmDelete(recipe?.title ?? 'this recipe');
+    const confirmed = await confirmDelete(recipe?.title ?? 'công thức này');
     if (confirmed) {
       deleteMutation.mutate(id, {
-        onSuccess: () => Toast.show({ content: 'Recipe deleted', icon: 'success' }),
-        onError: () => Toast.show({ content: 'Failed to delete recipe', icon: 'fail' }),
+        onSuccess: () => Toast.show({ content: 'Đã xóa công thức', icon: 'success' }),
+        onError: () => Toast.show({ content: 'Xóa công thức thất bại', icon: 'fail' }),
       });
     }
   };
 
   const handleDuplicate = (id: string) => {
     duplicateMutation.mutate(id, {
-      onSuccess: () => Toast.show({ content: 'Recipe duplicated', icon: 'success' }),
-      onError: () => Toast.show({ content: 'Failed to duplicate', icon: 'fail' }),
+      onSuccess: () => Toast.show({ content: 'Đã nhân đôi công thức', icon: 'success' }),
+      onError: () => Toast.show({ content: 'Nhân đôi thất bại', icon: 'fail' }),
     });
   };
 
@@ -63,17 +63,17 @@ const RecipeManagementPage: React.FC<RecipeManagementPageProps> = ({ className }
       {/* Header */}
       <div className="px-4 pt-4 pb-2 flex flex-col gap-3">
         <div className="flex items-center justify-between">
-          <h1 className="text-xl font-bold">My Recipes</h1>
+          <h1 className="text-xl font-bold">Công thức của tôi</h1>
           <Button size="sm" onClick={openCreateEditor} className="gap-1">
             <Plus className="size-4" />
-            New
+            Mới
           </Button>
         </div>
 
         <SearchInput
           value={search}
           onChange={setSearch}
-          placeholder="Search recipes..."
+          placeholder="Tìm kiếm công thức..."
           showVoiceButton={false}
         />
       </div>
@@ -86,7 +86,7 @@ const RecipeManagementPage: React.FC<RecipeManagementPageProps> = ({ className }
           </div>
         ) : error ? (
           <div className="text-center py-16 text-destructive">
-            <p className="text-sm">Failed to load recipes</p>
+            <p className="text-sm">Tải công thức thất bại</p>
             <p className="text-xs text-muted-foreground mt-1">{error.message}</p>
           </div>
         ) : recipes.length === 0 && !search ? (
@@ -94,7 +94,7 @@ const RecipeManagementPage: React.FC<RecipeManagementPageProps> = ({ className }
         ) : recipes.length === 0 && search ? (
           <div className="text-center py-16">
             <p className="text-sm text-muted-foreground">
-              No recipes match "{search}"
+              Không tìm thấy công thức nào khớp với "{search}"
             </p>
           </div>
         ) : (
@@ -104,7 +104,7 @@ const RecipeManagementPage: React.FC<RecipeManagementPageProps> = ({ className }
               <>
                 {systemRecipes.length > 0 && (
                   <h2 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mt-2">
-                    Your Recipes ({userRecipes.length})
+                    Công thức của bạn ({userRecipes.length})
                   </h2>
                 )}
                 {userRecipes.map((recipe) => (
@@ -124,7 +124,7 @@ const RecipeManagementPage: React.FC<RecipeManagementPageProps> = ({ className }
             {systemRecipes.length > 0 && (
               <>
                 <h2 className="text-sm font-bold text-muted-foreground uppercase tracking-wider mt-4">
-                  System Recipes ({systemRecipes.length})
+                  Công thức hệ thống ({systemRecipes.length})
                 </h2>
                 {systemRecipes.map((recipe) => (
                   <RecipeListItem

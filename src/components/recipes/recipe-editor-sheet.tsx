@@ -46,10 +46,10 @@ const RecipeEditorSheet: React.FC = () => {
   const handleClose = () => {
     if (draftDirty) {
       Dialog.confirm({
-        title: 'Discard changes?',
-        content: 'You have unsaved changes. Are you sure you want to discard them?',
-        confirmText: 'Discard',
-        cancelText: 'Keep Editing',
+        title: 'Hủy thay đổi?',
+        content: 'Bạn có thay đổi chưa lưu. Bạn có chắc muốn hủy chúng?',
+        confirmText: 'Hủy',
+        cancelText: 'Tiếp tục sửa',
         onConfirm: () => closeEditor(),
       });
     } else {
@@ -111,7 +111,7 @@ const RecipeEditorSheet: React.FC = () => {
     <BottomSheet
       visible={isEditorOpen}
       onClose={handleClose}
-      title={isEditMode ? 'Edit Recipe' : 'New Recipe'}
+      title={isEditMode ? 'Sửa công thức' : 'Công thức mới'}
     >
       {isEditMode && isLoading ? (
         <div className="flex items-center justify-center py-16">

@@ -77,11 +77,11 @@ export const MealLogDetailSheet: React.FC<MealLogDetailSheetProps> = ({
       },
       {
         onSuccess: () => {
-          Toast.show({ icon: 'success', content: 'Updated!' });
+          Toast.show({ icon: 'success', content: 'Đã cập nhật!' });
           onClose();
         },
         onError: () => {
-          Toast.show({ icon: 'fail', content: 'Failed to update' });
+          Toast.show({ icon: 'fail', content: 'Cập nhật thất bại' });
         },
       },
     );
@@ -90,12 +90,12 @@ export const MealLogDetailSheet: React.FC<MealLogDetailSheetProps> = ({
   const handleDelete = async () => {
     if (!mealLogId) return;
     const confirmed = await Dialog.confirm({
-      content: 'Delete this meal log?',
+      content: 'Xóa bản ghi này?',
     });
     if (confirmed) {
       deleteMutation.mutate(mealLogId, {
         onSuccess: () => {
-          Toast.show({ icon: 'success', content: 'Deleted' });
+          Toast.show({ icon: 'success', content: 'Đã xóa' });
           onClose();
         },
       });
@@ -118,14 +118,14 @@ export const MealLogDetailSheet: React.FC<MealLogDetailSheetProps> = ({
   };
 
   return (
-    <BottomSheet visible={visible} onClose={onClose} title="Meal Details">
+    <BottomSheet visible={visible} onClose={onClose} title="Chi tiết món">
       {isLoading ? (
         <div className="flex justify-center py-12">
           <DotLoading color="primary" />
         </div>
       ) : !log ? (
         <div className="py-12 text-center text-muted-foreground">
-          Meal log not found
+          Không tìm thấy bản ghi
         </div>
       ) : (
         <div className="flex flex-col h-full">
@@ -133,7 +133,7 @@ export const MealLogDetailSheet: React.FC<MealLogDetailSheetProps> = ({
             {/* Meal Type */}
             <div>
               <label className="text-sm font-medium text-muted-foreground mb-2 block">
-                Meal type
+                Loại món
               </label>
               <MealTypeSelector value={mealType} onChange={setMealType} />
             </div>
@@ -141,7 +141,7 @@ export const MealLogDetailSheet: React.FC<MealLogDetailSheetProps> = ({
             {/* Cost */}
             <div>
               <label className="text-sm font-medium text-muted-foreground mb-2 block">
-                Total cost
+                Tổng tiền
               </label>
               <CostInput value={totalCost} onChange={setTotalCost} />
             </div>
@@ -149,7 +149,7 @@ export const MealLogDetailSheet: React.FC<MealLogDetailSheetProps> = ({
             {/* Venue */}
             <div>
               <label className="text-sm font-medium text-muted-foreground mb-2 block">
-                Venue
+                Quán
               </label>
               <VenuePicker value={venueId} onChange={setVenueId} />
             </div>
@@ -157,7 +157,7 @@ export const MealLogDetailSheet: React.FC<MealLogDetailSheetProps> = ({
             {/* Rating */}
             <div>
               <label className="text-sm font-medium text-muted-foreground mb-2 block">
-                Rating
+                Đánh giá
               </label>
               <RatingInput value={rating} onChange={setRating} size={28} />
             </div>
@@ -165,12 +165,12 @@ export const MealLogDetailSheet: React.FC<MealLogDetailSheetProps> = ({
             {/* Notes */}
             <div>
               <label className="text-sm font-medium text-muted-foreground mb-2 block">
-                Notes
+                Ghi chú
               </label>
               <textarea
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
-                placeholder="What did you think?"
+                placeholder="Bạn thấy sao?"
                 rows={2}
                 className="w-full rounded-lg border border-border bg-secondary px-3 py-2 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-primary/30"
               />
@@ -179,13 +179,13 @@ export const MealLogDetailSheet: React.FC<MealLogDetailSheetProps> = ({
             {/* Tags */}
             <div>
               <label className="text-sm font-medium text-muted-foreground mb-2 block">
-                Tags (comma-separated)
+                Thẻ (cách nhau bằng dấu phẩy)
               </label>
               <input
                 type="text"
                 value={tags}
                 onChange={(e) => setTags(e.target.value)}
-                placeholder="e.g. spicy, lunch"
+                placeholder="ví dụ: cay, bữa trưa"
                 className="w-full rounded-lg border border-border bg-secondary px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary/30"
               />
             </div>
@@ -194,14 +194,14 @@ export const MealLogDetailSheet: React.FC<MealLogDetailSheetProps> = ({
             <div>
               <div className="flex items-center justify-between mb-2">
                 <label className="text-sm font-medium text-muted-foreground">
-                  Dishes
+                  Món
                 </label>
                 <button
                   type="button"
                   onClick={addDish}
                   className="flex items-center gap-1 text-xs text-primary font-medium"
                 >
-                  <Plus size={14} /> Add dish
+                  <Plus size={14} /> Thêm món
                 </button>
               </div>
               <div className="flex flex-col gap-3">
@@ -223,12 +223,12 @@ export const MealLogDetailSheet: React.FC<MealLogDetailSheetProps> = ({
               onClick={handleDelete}
               className="flex items-center gap-2 text-sm text-destructive font-medium py-3"
             >
-              <Trash2 size={16} /> Delete this meal
+              <Trash2 size={16} /> Xóa món này
             </button>
           </div>
 
           <FixedBottomAction
-            primaryLabel="Save Changes"
+            primaryLabel="Lưu thay đổi"
             primaryOnClick={handleSave}
             primaryDisabled={!mealType || totalCost <= 0 || updateMutation.isPending}
           />

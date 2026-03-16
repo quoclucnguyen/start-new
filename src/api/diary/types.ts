@@ -232,9 +232,9 @@ export interface DbMealItemEntry {
 // ============================================================================
 
 export const MEAL_TYPE_LABELS: Record<MealType, string> = {
-  delivery: 'Delivery',
-  dine_in: 'Dine-in',
-  ready_made: 'Ready-made',
+  delivery: 'Giao hàng',
+  dine_in: 'Tại chỗ',
+  ready_made: 'Mang đi',
 };
 
 export const MEAL_TYPE_ICONS: Record<MealType, string> = {
@@ -244,9 +244,9 @@ export const MEAL_TYPE_ICONS: Record<MealType, string> = {
 };
 
 export const VENUE_STATUS_LABELS: Record<VenueStatus, string> = {
-  favorite: 'Favorite',
-  blacklisted: 'Blacklisted',
-  neutral: 'Neutral',
+  favorite: 'Yêu thích',
+  blacklisted: 'Đưa vào danh sách đen',
+  neutral: 'Bình thường',
 };
 
 export function formatCost(amount: number): string {
@@ -259,9 +259,9 @@ export function formatLogDate(dateStr: string): string {
   const diffMs = now.getTime() - date.getTime();
   const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
 
-  if (diffDays === 0) return 'Today';
-  if (diffDays === 1) return 'Yesterday';
-  if (diffDays < 7) return `${diffDays} days ago`;
+  if (diffDays === 0) return 'Hôm nay';
+  if (diffDays === 1) return 'Hôm qua';
+  if (diffDays < 7) return `${diffDays} ngày trước`;
 
   return date.toLocaleDateString('vi-VN', {
     day: '2-digit',
@@ -287,8 +287,8 @@ export function getDateGroupLabel(dateKey: string): string {
   const target = new Date(date.getFullYear(), date.getMonth(), date.getDate());
   const diffDays = Math.floor((today.getTime() - target.getTime()) / (1000 * 60 * 60 * 24));
 
-  if (diffDays === 0) return 'Today';
-  if (diffDays === 1) return 'Yesterday';
+  if (diffDays === 0) return 'Hôm nay';
+  if (diffDays === 1) return 'Hôm qua';
   return date.toLocaleDateString('vi-VN', {
     weekday: 'long',
     day: '2-digit',

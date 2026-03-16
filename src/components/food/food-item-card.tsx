@@ -31,7 +31,7 @@ const statusConfig: Record<ExpiryStatus, {
     iconColor: 'text-red-500 dark:text-red-400',
     textColor: 'text-red-500',
     tagColor: 'danger',
-    tagText: 'Expiring',
+    tagText: 'Sắp hết hạn',
     progressColor: '#ef4444',
   },
   soon: {
@@ -40,7 +40,7 @@ const statusConfig: Record<ExpiryStatus, {
     iconColor: 'text-orange-500 dark:text-orange-400',
     textColor: 'text-orange-500',
     tagColor: 'warning',
-    tagText: 'Soon',
+    tagText: 'Gần hết hạn',
     progressColor: '#f97316',
   },
   good: {
@@ -49,7 +49,7 @@ const statusConfig: Record<ExpiryStatus, {
     iconColor: 'text-yellow-600 dark:text-yellow-400',
     textColor: 'text-yellow-600 dark:text-yellow-400',
     tagColor: 'warning',
-    tagText: 'Good',
+    tagText: 'Tốt',
     progressColor: '#eab308',
   },
   fresh: {
@@ -58,7 +58,7 @@ const statusConfig: Record<ExpiryStatus, {
     iconColor: 'text-green-600 dark:text-green-400',
     textColor: 'text-green-600 dark:text-green-400',
     tagColor: 'success',
-    tagText: 'Fresh',
+    tagText: 'Tươi',
     progressColor: '#22c55e',
   },
 };
@@ -120,7 +120,7 @@ const FoodItemCard = React.forwardRef<HTMLDivElement, FoodItemCardProps>(
             {percentLeft !== undefined && (
               <div className="shrink-0 flex flex-col items-end gap-1 z-10">
                 <span className="text-xs font-medium text-muted-foreground">
-                  {percentLeft}% left
+                  {percentLeft}% còn lại
                 </span>
                 <ProgressBar 
                   percent={percentLeft} 
@@ -135,12 +135,12 @@ const FoodItemCard = React.forwardRef<HTMLDivElement, FoodItemCardProps>(
               </div>
             )}
             
-            <Button 
+            <Button
               fill='none'
               size='mini'
               className="shrink-0 ml-1 z-10 flex items-center justify-center text-gray-500"
               onClick={onMoreClick}
-              aria-label="More options"
+              aria-label="Thêm tùy chọn"
               style={{ padding: 4, border: 'none' }}
             >
               <MoreVertical size={20} />

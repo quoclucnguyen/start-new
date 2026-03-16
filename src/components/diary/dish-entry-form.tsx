@@ -27,16 +27,17 @@ export const DishEntryForm: React.FC<DishEntryFormProps> = ({
   return (
     <div className={cn('p-3 rounded-xl bg-secondary/50 border border-border/30 space-y-3', className)}>
       <div className="flex items-center justify-between">
-        <span className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
-          Dish {index + 1}
+        <span className="text-xs font-semibold text-foreground/80 uppercase tracking-wide">
+          Món {index + 1}
         </span>
         {onRemove && (
           <button
             type="button"
             onClick={onRemove}
-            className="p-1 rounded text-muted-foreground hover:text-destructive transition-colors"
+            aria-label={`Xóa món ${index + 1}`}
+            className="p-1 rounded text-foreground/70 hover:text-destructive transition-colors"
           >
-            <Trash2 size={14} />
+            <Trash2 size={14} aria-hidden="true" />
           </button>
         )}
       </div>
@@ -44,20 +45,20 @@ export const DishEntryForm: React.FC<DishEntryFormProps> = ({
       <Input
         value={value.itemName}
         onChange={(val) => update({ itemName: val })}
-        placeholder="Dish name"
+        placeholder="Tên món"
         className="text-sm"
       />
 
       <div className="flex gap-3">
         <div className="flex-1">
-          <label className="text-xs text-muted-foreground mb-1 block">Price</label>
+          <label className="text-xs text-foreground/80 mb-1 block">Giá</label>
           <CostInput
             value={value.price ?? 0}
             onChange={(v) => update({ price: v || undefined })}
           />
         </div>
         <div className="w-20">
-          <label className="text-xs text-muted-foreground mb-1 block">Qty</label>
+          <label className="text-xs text-foreground/80 mb-1 block">Số lượng</label>
           <Input
             type="number"
             value={value.quantity?.toString() ?? '1'}
@@ -68,7 +69,7 @@ export const DishEntryForm: React.FC<DishEntryFormProps> = ({
       </div>
 
       <div>
-        <label className="text-xs text-muted-foreground mb-1 block">Rating</label>
+        <label className="text-xs text-foreground/80 mb-1 block">Đánh giá</label>
         <RatingInput
           value={value.rating ?? 0}
           onChange={(r) => update({ rating: r || undefined })}
@@ -79,7 +80,7 @@ export const DishEntryForm: React.FC<DishEntryFormProps> = ({
       <TextArea
         value={value.notes ?? ''}
         onChange={(val) => update({ notes: val || undefined })}
-        placeholder="Notes about this dish..."
+        placeholder="Ghi chú về món này..."
         maxLength={200}
         rows={1}
         autoSize={{ minRows: 1, maxRows: 3 }}

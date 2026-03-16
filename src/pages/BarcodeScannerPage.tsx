@@ -77,23 +77,23 @@ export const BarcodeScannerPage: React.FC = () => {
       if (productData) {
         // Product found - navigate to add page with prefill
         Toast.show({
-          content: `Found: ${productData.name}`,
+          content: `Đã tìm thấy: ${productData.name}`,
           icon: 'success',
         });
         navigateToAdd(productData);
       } else {
         // Product not found - manual input
         Toast.show({
-          content: 'Product not found. Please enter details manually.',
+          content: 'Không tìm thấy sản phẩm. Vui lòng nhập thông tin thủ công.',
           icon: 'fail',
         });
         navigateToAdd(null, scanState.barcode);
       }
     }
-    
+
     if (productError) {
       Toast.show({
-        content: 'Error looking up product. Please try again.',
+        content: 'Lỗi khi tìm sản phẩm. Vui lòng thử lại.',
         icon: 'fail',
       });
       setScanState({ status: 'idle', barcode: null });
@@ -109,7 +109,7 @@ export const BarcodeScannerPage: React.FC = () => {
       } catch (err) {
         console.error('Failed to start scanner:', err);
         Toast.show({
-          content: 'Failed to access camera',
+          content: 'Không thể truy cập camera',
           icon: 'fail',
         });
       }
@@ -149,15 +149,15 @@ export const BarcodeScannerPage: React.FC = () => {
   const getStatusText = () => {
     switch (scanState.status) {
       case 'scanning':
-        return 'Scanning...';
+        return 'Đang quét...';
       case 'detected':
-        return 'Barcode detected!';
+        return 'Đã phát hiện mã vạch!';
       case 'loading':
-        return 'Looking up product...';
+        return 'Đang tìm sản phẩm...';
       case 'error':
-        return 'Scan failed';
+        return 'Quét thất bại';
       default:
-        return 'Position barcode in frame';
+        return 'Đặt mã vạch trong khung hình';
     }
   };
   
@@ -167,13 +167,13 @@ export const BarcodeScannerPage: React.FC = () => {
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black">
         <div className="text-center text-white">
           <SpinLoading color="primary" style={{ '--size': '48px' }} />
-          <p className="mt-4 text-lg">Telegram Scanner Active</p>
-          <p className="mt-2 text-sm text-gray-400">Scan a barcode to continue</p>
+          <p className="mt-4 text-lg">Trình quét Telegram đang hoạt động</p>
+          <p className="mt-2 text-sm text-gray-400">Quét mã vạch để tiếp tục</p>
           <button
             onClick={handleClose}
             className="mt-6 px-6 py-2 rounded-xl bg-white/10 text-white"
           >
-            Cancel
+            Hủy
           </button>
         </div>
       </div>
@@ -188,8 +188,8 @@ export const BarcodeScannerPage: React.FC = () => {
         statusText={getStatusText()}
         helpText={
           scanState.status === 'loading'
-            ? 'Please wait...'
-            : 'Point camera at product barcode'
+            ? 'Vui lòng đợi...'
+            : 'Hướng camera vào mã vạch sản phẩm'
         }
         onClose={handleClose}
         onCapture={handleCapture}
@@ -209,7 +209,7 @@ export const BarcodeScannerPage: React.FC = () => {
           <div className="absolute inset-0 flex items-center justify-center bg-black/60 z-30">
             <div className="text-center">
               <SpinLoading color="primary" style={{ '--size': '48px' }} />
-              <p className="mt-4 text-white text-lg">Looking up product...</p>
+              <p className="mt-4 text-white text-lg">Đang tìm sản phẩm...</p>
             </div>
           </div>
         )}
@@ -221,21 +221,21 @@ export const BarcodeScannerPage: React.FC = () => {
           <div className="text-center px-8">
             <p className="text-red-400 text-lg mb-4">
               {cameraSupported
-                ? 'Camera access denied or unavailable'
-                : 'Camera not supported on this device'}
+                ? 'Không thể truy cập camera hoặc camera không khả dụng'
+                : 'Thiết bị này không hỗ trợ camera'}
             </p>
             <button
               onClick={handleClose}
               className="px-6 py-3 rounded-xl bg-white/10 text-white mr-3"
             >
-              Go Back
+              Quay lại
             </button>
             {cameraSupported && (
               <button
                 onClick={handleCapture}
                 className="px-6 py-3 rounded-xl bg-primary text-primary-foreground"
               >
-                Try Again
+                Thử lại
               </button>
             )}
           </div>

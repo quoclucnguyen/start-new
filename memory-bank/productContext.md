@@ -11,6 +11,7 @@ Food waste is a significant global issue. Households throw away billions of doll
 3. **"I forgot I had this"** - Visual inventory with photos and search reduces forgotten items
 4. **"What do I need to buy?"** - Shopping list tracking supports planned and purchased items
 5. **"What can I make?"** - Recipe suggestions use current inventory and show missing ingredients
+6. **"Where should I eat/order again?"** - Food diary tracks venues/dishes, ratings, and meal history for better repeat decisions
 
 ## How It Should Work
 
@@ -23,6 +24,7 @@ Food waste is a significant global issue. Households throw away billions of doll
 5. **Edit/Delete** - Modify quantities, update expiry dates, remove consumed items
 6. **Filter/Search** - Find specific items by name, category, or storage location
 7. **Configure** - Customize categories (emoji, color) and storage locations to match user's kitchen
+8. **Log meals outside home** - Track delivery/dine-in/ready-made meals, venue memories, and dish preferences
 
 ### User Experience Goals
 
@@ -63,6 +65,14 @@ Food waste is a significant global issue. Households throw away billions of doll
 4. Move checked items into inventory or clear checked items
 5. Review grouped items by category for faster shopping flow
 
+### Logging Meals in Food Diary
+
+1. Open **Diary** tab from bottom navigation
+2. Use quick meal-type actions (delivery/dine-in/ready-made)
+3. Select or create venue, enter meal cost, optionally add rating/notes/tags
+4. Save log and review in meal history grouped by date
+5. Open venue detail to review favorite/avoid dishes and past visits
+
 ### Getting Recipe Suggestions
 
 1. Open **Recipes** tab to see suggested recipes
@@ -86,3 +96,4 @@ Food waste is a significant global issue. Households throw away billions of doll
 3. **Progressive Enhancement** - Core features work without photos or barcode scanning
 4. **User Control** - Categories, storage locations, and filters are fully customizable
 5. **Telegram Native** - Feels like part of Telegram, not a separate website
+6. **Cross-Domain Cohesion** - Inventory, shopping, recipes, and diary should feel like one connected product

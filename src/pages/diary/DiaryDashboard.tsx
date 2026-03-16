@@ -31,7 +31,7 @@ export const DiaryDashboard: React.FC = () => {
     <div className="flex flex-col gap-6 py-2">
       {/* Quick Log Buttons */}
       <section>
-        <SectionHeader title="Quick Log" />
+        <SectionHeader title="Ghi nhanh" />
         <div className="grid grid-cols-3 gap-3 mt-2">
           {MEAL_TYPES.map((type) => (
             <button
@@ -52,14 +52,14 @@ export const DiaryDashboard: React.FC = () => {
       {/* Recent Meals */}
       <section>
         <SectionHeader
-          title="Recent Meals"
+          title="Món gần đây"
           action={
             <button
               type="button"
               onClick={() => navigate('/diary/history')}
               className="text-sm text-primary font-medium"
             >
-              History
+              Lịch sử
             </button>
           }
         />
@@ -91,8 +91,8 @@ export const DiaryDashboard: React.FC = () => {
           ) : (
             <EmptyState
               icon={<Clock size={32} className="opacity-50" />}
-              title="No meals logged yet"
-              description="Tap a quick log button above to add your first meal."
+              title="Chưa có món nào được ghi"
+              description="Nhấn nút ghi nhanh ở trên để thêm món đầu tiên."
             />
           )}
         </div>
@@ -101,7 +101,7 @@ export const DiaryDashboard: React.FC = () => {
       {/* Favorite Venues */}
       {favoriteVenues.length > 0 && (
         <section>
-          <SectionHeader title="Favorite Venues" />
+          <SectionHeader title="Quán yêu thích" />
           <div className="flex flex-col gap-2 mt-2">
             {favoriteVenues.map((venue) => (
               <button
@@ -128,7 +128,7 @@ export const DiaryDashboard: React.FC = () => {
 
       {suggestedVenues.length > 0 && (
         <section>
-          <SectionHeader title="Try Again Soon" />
+          <SectionHeader title="Thử lại sớm" />
           <div className="flex flex-col gap-2 mt-2">
             {suggestedVenues.map((venue) => (
               <button
@@ -140,7 +140,7 @@ export const DiaryDashboard: React.FC = () => {
                 <div>
                   <p className="font-medium text-foreground">{venue.name}</p>
                   <p className="text-xs text-muted-foreground">
-                    Quick log another meal from this venue
+                    Ghi nhanh món khác từ quán này
                   </p>
                 </div>
                 <VenueStatusBadge status={venue.status} />

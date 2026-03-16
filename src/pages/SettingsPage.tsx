@@ -104,7 +104,7 @@ function SortableItem({ item, onEdit, onDelete }: SortableItemProps) {
       <div className="flex-1 min-w-0">
         <p className="text-base font-semibold truncate">{item.name}</p>
         {item.showInFilters && (
-          <p className="text-xs text-muted-foreground">Shown in filters</p>
+          <p className="text-xs text-muted-foreground">Hiển thị trong bộ lọc</p>
         )}
       </div>
 
@@ -156,7 +156,7 @@ function EditModal({ visible, onClose, onSave, initialData, title, isLoading }: 
 
   const handleSave = () => {
     if (!name.trim()) {
-      Toast.show({ content: 'Name is required', position: 'bottom' });
+      Toast.show({ content: 'Thiếu tên', position: 'bottom' });
       return;
     }
     onSave({ name: name.trim(), icon, color, showInFilters });
@@ -187,13 +187,13 @@ function EditModal({ visible, onClose, onSave, initialData, title, isLoading }: 
           {/* Name Input */}
           <div className="space-y-2">
             <label className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
-              Name
+              Tên
             </label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
-              placeholder="Enter name..."
+              placeholder="Nhập tên..."
               className="w-full h-14 px-4 rounded-xl border border-input bg-card text-foreground focus:ring-2 focus:ring-primary focus:border-transparent outline-none font-medium"
             />
           </div>
@@ -201,7 +201,7 @@ function EditModal({ visible, onClose, onSave, initialData, title, isLoading }: 
           {/* Icon Picker */}
           <div className="space-y-3">
             <label className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
-              Pick an Icon
+              Chọn biểu tượng
             </label>
             <div className="grid grid-cols-8 gap-2">
               {ICON_OPTIONS.map((emoji) => (
@@ -224,7 +224,7 @@ function EditModal({ visible, onClose, onSave, initialData, title, isLoading }: 
           {/* Color Picker */}
           <div className="space-y-3">
             <label className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
-              Color Code
+              Màu sắc
             </label>
             <div className="flex gap-3 overflow-x-auto pb-2">
               {COLOR_OPTIONS.map((c) => (
@@ -246,8 +246,8 @@ function EditModal({ visible, onClose, onSave, initialData, title, isLoading }: 
           {/* Show in Filters Toggle */}
           <div className="flex items-center justify-between p-4 bg-accent rounded-xl">
             <div className="flex flex-col gap-1">
-              <span className="text-base font-bold">Show in quick filters</span>
-              <span className="text-xs text-muted-foreground">Pin to top of inventory list</span>
+              <span className="text-base font-bold">Hiển thị trong bộ lọc nhanh</span>
+              <span className="text-xs text-muted-foreground">Ghim lên đầu danh sách</span>
             </div>
             <label className="relative inline-flex items-center cursor-pointer">
               <input
@@ -267,14 +267,14 @@ function EditModal({ visible, onClose, onSave, initialData, title, isLoading }: 
             onClick={onClose}
             className="flex-1 px-4 py-3.5 text-base font-bold text-muted-foreground bg-transparent hover:bg-accent border border-border rounded-xl transition-all"
           >
-            Cancel
+            Hủy
           </button>
           <button
             onClick={handleSave}
             disabled={isLoading}
             className="flex-[2] px-4 py-3.5 text-base font-bold text-primary-foreground bg-primary hover:bg-primary/90 rounded-xl transition-all disabled:opacity-50"
           >
-            {isLoading ? 'Saving...' : 'Save'}
+            {isLoading ? 'Đang lưu...' : 'Lưu'}
           </button>
         </div>
       </div>
@@ -347,7 +347,7 @@ export const SettingsPage: React.FC = () => {
           { id: item.id, updates: data },
           {
             onSuccess: () => {
-              Toast.show({ content: 'Category updated', position: 'bottom' });
+              Toast.show({ content: 'Đã cập nhật danh mục', position: 'bottom' });
               setEditModal({ visible: false, type: 'category' });
             },
           }
@@ -357,7 +357,7 @@ export const SettingsPage: React.FC = () => {
           { ...data, sortOrder: categories.length },
           {
             onSuccess: () => {
-              Toast.show({ content: 'Category added', position: 'bottom' });
+              Toast.show({ content: 'Đã thêm danh mục', position: 'bottom' });
               setEditModal({ visible: false, type: 'category' });
             },
           }
@@ -369,7 +369,7 @@ export const SettingsPage: React.FC = () => {
           { id: item.id, updates: data },
           {
             onSuccess: () => {
-              Toast.show({ content: 'Storage location updated', position: 'bottom' });
+              Toast.show({ content: 'Đã cập nhật nơi lưu trữ', position: 'bottom' });
               setEditModal({ visible: false, type: 'storage' });
             },
           }
@@ -379,7 +379,7 @@ export const SettingsPage: React.FC = () => {
           { ...data, sortOrder: storageLocations.length },
           {
             onSuccess: () => {
-              Toast.show({ content: 'Storage location added', position: 'bottom' });
+              Toast.show({ content: 'Đã thêm nơi lưu trữ', position: 'bottom' });
               setEditModal({ visible: false, type: 'storage' });
             },
           }
@@ -390,13 +390,13 @@ export const SettingsPage: React.FC = () => {
 
   const handleDeleteCategory = (id: string) => {
     deleteCategory.mutate(id, {
-      onSuccess: () => Toast.show({ content: 'Category deleted', position: 'bottom' }),
+      onSuccess: () => Toast.show({ content: 'Đã xóa danh mục', position: 'bottom' }),
     });
   };
 
   const handleDeleteStorageLocation = (id: string) => {
     deleteStorageLocation.mutate(id, {
-      onSuccess: () => Toast.show({ content: 'Storage location deleted', position: 'bottom' }),
+      onSuccess: () => Toast.show({ content: 'Đã xóa nơi lưu trữ', position: 'bottom' }),
     });
   };
 
@@ -412,12 +412,12 @@ export const SettingsPage: React.FC = () => {
         >
           <ArrowLeft size={24} />
         </button>
-        <h1 className="text-lg font-bold">Configuration</h1>
+        <h1 className="text-lg font-bold">Cấu hình</h1>
         <button
           onClick={() => navigate('/')}
           className="px-4 py-2 rounded-full text-sm font-bold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
         >
-          Done
+          Xong
         </button>
       </header>
 
@@ -433,9 +433,9 @@ export const SettingsPage: React.FC = () => {
             <section className="mt-6 mb-8">
               <div className="flex items-center justify-between mb-3 px-1">
                 <h2 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
-                  Manage Categories
+                  Quản lý danh mục
                 </h2>
-                <span className="text-xs text-muted-foreground">Drag to reorder</span>
+                <span className="text-xs text-muted-foreground">Kéo để sắp xếp</span>
               </div>
 
               <div className="bg-card rounded-2xl border border-border overflow-hidden">
@@ -465,7 +465,7 @@ export const SettingsPage: React.FC = () => {
                 className="w-full mt-3 flex items-center justify-center gap-2 py-3.5 bg-card border border-dashed border-muted-foreground/30 rounded-xl text-muted-foreground hover:border-primary hover:text-primary transition-all"
               >
                 <Plus size={20} />
-                <span className="font-semibold">Add Category</span>
+                <span className="font-semibold">Thêm danh mục</span>
               </button>
             </section>
 
@@ -473,9 +473,9 @@ export const SettingsPage: React.FC = () => {
             <section className="mb-8">
               <div className="flex items-center justify-between mb-3 px-1">
                 <h2 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
-                  Manage Storage Locations
+                  Quản lý nơi lưu trữ
                 </h2>
-                <span className="text-xs text-muted-foreground">Drag to reorder</span>
+                <span className="text-xs text-muted-foreground">Kéo để sắp xếp</span>
               </div>
 
               <div className="bg-card rounded-2xl border border-border overflow-hidden">
@@ -505,7 +505,7 @@ export const SettingsPage: React.FC = () => {
                 className="w-full mt-3 flex items-center justify-center gap-2 py-3.5 bg-card border border-dashed border-muted-foreground/30 rounded-xl text-muted-foreground hover:border-primary hover:text-primary transition-all"
               >
                 <Plus size={20} />
-                <span className="font-semibold">Add Location</span>
+                <span className="font-semibold">Thêm nơi lưu trữ</span>
               </button>
             </section>
           </>
@@ -520,8 +520,8 @@ export const SettingsPage: React.FC = () => {
         initialData={editModal.item}
         title={
           editModal.item
-            ? `Edit ${editModal.type === 'category' ? 'Category' : 'Location'}`
-            : `Add ${editModal.type === 'category' ? 'Category' : 'Location'}`
+            ? `Sửa ${editModal.type === 'category' ? 'danh mục' : 'nơi lưu trữ'}`
+            : `Thêm ${editModal.type === 'category' ? 'danh mục' : 'nơi lưu trữ'}`
         }
         isLoading={
           addCategory.isPending ||

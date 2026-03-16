@@ -1,203 +1,135 @@
 # Progress
 
-**Last Updated:** 2026-03-14
+**Last Updated:** 2026-03-16
 
 ## What Works
 
 ### ✅ Fully Implemented Features
 
 #### Core Inventory Management
-- **Food Item CRUD**: Create, read, update, delete food items
-- **Expiry Tracking**: Automatic calculation of expiry status (expiring/soon/good/fresh)
-- **Image Upload**: Photo capture/upload with client-side compression
-- **Search & Filter**: Real-time search, category filter, storage filter, sort options
-- **Quantity Management**: Add/edit with quantity and unit (pieces, kg, g, l, ml, bottles, packs)
+- Food item CRUD (create/read/update/delete)
+- Expiry status calculation + color-coded urgency UI
+- Image upload with client-side compression
+- Search/filter/sort by name/category/storage/status
 
 #### Authentication
-- **Telegram Mini App Login**: Seamless authentication via TMA SDK
-- **Email/Password Login**: Alternative auth method for non-Telegram users
-- **Auth State Management**: Zustand store with Supabase integration
-- **Route Protection**: AuthGuard component wraps protected routes
-- **Auto-Login**: Automatic TMA login when initData available
+- Telegram Mini App auth flow + email/password fallback
+- `AuthGuard` protected routing
+- Zustand auth store synced with Supabase auth events
 
 #### Configuration
-- **User-Configurable Categories**: Custom name, emoji icon, color, filter visibility
-- **User-Configurable Storage Locations**: Same customization options as categories
-- **Settings Persistence**: Settings stored and retrieved via API
-
-#### Barcode Scanning
-- **Quagga2 Integration**: Barcode detection via camera
-- **OpenFoodFacts API**: Product data lookup by barcode
-- **Auto-Fill Form**: Barcode scan populates product name and category
+- User-configurable categories and storage locations
+- Reorder/update/delete flows
+- Persistence via Supabase settings tables
 
 #### Shopping List
-- **Shopping List Page**: `/list` route integrated into main navigation
-- **Shopping Item CRUD (UI + API)**: Add, toggle checked, delete single, delete checked
-- **Move Purchased to Inventory**: Checked shopping items can be created as inventory items
-- **Optimistic Updates**: Shopping mutations use optimistic cache updates + rollback
-- **Category-grouped Display**: Unchecked items grouped by category; checked section separated
+- `/list` route integrated in main navigation
+- Add/check/delete item flows
+- Bulk clear checked items
+- Move purchased items into inventory
+- Optimistic mutation pattern implemented
 
-#### Recipe Features
-- **Recipe Suggestions Page**: `/recipes` route implemented
-- **Recipe Management Page**: `/recipes/manage` route implemented for user recipe CRUD flows
-- **Recipe Matching Engine**: Match inventory to recipe ingredients with match percentage + missing list
-- **Seed + User Recipe Merge**: Suggestion flow includes seed recipes when DB data is limited
-- **Add Missing Ingredients to Shopping List**: Mutation flow available from suggestions
+#### Recipes
+- `/recipes` suggestions page implemented
+- `/recipes/manage` management page implemented
+- Seed + user recipe merge for suggestions
+- Inventory matcher with missing-ingredient output
+- Add-missing-ingredients to shopping list mutation
 
-#### UI/UX
-- **Mobile-First Design**: Touch-friendly interactions, large tap targets
-- **Responsive Layout**: Works on various screen sizes
-- **Color-Coded Expiry**: Visual indicators (red/orange/yellow/green)
-- **Bottom Navigation**: Main app navigation pattern
+#### Food Diary (MVP A)
+- 5-tab navigation includes **Diary**
+- Diary routes implemented:
+  - `/diary`
+  - `/diary/history`
+  - `/diary/log`
+  - `/diary/venue/:id`
+- Diary domain APIs/hooks implemented:
+  - venues
+  - meal logs
+  - menu items
+  - meal item entries
+- Diary data schema created in `supabase/database/diary-tables.sql`
+- Core diary UI shipped:
+  - quick logging
+  - meal history with filters/sort/grouping
+  - venue detail with status + dish sections
+  - meal detail sheet editing for log-level fields
 
 #### Technical Foundation
-- **TypeScript Coverage**: Full type safety across codebase
-- **Optimistic Updates**: All mutations use TanStack Query optimistic updates
-- **Query Caching**: Configured stale times and persistence
-- **Error Handling**: Rollback on mutation errors
-- **Code Quality**: ESLint configured and enforced
+- TypeScript strict-mode architecture maintained
+- TanStack Query for server state + optimistic updates
+- Zustand limited to UI state
+- React Compiler setup active
+- Lint/build scripts are current (`npm run lint`, `npm run build`)
 
 ## What's Left to Build
 
-### 📋 Shopping List (Follow-up)
+### Near-Term Product Follow-up
 
-**Status:** Core feature implemented; follow-up polish remains.
+1. **Diary persistence depth**
+   - Persist dish-entry edits from `MealLogDetailSheet` end-to-end via `meal_item_entries` mutation flow.
+2. **Shopping UX polish**
+   - Quick-add inventory item to shopping list.
+3. **Recipe quality polish**
+   - Better ranking/tuning + richer dataset strategy.
 
-**Remaining work:**
-- Quick-add from inventory directly into shopping list
-- Full QA pass (optimistic rollback edge cases, mobile interaction polish, in-app flow verification)
+### Reliability / Production Hardening
 
-### ⏳ Other Planned Features (Not Started)
+- Add error boundaries and improved empty/error/loading states across domains
+- Improve API error clarity for user-facing flows
+- Define and implement testing strategy (unit + integration + E2E)
+- Harden Supabase schema/policies for production use
 
-#### Recipe Suggestions
+### Platform / Roadmap Items
 
-#### Recipe Suggestions / Management (Follow-up)
-- More robust recipe dataset and curation workflow
-- Better ranking/tuning for suggestion relevance
-- Additional UX polish for recipe detail and management flows
-
-#### Receipt Scanning
-- Capture or upload receipt image
-- OCR text extraction
-- Parse items from receipt text
-- Batch add items to inventory
-
-#### Notifications
-- Push notifications for expiring items
-- Daily/weekly expiry summary
-- In-app notification center
-
-#### Advanced Features
-- Family sharing/collaboration
-- Analytics and insights
-- Voice input for adding items
-- Export/import inventory data
-- Inventory reports
-
-### 🔧 Technical Improvements Needed
-
-#### Supabase Backend Migration
-- [ ] Ensure all domains consistently support intended runtime mode (mock vs Supabase)
-- [ ] Harden DB schema and policies for recipes/shopping domains
-- [ ] Migrate existing data (if any)
-- [ ] Test real-time sync functionality
-
-#### Testing
-- [ ] Unit tests for business logic (expiry calculation, etc.)
-- [ ] Integration tests for API layer
-- [ ] Component tests using React Testing Library
-- [ ] E2E tests for critical user flows
-
-#### Performance & Reliability
-- [ ] Add error boundaries
-- [ ] Implement proper loading states
-- [ ] Add retry logic for failed API calls
-- [ ] Optimize image compression performance
-- [ ] Add performance monitoring
-
-#### Offline Support
-- [ ] Service worker for caching
-- [ ] Offline detection
-- [ ] Queue actions while offline
-- [ ] Sync when connection restored
+- Receipt OCR flow
+- Notifications (expiry and reminders)
+- Diary analytics/suggestions (forgotten gems, nudges)
+- Offline queue/sync strategy
+- Family sharing and collaboration
 
 ## Current Status
 
-### Project Phase: **Active Development - Multi-Feature App**
+### Project Phase
 
-The app now includes inventory, shopping, and recipe modules in active use. Core user flows are implemented; current focus is reliability, consistency, and production hardening.
+**Active Development — Multi-Domain Product**
+
+The app now operates as a connected system spanning inventory, shopping, recipes, and diary features. Core user flows are implemented in all four domains, with current effort focused on consistency, UX polish, and production readiness.
 
 ### Stable Areas
-- Inventory CRUD operations
-- Expiry tracking and display
-- Authentication (both TMA and email/password)
-- User configuration (categories, storage locations)
-- Search, filter, and sort functionality
-- Barcode scanning with OpenFoodFacts integration
-- Shopping list core flow (add/check/delete/move to inventory)
-- Recipe suggestion and recipe management core flow
+
+- Inventory and expiry workflows
+- Auth + route protection
+- Shopping core loop
+- Recipe suggestion + management core loop
+- Diary MVP A navigation and core logging/history flows
 
 ### Areas Needing Work
-- Shopping + recipe UX/QA polish
-- Backend hardening (blocking production deployment)
-- Testing coverage (quality improvement)
-- Offline support (user experience improvement)
 
-## Known Issues
+- Diary dish-entry persistence completeness
+- Cross-domain UX polish and QA pass
+- Runtime-mode consistency (mock vs Supabase)
+- Testing and reliability tooling
 
-### Minor Issues
-1. **Barcode scanning reliability**: Varies by device and lighting conditions
-2. **Image compression**: Can be slow on lower-end devices
-3. **No undo functionality**: Deleted items cannot be recovered
-4. **No bulk operations**: Cannot delete/move multiple items at once
+## Known Issues / Technical Debt
 
-### Technical Debt
-1. **localStorage API**: Temporary implementation that needs Supabase migration
-2. **Mixed data-source strategy**: Some modules support mock/supabase toggle, settings uses direct Supabase
-3. **No error boundaries**: Errors can crash entire app
-4. **Limited error messages**: Generic error handling doesn't help users debug
-5. **No form validation feedback**: Users might not know why form submission fails
-
-## Evolution of Project Decisions
-
-### Data Types: Union Types → Strings
-**Decision**: Changed `FoodCategory` and `StorageLocation` from union types to `string`
-**When**: Early development
-**Why**: Support user-configurable categories instead of hardcoded values
-**Impact**: Required updates across all components that used these types
-
-### Authentication: Email-Only → TMA + Email
-**Decision**: Added Telegram Mini App authentication alongside email/password
-**When**: After initial implementation
-**Why**: Primary use case is Telegram Mini App, email is fallback for testing
-**Impact**: Added dual auth flows, `useAuthStore` handles both paths
-
-### State Management: Zustand-Only → TanStack Query + Zustand
-**Decision**: Use TanStack Query for server state, Zustand for UI state only
-**When**: From the start (learned from previous projects)
-**Why**: Clear separation of concerns, automatic caching, optimistic updates
-**Impact**: All data operations go through TanStack Query hooks
-
-### Routing: BrowserRouter → MemoryRouter
-**Decision**: Use MemoryRouter instead of BrowserRouter
-**When**: Initial implementation for TMA compatibility
-**Why**: Telegram Mini Apps don't have browser history
-**Impact**: No deep linking, all navigation is programmatic
+1. Mixed mock/supabase strategy remains inconsistent (`settings.api.ts` still direct Supabase)
+2. Diary meal detail currently updates log-level fields; dish-entry persistence is incomplete
+3. No error boundaries yet
+4. No offline detection/queueing strategy implemented
+5. Device-dependent reliability for barcode scanning and image-processing performance
 
 ## Development Priorities
 
 ### Next Sprint (Recommended)
-1. Polish shopping list UX (quick-add from inventory + QA)
-2. Improve recipe suggestion/management UX and ranking
-3. Improve error handling and loading states
+
+1. Wire meal dish-entry persistence in diary edit flow
+2. Implement inventory → shopping quick-add
+3. Run cross-domain QA sweep (shopping/recipes/diary)
+4. Improve loading/error UX and add initial error boundary coverage
 
 ### Following Sprint
-1. Begin Supabase backend migration
-2. Add error boundaries
-3. Implement undo functionality
 
-### Future Considerations
-1. Receipt scanning integration
-2. Push notifications
-3. Family sharing features
-4. Advanced analytics
+1. Normalize runtime mode behavior across all domains
+2. Establish baseline automated tests for critical flows
+3. Begin production hardening of schema/policies and migration strategy

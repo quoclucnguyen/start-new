@@ -65,7 +65,7 @@ export const VenuePicker: React.FC<VenuePickerProps> = ({
           onClick={handleClear}
           className="text-xs text-muted-foreground underline"
         >
-          Change
+          Thay đổi
         </button>
       </div>
     );
@@ -82,7 +82,7 @@ export const VenuePicker: React.FC<VenuePickerProps> = ({
             setIsOpen(true);
           }}
           onFocus={() => setIsOpen(true)}
-          placeholder="Search venue or create new..."
+          placeholder="Tìm quán hoặc tạo mới..."
           className="text-sm h-10"
           clearable
         />
@@ -113,7 +113,7 @@ export const VenuePicker: React.FC<VenuePickerProps> = ({
               className="w-full flex items-center gap-2 px-3 py-2.5 text-left text-sm text-primary font-medium border-t border-border hover:bg-muted active:bg-muted transition-colors"
             >
               <Plus size={14} />
-              Create &ldquo;{query.trim()}&rdquo;
+              Tạo &ldquo;{query.trim()}&rdquo;
             </button>
           )}
         </div>

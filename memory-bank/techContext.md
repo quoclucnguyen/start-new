@@ -23,7 +23,7 @@
 - **React Router 7.12.0** - Client-side routing with MemoryRouter for TMA
 
 ### Backend Integration
-- **Supabase 2.48.0** - Authentication and active database integration across inventory/shopping/recipes/settings
+- **Supabase 2.48.0** - Authentication and active database integration across inventory/shopping/recipes/diary/settings
 - **@tma.js/sdk-react 3.0.8** - Telegram Mini App SDK integration
 
 ### External APIs
@@ -124,6 +124,7 @@ npm run lint         # Run ESLint on all TypeScript files
 - **Mixed runtime mode**: Some APIs toggle mock/supabase via `VITE_USE_MOCK_API`, while settings currently use direct Supabase
 - **Base64 Images**: Stored in localStorage in mock-mode development
 - **Barcode Scanning**: Quality varies by device camera and lighting
+- **Diary detail persistence gap**: meal dish-entry edits are not fully wired through update flows yet
 
 ## Dependency Patterns
 
@@ -165,10 +166,11 @@ npm run lint         # Run ESLint on all TypeScript files
 3. **Image Compression**: pica can be slow on lower-end devices
 4. **MemoryRouter**: Can't share deep links to specific screens
 5. **No Offline Detection**: App doesn't currently detect offline state
+6. **Diary edit depth**: `MealLogDetailSheet` currently updates meal-log fields but not end-to-end dish-entry persistence
 
 ## Future Technical Work
 
-1. **Supabase Migration**: Replace localStorage with real backend
+1. **Runtime Mode Consistency**: Unify mock/supabase behavior for all domains (including settings)
 2. **Service Worker**: Add offline capability and caching
 3. **Push Notifications**: Integrate Telegram push notifications for expiry alerts
 4. **Receipt OCR**: Integrate OCR service for receipt scanning

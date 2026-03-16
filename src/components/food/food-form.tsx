@@ -104,9 +104,9 @@ const FoodForm = React.forwardRef<FoodFormRef, FoodFormProps>(
 
         {/* Food Name */}
         <Form form={form} layout="vertical" disabled={isLoading}>
-          <Form.Item label="Food Name" required>
+          <Form.Item label="Tên món" required>
             <Input
-              placeholder="e.g., Organic Whole Milk"
+              placeholder="ví dụ: Sữa tươi nguyên chất"
               value={values.name}
               onChange={(val) => updateValue('name', val)}
               className="h-14! rounded-xl!"
@@ -114,7 +114,7 @@ const FoodForm = React.forwardRef<FoodFormRef, FoodFormProps>(
           </Form.Item>
 
           {/* Category */}
-          <Form.Item label="Category">
+          <Form.Item label="Danh mục">
             <CategoryPicker
               value={values.category}
               onChange={(val) => updateValue('category', val)}
@@ -122,7 +122,7 @@ const FoodForm = React.forwardRef<FoodFormRef, FoodFormProps>(
           </Form.Item>
 
           {/* Expiry Date */}
-          <Form.Item label="Expiry Date">
+          <Form.Item label="Ngày hết hạn">
             <div className="flex flex-col gap-3">
               <DatePickerInput
                 value={values.noExpiry ? null : values.expiryDate}
@@ -131,7 +131,7 @@ const FoodForm = React.forwardRef<FoodFormRef, FoodFormProps>(
                 min={new Date()}
               />
               <div className="flex items-center justify-between">
-                <span className="text-sm text-muted-foreground">No expiry date</span>
+                <span className="text-sm text-muted-foreground">Không có ngày hết hạn</span>
                 <Switch
                   checked={values.noExpiry}
                   onChange={(checked) => updateValue('noExpiry', checked)}
@@ -141,7 +141,7 @@ const FoodForm = React.forwardRef<FoodFormRef, FoodFormProps>(
           </Form.Item>
 
           {/* Quantity */}
-          <Form.Item label="Quantity">
+          <Form.Item label="Số lượng">
             <div className="flex items-center gap-4">
               <QuantityStepper
                 value={values.quantity}
@@ -157,7 +157,7 @@ const FoodForm = React.forwardRef<FoodFormRef, FoodFormProps>(
           </Form.Item>
 
           {/* Storage Location */}
-          <Form.Item label="Storage Location">
+          <Form.Item label="Nơi lưu trữ">
             <StorageLocationPicker
               value={values.storage}
               onChange={(val) => updateValue('storage', val as StorageLocation)}
@@ -165,9 +165,9 @@ const FoodForm = React.forwardRef<FoodFormRef, FoodFormProps>(
           </Form.Item>
 
           {/* Notes */}
-          <Form.Item label="Notes (optional)">
+          <Form.Item label="Ghi chú (tùy chọn)">
             <TextArea
-              placeholder="Add any notes about this item..."
+              placeholder="Thêm ghi chú về món này..."
               value={values.notes}
               onChange={(val) => updateValue('notes', val)}
               rows={3}

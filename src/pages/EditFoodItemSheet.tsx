@@ -36,14 +36,14 @@ export const EditFoodItemSheet: React.FC<EditFoodItemSheetProps> = ({
     updateFoodItem.mutate(updateInput, {
       onSuccess: () => {
         Toast.show({
-          content: 'Item updated successfully!',
+          content: 'Cập nhật món thành công!',
           position: 'bottom',
         });
         onClose();
       },
       onError: (error) => {
         Toast.show({
-          content: error.message || 'Failed to update item',
+          content: error.message || 'Cập nhật món thất bại',
           position: 'bottom',
         });
       },
@@ -63,14 +63,14 @@ export const EditFoodItemSheet: React.FC<EditFoodItemSheetProps> = ({
     deleteFoodItem.mutate(itemId, {
       onSuccess: () => {
         Toast.show({
-          content: 'Item deleted',
+          content: 'Đã xóa món',
           position: 'bottom',
         });
         onClose();
       },
       onError: (error) => {
         Toast.show({
-          content: error.message || 'Failed to delete item',
+          content: error.message || 'Xóa món thất bại',
           position: 'bottom',
         });
       },
@@ -94,13 +94,13 @@ export const EditFoodItemSheet: React.FC<EditFoodItemSheetProps> = ({
       {
         onSuccess: () => {
           Toast.show({
-            content: 'Added to shopping list!',
+            content: 'Đã thêm vào danh sách mua!',
             position: 'bottom',
           });
         },
         onError: (error) => {
           Toast.show({
-            content: error.message || 'Failed to add to shopping list',
+            content: error.message || 'Thêm vào danh sách mua thất bại',
             position: 'bottom',
           });
         },
@@ -112,7 +112,7 @@ export const EditFoodItemSheet: React.FC<EditFoodItemSheetProps> = ({
     <BottomSheet
       visible={visible}
       onClose={onClose}
-      title="Edit Item"
+      title="Sửa món"
     >
       {isLoadingItem ? (
         <div className="flex items-center justify-center h-64">
@@ -136,22 +136,22 @@ export const EditFoodItemSheet: React.FC<EditFoodItemSheetProps> = ({
               className="mt-4 w-full flex items-center justify-center gap-2 py-3 rounded-xl border border-border text-sm font-medium text-muted-foreground hover:bg-muted/50 active:scale-[0.98] transition-all disabled:opacity-50"
             >
               <ShoppingCart size={18} />
-              {addToShoppingList.isPending ? 'Adding...' : 'Add to Shopping List'}
+              {addToShoppingList.isPending ? 'Đang thêm...' : 'Thêm vào danh sách mua'}
             </button>
           </div>
 
           <FixedBottomAction
-            primaryLabel="Save Changes"
+            primaryLabel="Lưu thay đổi"
             primaryOnClick={handleSave}
             primaryLoading={updateFoodItem.isPending}
-            secondaryLabel="Delete"
+            secondaryLabel="Xóa"
             secondaryOnClick={handleDelete}
             secondaryVariant="destructive"
           />
         </>
       ) : (
         <div className="flex items-center justify-center h-64 text-muted-foreground">
-          Item not found
+          Không tìm thấy món
         </div>
       )}
     </BottomSheet>

@@ -13,10 +13,10 @@ import { SectionHeader } from '@/components/shared';
 import { EmptyState } from '@/components/shared';
 
 const mealTypeFilters = [
-  { id: 'all', label: 'All' },
-  { id: 'delivery', label: '🛵 Delivery' },
-  { id: 'dine_in', label: '🍽️ Dine-in' },
-  { id: 'ready_made', label: '🏪 Ready-made' },
+  { id: 'all', label: 'Tất cả' },
+  { id: 'delivery', label: '🛵 Giao hàng' },
+  { id: 'dine_in', label: '🍽️ Tại chỗ' },
+  { id: 'ready_made', label: '🏪 Mang đi' },
 ];
 
 export const MealHistoryPage: React.FC = () => {
@@ -95,7 +95,7 @@ export const MealHistoryPage: React.FC = () => {
             type="text"
             value={filters.search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Search meals..."
+            placeholder="Tìm món..."
             className="flex-1 bg-transparent text-sm outline-none"
           />
         </div>
@@ -118,12 +118,12 @@ export const MealHistoryPage: React.FC = () => {
             onClick={() => setSort(s)}
             className={filters.sort === s ? 'text-primary font-bold' : ''}
           >
-            {s === 'recent' ? 'Recent' : s === 'cost' ? 'Cost' : 'Rating'}
+            {s === 'recent' ? 'Gần đây' : s === 'cost' ? 'Giá' : 'Đánh giá'}
           </button>
         ))}
         {totalSpending > 0 && (
           <span className="ml-auto font-medium text-foreground">
-            Total: {formatCost(totalSpending)}
+            Tổng: {formatCost(totalSpending)}
           </span>
         )}
       </div>
@@ -147,11 +147,11 @@ export const MealHistoryPage: React.FC = () => {
         </div>
       ) : sortedDateKeys.length === 0 ? (
         <EmptyState
-          title="No meals found"
+          title="Không tìm thấy món"
           description={
             filters.search || filters.mealType !== 'all'
-              ? 'Try changing your search or filters.'
-              : 'Start logging meals to build your diary history.'
+              ? 'Thử thay đổi tìm kiếm hoặc bộ lọc.'
+              : 'Bắt đầu ghi món để xây dựng lịch sử.'
           }
         />
       ) : (

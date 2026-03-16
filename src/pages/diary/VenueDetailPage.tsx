@@ -38,12 +38,12 @@ export const VenueDetailPage: React.FC = () => {
   };
 
   const handleAddDish = () => {
-    const name = window.prompt('Dish name');
+    const name = window.prompt('Tên món');
     if (name && id) {
       addMenuItem.mutate(
         { venueId: id, name },
         {
-          onSuccess: () => Toast.show({ icon: 'success', content: 'Dish added' }),
+          onSuccess: () => Toast.show({ icon: 'success', content: 'Đã thêm món' }),
         },
       );
     }
@@ -63,7 +63,7 @@ export const VenueDetailPage: React.FC = () => {
     return (
       <AppShell>
         <TopAppBar
-          title="Venue"
+          title="Quán"
           leftAction={
             <IconButton onClick={() => navigate(-1)}>
               <ArrowLeft size={22} />
@@ -71,7 +71,7 @@ export const VenueDetailPage: React.FC = () => {
           }
         />
         <div className="flex flex-col items-center py-12 text-muted-foreground">
-          <p>Venue not found</p>
+          <p>Không tìm thấy quán</p>
         </div>
       </AppShell>
     );
@@ -135,7 +135,7 @@ export const VenueDetailPage: React.FC = () => {
                     : 'border-border/50 bg-secondary/50 text-muted-foreground'
                 }`}
               >
-                {s === 'favorite' ? '⭐ Favorite' : s === 'blacklisted' ? '🚫 Avoid' : 'Neutral'}
+                {s === 'favorite' ? '⭐ Yêu thích' : s === 'blacklisted' ? '🚫 Tránh' : 'Bình thường'}
               </button>
             ))}
           </div>
@@ -144,7 +144,7 @@ export const VenueDetailPage: React.FC = () => {
         {/* Món tủ (Favorite Dishes) */}
         {favorites.length > 0 && (
           <section className="mb-6">
-            <SectionHeader title="⭐ Must-try Dishes" />
+            <SectionHeader title="⭐ Món nên thử" />
             <div className="flex flex-col gap-2 mt-2">
               {favorites.map((item) => (
                 <DishRow key={item.id} item={item} />
@@ -156,7 +156,7 @@ export const VenueDetailPage: React.FC = () => {
         {/* Blacklisted Dishes */}
         {blacklisted.length > 0 && (
           <section className="mb-6">
-            <SectionHeader title="🚫 Avoid" />
+            <SectionHeader title="🚫 Món nên tránh" />
             <div className="flex flex-col gap-2 mt-2">
               {blacklisted.map((item) => (
                 <DishRow key={item.id} item={item} />
@@ -168,14 +168,14 @@ export const VenueDetailPage: React.FC = () => {
         {/* All Dishes */}
         <section className="mb-6">
           <SectionHeader
-            title="All Dishes"
+            title="Tất cả món"
             action={
               <button
                 type="button"
                 onClick={handleAddDish}
                 className="text-sm text-primary font-medium"
               >
-                Add
+                Thêm
               </button>
             }
           />
@@ -186,8 +186,8 @@ export const VenueDetailPage: React.FC = () => {
               ))
             ) : (
               <EmptyState
-                title="No dishes yet"
-                description="Add a dish to start building memory for this venue."
+                title="Chưa có món nào"
+                description="Thêm món để bắt đầu xây dựng kỷ niệm cho quán này."
               />
             )}
           </div>
@@ -195,7 +195,7 @@ export const VenueDetailPage: React.FC = () => {
 
         {/* Visit History */}
         <section>
-          <SectionHeader title="Visit History" />
+          <SectionHeader title="Lịch sử ghé thăm" />
           <div className="flex flex-col gap-2 mt-2">
             {venueLogs.length > 0 ? (
               venueLogs.map((log) => (
@@ -207,8 +207,8 @@ export const VenueDetailPage: React.FC = () => {
               ))
             ) : (
               <EmptyState
-                title="No visits yet"
-                description="Use the button below to log your first meal at this venue."
+                title="Chưa ghé thăm lần nào"
+                description="Dùng nút bên dưới để ghi món đầu tiên tại quán này."
               />
             )}
           </div>
@@ -222,7 +222,7 @@ export const VenueDetailPage: React.FC = () => {
             className="flex items-center gap-2 px-5 h-12 rounded-full bg-primary shadow-lg shadow-primary/40 text-primary-foreground font-medium transform active:scale-95 transition-transform"
           >
             <Plus size={20} />
-            Log here
+            Ghi tại đây
           </button>
         </div>
       </main>

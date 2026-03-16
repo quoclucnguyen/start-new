@@ -96,10 +96,10 @@ export const ShoppingListPage: React.FC<ShoppingListPageProps> = ({ className })
   const handleDelete = async (id: string, name: string) => {
     const confirmed = await new Promise<boolean>((resolve) => {
       Dialog.confirm({
-        title: 'Remove Item',
-        content: `Remove "${name}" from your shopping list?`,
-        confirmText: 'Remove',
-        cancelText: 'Cancel',
+        title: 'Xóa món',
+        content: `Xóa "${name}" khỏi danh sách mua?`,
+        confirmText: 'Xóa',
+        cancelText: 'Hủy',
         onConfirm: () => resolve(true),
         onCancel: () => resolve(false),
       });
@@ -113,10 +113,10 @@ export const ShoppingListPage: React.FC<ShoppingListPageProps> = ({ className })
   const handleDeleteChecked = async () => {
     const confirmed = await new Promise<boolean>((resolve) => {
       Dialog.confirm({
-        title: 'Delete Checked Items',
-        content: `Remove ${checkedCount} checked item${checkedCount !== 1 ? 's' : ''} from your list?`,
-        confirmText: 'Delete',
-        cancelText: 'Cancel',
+        title: 'Xóa món đã chọn',
+        content: `Xóa ${checkedCount} món đã chọn khỏi danh sách?`,
+        confirmText: 'Xóa',
+        cancelText: 'Hủy',
         onConfirm: () => resolve(true),
         onCancel: () => resolve(false),
       });
@@ -125,7 +125,7 @@ export const ShoppingListPage: React.FC<ShoppingListPageProps> = ({ className })
     if (confirmed) {
       deleteCheckedMutation.mutate(undefined, {
         onSuccess: () => {
-          Toast.show({ content: 'Checked items removed', position: 'bottom' });
+          Toast.show({ content: 'Đã xóa món đã chọn', position: 'bottom' });
         },
       });
     }
@@ -134,10 +134,10 @@ export const ShoppingListPage: React.FC<ShoppingListPageProps> = ({ className })
   const handleMoveToInventory = async () => {
     const confirmed = await new Promise<boolean>((resolve) => {
       Dialog.confirm({
-        title: 'Move to Inventory',
-        content: `Move ${checkedCount} checked item${checkedCount !== 1 ? 's' : ''} to your inventory?`,
-        confirmText: 'Move',
-        cancelText: 'Cancel',
+        title: 'Chuyển vào kho',
+        content: `Chuyển ${checkedCount} món đã chọn vào kho?`,
+        confirmText: 'Chuyển',
+        cancelText: 'Hủy',
         onConfirm: () => resolve(true),
         onCancel: () => resolve(false),
       });
@@ -148,7 +148,7 @@ export const ShoppingListPage: React.FC<ShoppingListPageProps> = ({ className })
         onSuccess: (createdItems) => {
           const count = createdItems?.length ?? 0;
           Toast.show({
-            content: `${count} item${count !== 1 ? 's' : ''} added to inventory`,
+            content: `Đã thêm ${count} món vào kho`,
             position: 'bottom',
           });
         },
@@ -160,7 +160,7 @@ export const ShoppingListPage: React.FC<ShoppingListPageProps> = ({ className })
     addMutation.mutate(input, {
       onSuccess: () => {
         closeAddModal();
-        Toast.show({ content: 'Item added', position: 'bottom' });
+        Toast.show({ content: 'Đã thêm món', position: 'bottom' });
       },
     });
   };
@@ -179,7 +179,7 @@ export const ShoppingListPage: React.FC<ShoppingListPageProps> = ({ className })
   if (error) {
     return (
       <div className="p-4 text-center text-destructive">
-        <p>Failed to load shopping list</p>
+        <p>Tải danh sách mua thất bại</p>
         <p className="text-sm text-muted-foreground mt-1">{error.message}</p>
       </div>
     );
@@ -226,13 +226,13 @@ export const ShoppingListPage: React.FC<ShoppingListPageProps> = ({ className })
           {checkedItems.length > 0 && (
             <div className="mb-4">
               <SectionHeader
-                title={`Checked (${checkedItems.length})`}
+                title={`Đã chọn (${checkedItems.length})`}
                 action={
                   <button
                     className="text-xs text-primary font-semibold"
                     onClick={handleDeleteChecked}
                   >
-                    Clear
+                    Xóa
                   </button>
                 }
               />
@@ -268,7 +268,7 @@ export const ShoppingListPage: React.FC<ShoppingListPageProps> = ({ className })
       <BottomSheet
         visible={isAddModalOpen}
         onClose={closeAddModal}
-        title={editingItemId ? 'Edit Item' : 'Add to Shopping List'}
+        title={editingItemId ? 'Sửa món' : 'Thêm vào danh sách mua'}
         height="70vh"
       >
         <div className="px-4 pb-4">
@@ -294,7 +294,7 @@ export const ShoppingListPage: React.FC<ShoppingListPageProps> = ({ className })
               onClick={() => formRef.current?.submit()}
               disabled={addMutation.isPending}
             >
-              {addMutation.isPending ? 'Adding...' : editingItemId ? 'Save Changes' : 'Add to List'}
+              {addMutation.isPending ? 'Đang thêm...' : editingItemId ? 'Lưu thay đổi' : 'Thêm vào danh sách'}
             </button>
           </div>
         </div>
