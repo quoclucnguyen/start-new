@@ -172,7 +172,7 @@ The same API + hooks + optimistic mutation pattern is now used across domains:
 - `food-items.api.ts` + `use-food-items.ts` + `use-food-mutations.ts`
 - `shopping-list.api.ts` + `use-shopping-list.ts` + `use-shopping-list-mutations.ts`
 - `recipes-management.api.ts` + `use-recipes-management.ts` + `use-recipes-management-mutations.ts`
-- `diary/*` APIs + query hooks + mutation hooks (`venues`, `meal-logs`, `menu-items`, `meal-item-entries`)
+- `src/pages/diary/api/*` APIs + query hooks + mutation hooks (`venues`, `meal-logs`, `menu-items`, `meal-item-entries`)
 
 Each domain keeps:
 - DB/app mapping helpers (snake_case ↔ camelCase)
@@ -195,12 +195,26 @@ This keeps suggestion logic centralized in data hooks rather than spread across 
 
 Diary flows are composed by linking venue memory + meal logs + optional dish entries:
 
-1. `useRecentMealLogs()` powers diary dashboard recents
+1. `useMealLogs()` powers dashboard calendar/day views and `useRecentMealLogs()` supports compact recent lists where needed
 2. `useVenues()` provides favorites + venue lookup
 3. `useMealLogs()` + `groupLogsByDate()` drives history timeline
 4. `MealLogDetailSheet` edits meal-log fields and prepares dish-entry state
 
 Pattern intent: keep query/mutation orchestration in hooks and thin pages for rendering + interaction.
+
+### 10. Diary Calendar + Deep-Link Detail Pattern
+
+Diary interaction now uses two complementary access patterns:
+
+1. **Calendar-first browsing (`DiaryDashboard`)**
+   - Month grid (42 cells, Monday-first)
+   - Day selection maps to logs for a specific date key
+   - Date dots indicate days containing meal logs
+2. **History + deep-link detail (`MealHistoryPage`)**
+   - History page can open detail sheet via query param (`?mealLogId=...`)
+   - Detail sheet state is synced with URL for direct transitions from dashboard/venue pages
+
+This pattern keeps timeline navigation intuitive while still allowing targeted entry-point linking inside `MemoryRouter` constraints.
 
 ## Component Relationships
 

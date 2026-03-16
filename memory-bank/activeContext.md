@@ -15,17 +15,20 @@ Current focus has shifted from feature scaffolding to **integration consistency,
 
 ## Recent Changes
 
-### Food Diary MVP A Landed
-- Added diary domain data model + APIs + hooks under `src/api/diary/`
+### Food Diary MVP A Landed + Calendar Iteration
+- Added diary domain data model + APIs + hooks under `src/pages/diary/api/`
 - Added Supabase schema for diary tables in `supabase/database/diary-tables.sql`:
   - `venues`
   - `menu_items`
   - `meal_logs`
   - `meal_item_entries`
 - Added diary UI/store/pages:
-  - `src/store/diary.store.ts`
-  - `src/components/diary/*`
+  - `src/pages/diary/store/diary.store.ts`
+  - `src/pages/diary/components/*`
   - `src/pages/diary/*`
+- `DiaryDashboard` now includes a month calendar with day-level selection and per-day meal cards
+- `QuickLogPage` includes log datetime picker (`antd-mobile` `DatePicker`) and creates dish entries on create flow
+- `MealHistoryPage` + detail sheet support URL-driven opening with `?mealLogId=...`
 
 ### Routing & Navigation Expanded
 - Main route tree includes `/diary` (dashboard) and `/diary/history`
@@ -52,6 +55,11 @@ Current focus has shifted from feature scaffolding to **integration consistency,
 - Domain-scoped query keys + user-scoped key segments
 - Mutations continue optimistic update → rollback on error → invalidate on settle
 
+### Diary Detail Editing Still Uses Partial Persistence
+- `MealLogDetailSheet` edits both log-level fields and local dish-entry form state
+- Current save path only calls `useUpdateMealLog()` (meal log table updates)
+- Dish-entry updates/deletes/additions are not yet wired through `meal_item_entries` mutations from this edit flow
+
 ## Next Steps
 
 1. **Close diary functional gaps**
@@ -70,6 +78,7 @@ Current focus has shifted from feature scaffolding to **integration consistency,
 
 - Mixed mock/supabase behavior can still cause confusing dev/test outcomes
 - Diary meal detail sheet currently edits local dish form state without persistence wiring
+- Diary mock mode diverges from Supabase behavior for dish entries on create/update paths
 - Documentation drift exists in some planning/checklist docs compared with implemented code
 - Barcode scanning and image compression remain device-dependent hotspots
 

@@ -125,6 +125,7 @@ npm run lint         # Run ESLint on all TypeScript files
 - **Base64 Images**: Stored in localStorage in mock-mode development
 - **Barcode Scanning**: Quality varies by device camera and lighting
 - **Diary detail persistence gap**: meal dish-entry edits are not fully wired through update flows yet
+- **Diary mock parity gap**: `meal_logs` mock create path currently does not persist `items` like Supabase create does via `meal_item_entries`
 
 ## Dependency Patterns
 
@@ -167,6 +168,7 @@ npm run lint         # Run ESLint on all TypeScript files
 4. **MemoryRouter**: Can't share deep links to specific screens
 5. **No Offline Detection**: App doesn't currently detect offline state
 6. **Diary edit depth**: `MealLogDetailSheet` currently updates meal-log fields but not end-to-end dish-entry persistence
+7. **Diary data-source mismatch**: mock meal-log behavior diverges from Supabase around dish-entry create/update semantics
 
 ## Future Technical Work
 

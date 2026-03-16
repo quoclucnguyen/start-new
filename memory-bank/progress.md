@@ -50,8 +50,10 @@
   - meal item entries
 - Diary data schema created in `supabase/database/diary-tables.sql`
 - Core diary UI shipped:
-  - quick logging
+  - dashboard calendar view with day-level log browsing
+  - quick logging with datetime picker
   - meal history with filters/sort/grouping
+  - URL-driven meal detail sheet opening via `?mealLogId=...`
   - venue detail with status + dish sections
   - meal detail sheet editing for log-level fields
 
@@ -107,6 +109,7 @@ The app now operates as a connected system spanning inventory, shopping, recipes
 ### Areas Needing Work
 
 - Diary dish-entry persistence completeness
+- Diary mock vs Supabase parity for meal-item entry persistence
 - Cross-domain UX polish and QA pass
 - Runtime-mode consistency (mock vs Supabase)
 - Testing and reliability tooling
@@ -115,9 +118,10 @@ The app now operates as a connected system spanning inventory, shopping, recipes
 
 1. Mixed mock/supabase strategy remains inconsistent (`settings.api.ts` still direct Supabase)
 2. Diary meal detail currently updates log-level fields; dish-entry persistence is incomplete
-3. No error boundaries yet
-4. No offline detection/queueing strategy implemented
-5. Device-dependent reliability for barcode scanning and image-processing performance
+3. Diary mock `meal_logs` create/update behavior diverges from Supabase for dish-entry persistence semantics
+4. No error boundaries yet
+5. No offline detection/queueing strategy implemented
+6. Device-dependent reliability for barcode scanning and image-processing performance
 
 ## Development Priorities
 
