@@ -22,7 +22,6 @@ export const queryClient = new QueryClient({
 });
 
 // Create localStorage persister for OpenFoodFacts cache
-// eslint-disable-next-line deprecation/deprecation
 const localStoragePersister = createSyncStoragePersister({
   storage: globalThis.window?.localStorage,
   key: 'food-inventory-cache',

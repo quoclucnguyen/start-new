@@ -240,6 +240,7 @@ function saveItems(items: FoodItem[]): void {
 /**
  * Mock implementation using localStorage (for development without Supabase)
  */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 export const mockFoodItemsApi: IFoodItemsApi = {
   async getAll(_userId: string): Promise<FoodItem[]> {
     await delay();
@@ -261,11 +262,11 @@ export const mockFoodItemsApi: IFoodItemsApi = {
       createdAt: now,
       updatedAt: now,
     };
-    
+
     const items = getStoredItems();
     items.push(newItem);
     saveItems(items);
-    
+
     return newItem;
   },
 
@@ -273,20 +274,20 @@ export const mockFoodItemsApi: IFoodItemsApi = {
     await delay();
     const items = getStoredItems();
     const index = items.findIndex(item => item.id === input.id);
-    
+
     if (index === -1) {
       throw new Error(`Food item with id ${input.id} not found`);
     }
-    
+
     const updatedItem: FoodItem = {
       ...items[index],
       ...input,
       updatedAt: new Date().toISOString(),
     };
-    
+
     items[index] = updatedItem;
     saveItems(items);
-    
+
     return updatedItem;
   },
 
@@ -294,14 +295,15 @@ export const mockFoodItemsApi: IFoodItemsApi = {
     await delay();
     const items = getStoredItems();
     const filteredItems = items.filter(item => item.id !== id);
-    
+
     if (filteredItems.length === items.length) {
       throw new Error(`Food item with id ${id} not found`);
     }
-    
+
     saveItems(filteredItems);
   },
 };
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 // ============================================================================
 // Export active implementation

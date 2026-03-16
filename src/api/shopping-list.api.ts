@@ -252,6 +252,7 @@ function saveItems(items: ShoppingListItem[]): void {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
 }
 
+/* eslint-disable @typescript-eslint/no-unused-vars */
 export const mockShoppingListApi: IShoppingListApi = {
   async getAll(_userId: string): Promise<ShoppingListItem[]> {
     await delay();
@@ -329,6 +330,7 @@ export const mockShoppingListApi: IShoppingListApi = {
     saveItems(items.map(item => ({ ...item, checked: false, purchasedAt: undefined, updatedAt: now })));
   },
 };
+/* eslint-enable @typescript-eslint/no-unused-vars */
 
 // ============================================================================
 // Export active implementation
