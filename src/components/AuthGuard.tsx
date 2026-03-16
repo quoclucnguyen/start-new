@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { Navigate, useLocation } from 'react-router';
-import { useAuthStore } from '@/store/auth.store';
+import { useAuthStore } from '@/pages/login/store/auth.store';
 import { SpinLoading } from 'antd-mobile';
 
 interface AuthGuardProps {

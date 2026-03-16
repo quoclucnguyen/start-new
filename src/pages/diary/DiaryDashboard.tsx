@@ -2,10 +2,10 @@ import * as React from 'react';
 import { useNavigate } from 'react-router';
 import { DotLoading } from 'antd-mobile';
 import { ChevronLeft, ChevronRight, Clock } from 'lucide-react';
-import { useMealLogs } from '@/api/diary';
+import { useMealLogs } from '@/pages/diary/api';
 import { cn } from '@/lib/utils';
-import type { MealLog } from '@/api/diary/types';
-import { MealLogCard } from '@/components/diary/meal-log-card';
+import type { MealLog } from '@/pages/diary/api/types';
+import { MealLogCard } from '@/pages/diary/components/meal-log-card';
 import { EmptyState, SectionHeader } from '@/components/shared';
 
 const WEEKDAY_LABELS = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];

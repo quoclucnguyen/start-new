@@ -6,18 +6,18 @@ import { AppShell } from '@/components/layout/app-shell';
 import { TopAppBar } from '@/components/layout/top-app-bar';
 import { IconButton } from '@/components/ui/icon-button';
 import { EmptyState, SectionHeader } from '@/components/shared';
-import { VenueStatusBadge } from '@/components/diary/venue-status-badge';
-import { MealLogCard } from '@/components/diary/meal-log-card';
-import { RatingInput } from '@/components/diary/rating-input';
+import { VenueStatusBadge } from '@/pages/diary/components/venue-status-badge';
+import { MealLogCard } from '@/pages/diary/components/meal-log-card';
+import { RatingInput } from '@/pages/diary/components/rating-input';
 import {
   useVenue,
   useMenuItems,
   useMealLogs,
   useUpdateVenue,
   useAddMenuItem,
-} from '@/api/diary';
-import { formatCost } from '@/api/diary/types';
-import type { VenueStatus, MenuItem } from '@/api/diary/types';
+} from '@/pages/diary/api';
+import { formatCost } from '@/pages/diary/api/types';
+import type { VenueStatus, MenuItem } from '@/pages/diary/api/types';
 
 export const VenueDetailPage: React.FC = () => {
   const navigate = useNavigate();

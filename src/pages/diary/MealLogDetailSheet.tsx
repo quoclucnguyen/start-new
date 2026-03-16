@@ -3,17 +3,17 @@ import { Toast, DotLoading, Dialog } from 'antd-mobile';
 import { Plus, Trash2 } from 'lucide-react';
 import { BottomSheet } from '@/components/shared';
 import { FixedBottomAction } from '@/components/shared';
-import { MealTypeSelector } from '@/components/diary/meal-type-selector';
-import { CostInput } from '@/components/diary/cost-input';
-import { RatingInput } from '@/components/diary/rating-input';
-import { VenuePicker } from '@/components/diary/venue-picker';
-import { DishEntryForm } from '@/components/diary/dish-entry-form';
+import { MealTypeSelector } from '@/pages/diary/components/meal-type-selector';
+import { CostInput } from '@/pages/diary/components/cost-input';
+import { RatingInput } from '@/pages/diary/components/rating-input';
+import { VenuePicker } from '@/pages/diary/components/venue-picker';
+import { DishEntryForm } from '@/pages/diary/components/dish-entry-form';
 import {
   useMealLog,
   useUpdateMealLog,
   useDeleteMealLog,
-} from '@/api/diary';
-import type { MealType, CreateMealItemEntryInput } from '@/api/diary/types';
+} from '@/pages/diary/api';
+import type { MealType, CreateMealItemEntryInput } from '@/pages/diary/api/types';
 
 interface MealLogDetailSheetProps {
   mealLogId: string | null;

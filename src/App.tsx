@@ -3,18 +3,12 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@/lib/query-client";
 import { AuthGuard } from "@/components/AuthGuard";
 import { MainLayout } from "@/components/layout";
-import { InventoryDashboard } from "./pages/InventoryDashboard";
-import { AddFoodItemPage } from "./pages/AddFoodItemPage";
-import { BarcodeScannerPage } from "./pages/BarcodeScannerPage";
-import { LoginPage } from "./pages/LoginPage";
-import { SettingsPage } from "./pages/SettingsPage";
-import { ShoppingListPage } from "@/components/shopping/shopping-list-page";
-import { RecipeManagementPage } from "@/components/recipes/recipe-management-page";
-import { RecipeSuggestionsPage } from "@/components/recipes/recipe-suggestions-page";
-import { DiaryDashboard } from "@/pages/diary/DiaryDashboard";
-import { QuickLogPage } from "@/pages/diary/QuickLogPage";
-import { MealHistoryPage } from "@/pages/diary/MealHistoryPage";
-import { VenueDetailPage } from "@/pages/diary/VenueDetailPage";
+import { InventoryDashboard, AddFoodItemPage, BarcodeScannerPage } from "@/pages/inventory";
+import { LoginPage } from "@/pages/login";
+import { SettingsPage } from "@/pages/settings";
+import { ShoppingListPage } from "@/pages/shopping";
+import { RecipeManagementPage, RecipeSuggestionsPage } from "@/pages/recipes";
+import { DiaryDashboard, QuickLogPage, MealHistoryPage, VenueDetailPage } from "@/pages/diary";
 import "./App.css";
 
 // Use MemoryRouter for Telegram Mini App (no browser history)

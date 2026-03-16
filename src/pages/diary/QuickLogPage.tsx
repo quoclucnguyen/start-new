@@ -6,13 +6,13 @@ import { AppShell } from '@/components/layout/app-shell';
 import { TopAppBar } from '@/components/layout/top-app-bar';
 import { IconButton } from '@/components/ui/icon-button';
 import { FixedBottomAction } from '@/components/shared';
-import { MealTypeSelector } from '@/components/diary/meal-type-selector';
-import { CostInput } from '@/components/diary/cost-input';
-import { RatingInput } from '@/components/diary/rating-input';
-import { VenuePicker } from '@/components/diary/venue-picker';
-import { DishEntryForm } from '@/components/diary/dish-entry-form';
-import { useAddMealLog } from '@/api/diary';
-import type { MealType, CreateMealItemEntryInput } from '@/api/diary/types';
+import { MealTypeSelector } from '@/pages/diary/components/meal-type-selector';
+import { CostInput } from '@/pages/diary/components/cost-input';
+import { RatingInput } from '@/pages/diary/components/rating-input';
+import { VenuePicker } from '@/pages/diary/components/venue-picker';
+import { DishEntryForm } from '@/pages/diary/components/dish-entry-form';
+import { useAddMealLog } from '@/pages/diary/api';
+import type { MealType, CreateMealItemEntryInput } from '@/pages/diary/api/types';
 
 export const QuickLogPage: React.FC = () => {
   const navigate = useNavigate();

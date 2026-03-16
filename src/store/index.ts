@@ -1,6 +1,9 @@
+// Shared stores only (route-specific stores are in their respective route folders)
 export { useUIStore, type SortOption } from './ui-store';
-export { useAuthStore } from './auth.store';
-export { useShoppingStore } from './shopping.store';
-export { useRecipesManagementStore } from './recipes-management.store';
-export { useRecipeSuggestionsStore } from './recipe-suggestions.store';
-export { useDiaryStore, type DiarySortOption } from './diary.store';
+
+// Re-export route-specific stores for backward compatibility
+export { useAuthStore } from '@/pages/login/store/auth.store';
+export { useShoppingStore } from '@/pages/shopping/store/shopping.store';
+export { useRecipesManagementStore } from '@/pages/recipes/store/recipes-management.store';
+export { useRecipeSuggestionsStore } from '@/pages/recipes/store/recipe-suggestions.store';
+export { useDiaryStore, type DiarySortOption } from '@/pages/diary/store/diary.store';
