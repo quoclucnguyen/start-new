@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useNavigate, useSearchParams } from 'react-router';
+import { useNavigate, useSearchParams, useLocation } from 'react-router';
 import { DatePicker, Toast } from 'antd-mobile';
 import { ArrowLeft, CalendarDays, ChevronDown, ChevronUp, Plus } from 'lucide-react';
 import { AppShell } from '@/components/layout/app-shell';
@@ -16,6 +16,7 @@ import type { MealType, CreateMealItemEntryInput } from '@/pages/diary/api/types
 
 export const QuickLogPage: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const [searchParams] = useSearchParams();
   const preselectedType = searchParams.get('type') as MealType | null;
   const preselectedVenue = searchParams.get('venue');
@@ -109,7 +110,9 @@ export const QuickLogPage: React.FC = () => {
       {
         onSuccess: (createdLog) => {
           Toast.show({ icon: 'success', content: 'Đã ghi món!' });
-          navigate(`/diary/history?mealLogId=${createdLog.id}`);
+          // Navigate back to the previous page or diary dashboard
+          const from = (location.state as { from?: { pathname: string } } | null)?.from?.pathname || '/diary';
+          navigate(from, { state: { refreshMealLog: createdLog.id } });
         },
         onError: () => {
           Toast.show({ icon: 'fail', content: 'Ghi món thất bại' });

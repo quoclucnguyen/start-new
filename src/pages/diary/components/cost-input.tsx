@@ -33,9 +33,9 @@ export const CostInput: React.FC<CostInputProps> = ({
         value={displayValue}
         onChange={handleChange}
         placeholder={placeholder}
-        className="w-full text-3xl font-bold text-center bg-transparent border-b-2 border-muted-foreground/20 focus:border-primary outline-none py-3 transition-colors"
+        className="w-full text-base font-semibold bg-secondary border border-border rounded-lg px-3 py-2 pr-6 focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
       />
-      <span className="absolute right-0 top-1/2 -translate-y-1/2 text-lg text-muted-foreground">
+      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-muted-foreground">
         đ
       </span>
     </div>

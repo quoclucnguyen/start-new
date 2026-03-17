@@ -9,7 +9,9 @@ export interface CheckboxProps
 
 const Checkbox = React.forwardRef<HTMLInputElement, CheckboxProps>(
   ({ className, label, description, id, ...props }, ref) => {
-    const inputId = id || React.useId();
+    // Always call useId at the top level to follow React Hooks rules
+    const generatedId = React.useId();
+    const inputId = id || generatedId;
     
     return (
       <div className="flex items-start gap-3">
