@@ -37,9 +37,9 @@ export const VenueCard: React.FC<VenueCardProps> = ({
 
           <div className="flex items-center gap-3 mt-0.5 text-xs text-muted-foreground">
             {visitCount !== undefined && (
-              <span>{visitCount} visit{visitCount !== 1 ? 's' : ''}</span>
+              <span>{visitCount} lượt ghé</span>
             )}
-            {lastVisit && <span>Last: {lastVisit}</span>}
+            {lastVisit && <span>Gần nhất: {lastVisit}</span>}
           </div>
 
           {venue.tags.length > 0 && (
