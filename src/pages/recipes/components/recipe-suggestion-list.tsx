@@ -38,8 +38,9 @@ const RecipeSuggestionList: React.FC<RecipeSuggestionListProps> = ({
             featured.suggestion.matchedIngredients.length +
             featured.suggestion.missingIngredients.length
           }
-          useIngredients={featured.suggestion.matchedIngredients.map((m) => m.recipeIngredientName)}
+          useIngredients={featured.suggestion.matchedIngredients.map((m) => m.foodItemName)}
           missingIngredients={featured.suggestion.missingIngredients.map((m) => m.name)}
+          expiringIngredients={getExpiringIngredientNames(featured)}
           featured={isFeatured}
           featureLabel={
             featured.suggestion.expiringIngredientsUsed.length > 0
@@ -75,8 +76,14 @@ const RecipeSuggestionList: React.FC<RecipeSuggestionListProps> = ({
               cookTime={`${item.recipe.cookTimeMinutes} min`}
               difficulty={capitalize(item.recipe.difficulty) as 'Easy' | 'Medium' | 'Hard'}
               matchPercentage={item.suggestion.matchPercentage}
+              matchedIngredients={item.suggestion.matchedIngredients.length}
+              totalIngredients={
+                item.suggestion.matchedIngredients.length +
+                item.suggestion.missingIngredients.length
+              }
               useIngredients={item.suggestion.matchedIngredients.map((m) => m.foodItemName)}
               missingIngredients={item.suggestion.missingIngredients.map((m) => m.name)}
+              expiringIngredients={getExpiringIngredientNames(item)}
               onCook={() => onViewRecipe(item.recipe.id)}
               onAddMissing={
                 item.suggestion.missingIngredients.length > 0
@@ -94,6 +101,14 @@ const RecipeSuggestionList: React.FC<RecipeSuggestionListProps> = ({
 
 function capitalize(s: string): string {
   return s.charAt(0).toUpperCase() + s.slice(1);
+}
+
+function getExpiringIngredientNames(item: RecipeSuggestionItem): string[] {
+  const expiringIds = new Set(item.suggestion.expiringIngredientsUsed);
+
+  return item.suggestion.matchedIngredients
+    .filter((ingredient) => expiringIds.has(ingredient.foodItemId))
+    .map((ingredient) => ingredient.foodItemName);
 }
 
 export { RecipeSuggestionList };
