@@ -16,7 +16,7 @@ interface DatePickerInputProps {
 }
 
 const DatePickerInput = React.forwardRef<DatePickerRef, DatePickerInputProps>(
-  ({ value, onChange, placeholder = 'Select expiry date', className, disabled, min, max }, ref) => {
+  ({ value, onChange, placeholder = 'Chọn ngày hết hạn', className, disabled, min, max }, ref) => {
     const datePickerRef = React.useRef<DatePickerRef>(null);
     
     // Forward ref
@@ -34,7 +34,7 @@ const DatePickerInput = React.forwardRef<DatePickerRef, DatePickerInputProps>(
 
     const formatDate = (date: Date | null | undefined): string => {
       if (!date) return placeholder;
-      return date.toLocaleDateString('en-US', {
+      return date.toLocaleDateString('vi-VN', {
         year: 'numeric',
         month: 'short',
         day: 'numeric',
@@ -69,7 +69,7 @@ const DatePickerInput = React.forwardRef<DatePickerRef, DatePickerInputProps>(
             'text-xs font-medium px-2 py-1 rounded-full',
             getBadgeColor()
           )}>
-            {daysLeft <= 0 ? 'Expired' : `${daysLeft}d left`}
+            {daysLeft <= 0 ? 'Đã hết hạn' : `${daysLeft} ngày còn lại`}
           </span>
         )}
         
@@ -79,8 +79,8 @@ const DatePickerInput = React.forwardRef<DatePickerRef, DatePickerInputProps>(
           onConfirm={(val) => onChange?.(val)}
           min={min}
           max={max}
-          cancelText="Cancel"
-          confirmText="Confirm"
+          cancelText="Hủy"
+          confirmText="Xác nhận"
         >
           {() => null}
         </DatePicker>

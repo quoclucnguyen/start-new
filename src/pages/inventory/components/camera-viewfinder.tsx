@@ -44,7 +44,7 @@ const CameraViewfinder = React.forwardRef<HTMLDivElement, CameraViewfinderProps>
     className, 
     status = 'scanning', 
     statusText,
-    helpText = 'Hold steady for automatic scan',
+    helpText = 'Giữ yên để quét tự động',
     onCapture,
     onClose,
     onFlashToggle,
@@ -57,9 +57,9 @@ const CameraViewfinder = React.forwardRef<HTMLDivElement, CameraViewfinderProps>
     ...props 
   }, ref) => {
     const defaultStatusText = {
-      scanning: 'Scanning...',
-      detected: 'Edges Detected',
-      idle: 'Position item in frame',
+      scanning: 'Đang quét...',
+      detected: 'Đã phát hiện viền',
+      idle: 'Đặt vật phẩm vào khung hình',
     };
 
     return (
@@ -113,7 +113,7 @@ const CameraViewfinder = React.forwardRef<HTMLDivElement, CameraViewfinderProps>
             )}
             <div className="text-center">
               <h3 className="text-white text-xl font-bold leading-tight drop-shadow-md">
-                Align receipt within frame
+                Đặt biên lai vào khung hình
               </h3>
               <p className="text-white/80 text-sm font-medium mt-1 drop-shadow-sm">
                 {helpText}
@@ -131,7 +131,7 @@ const CameraViewfinder = React.forwardRef<HTMLDivElement, CameraViewfinderProps>
               className="relative flex size-12 shrink-0 items-center justify-center overflow-hidden rounded-lg border-2 border-white/20 bg-gray-800 transition hover:border-white/60 hover:scale-105 active:scale-95"
             >
               {recentThumbnail ? (
-                <img src={recentThumbnail} alt="Recent scan" className="h-full w-full object-cover opacity-80" />
+                <img src={recentThumbnail} alt="Quét gần đây" className="h-full w-full object-cover opacity-80" />
               ) : (
                 <div className="h-full w-full bg-gray-700" />
               )}

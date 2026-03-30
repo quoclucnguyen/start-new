@@ -34,14 +34,14 @@ const ImagePickerPlaceholder = React.forwardRef<HTMLDivElement, ImagePickerPlace
       const file = e.target.files?.[0];
       if (!file || !user?.id) {
         if (!user?.id) {
-          Toast.show({ content: 'Please login to upload images', icon: 'fail' });
+          Toast.show({ content: 'Vui lòng đăng nhập để tải ảnh lên', icon: 'fail' });
         }
         return;
       }
 
       // Validate file size (max 10MB before compression)
       if (file.size > 10 * 1024 * 1024) {
-        Toast.show({ content: 'Image too large (max 10MB)', icon: 'fail' });
+        Toast.show({ content: 'Ảnh quá lớn (tối đa 10MB)', icon: 'fail' });
         return;
       }
 
@@ -49,11 +49,11 @@ const ImagePickerPlaceholder = React.forwardRef<HTMLDivElement, ImagePickerPlace
       try {
         const result = await uploadFoodImage(file, user.id);
         onChange?.(result.url);
-        Toast.show({ content: 'Image uploaded', icon: 'success' });
+        Toast.show({ content: 'Đã tải ảnh lên', icon: 'success' });
       } catch (error) {
         console.error('Upload failed:', error);
         Toast.show({ 
-          content: error instanceof Error ? error.message : 'Upload failed', 
+          content: error instanceof Error ? error.message : 'Tải ảnh thất bại', 
           icon: 'fail' 
         });
       } finally {
@@ -93,13 +93,13 @@ const ImagePickerPlaceholder = React.forwardRef<HTMLDivElement, ImagePickerPlace
         {isUploading ? (
           <div className="flex flex-col items-center gap-1 text-muted-foreground">
             <Loader2 className="size-8 animate-spin" />
-            <span className="text-xs">Uploading...</span>
+            <span className="text-xs">Đang tải...</span>
           </div>
         ) : imageUrl ? (
           <>
             <img
               src={imageUrl}
-              alt="Food item"
+              alt="Món ăn"
               className="size-full object-cover rounded-xl"
             />
             <button
@@ -116,7 +116,7 @@ const ImagePickerPlaceholder = React.forwardRef<HTMLDivElement, ImagePickerPlace
         ) : (
           <div className="flex flex-col items-center gap-1 text-muted-foreground">
             <ImagePlus className="size-8" />
-            <span className="text-xs">Add photo</span>
+            <span className="text-xs">Thêm ảnh</span>
           </div>
         )}
       </div>

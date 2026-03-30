@@ -12,20 +12,20 @@ interface UnitSelectorProps {
 }
 
 const unitOptions: { value: QuantityUnit; label: string }[] = [
-  { value: 'pieces', label: 'Pieces' },
+  { value: 'pieces', label: 'Cái' },
   { value: 'kg', label: 'Kg' },
-  { value: 'g', label: 'Grams' },
-  { value: 'l', label: 'Liters' },
+  { value: 'g', label: 'Gram' },
+  { value: 'l', label: 'Lít' },
   { value: 'ml', label: 'mL' },
-  { value: 'bottles', label: 'Bottles' },
-  { value: 'packs', label: 'Packs' },
+  { value: 'bottles', label: 'Chai' },
+  { value: 'packs', label: 'Gói' },
 ];
 
 const UnitSelector = React.forwardRef<HTMLDivElement, UnitSelectorProps>(
   ({ value = 'pieces', onChange, className }, ref) => {
     const [visible, setVisible] = React.useState(false);
 
-    const selectedLabel = unitOptions.find((opt) => opt.value === value)?.label || 'Pieces';
+    const selectedLabel = unitOptions.find((opt) => opt.value === value)?.label || 'Cái';
 
     return (
       <div ref={ref} className={cn('inline-flex', className)}>
@@ -51,8 +51,8 @@ const UnitSelector = React.forwardRef<HTMLDivElement, UnitSelectorProps>(
             }
             setVisible(false);
           }}
-          cancelText="Cancel"
-          confirmText="Done"
+          cancelText="Hủy"
+          confirmText="Xong"
         >
           {() => null}
         </Picker>
