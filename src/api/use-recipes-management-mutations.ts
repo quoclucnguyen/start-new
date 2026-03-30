@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { recipesManagementApi } from './recipes-management.api';
+import { RECIPE_SUGGESTIONS_QUERY_KEY } from './use-recipe-suggestions';
 import { RECIPES_MANAGEMENT_QUERY_KEY } from './use-recipes-management';
 import { useAuthStore } from '@/store';
 import type {
@@ -78,6 +79,9 @@ export function useCreateRecipe() {
         queryClient.invalidateQueries({
           queryKey: [...RECIPES_MANAGEMENT_QUERY_KEY, userId],
         });
+        queryClient.invalidateQueries({
+          queryKey: [...RECIPE_SUGGESTIONS_QUERY_KEY, userId],
+        });
       }
     },
   });
@@ -137,6 +141,9 @@ export function useUpdateRecipe() {
         queryClient.invalidateQueries({
           queryKey: [...RECIPES_MANAGEMENT_QUERY_KEY, userId, 'detail', variables.id],
         });
+        queryClient.invalidateQueries({
+          queryKey: [...RECIPE_SUGGESTIONS_QUERY_KEY, userId],
+        });
       }
     },
   });
@@ -163,6 +170,9 @@ export function useReplaceRecipeIngredients() {
       if (userId) {
         queryClient.invalidateQueries({
           queryKey: [...RECIPES_MANAGEMENT_QUERY_KEY, userId, 'detail', variables.recipeId],
+        });
+        queryClient.invalidateQueries({
+          queryKey: [...RECIPE_SUGGESTIONS_QUERY_KEY, userId],
         });
       }
     },
@@ -191,6 +201,9 @@ export function useReplaceRecipeSteps() {
         queryClient.invalidateQueries({
           queryKey: [...RECIPES_MANAGEMENT_QUERY_KEY, userId, 'detail', variables.recipeId],
         });
+        queryClient.invalidateQueries({
+          queryKey: [...RECIPE_SUGGESTIONS_QUERY_KEY, userId],
+        });
       }
     },
   });
@@ -213,6 +226,9 @@ export function useDuplicateRecipe() {
       if (userId) {
         queryClient.invalidateQueries({
           queryKey: [...RECIPES_MANAGEMENT_QUERY_KEY, userId],
+        });
+        queryClient.invalidateQueries({
+          queryKey: [...RECIPE_SUGGESTIONS_QUERY_KEY, userId],
         });
       }
     },
@@ -263,6 +279,9 @@ export function useDeleteRecipe() {
       if (userId) {
         queryClient.invalidateQueries({
           queryKey: [...RECIPES_MANAGEMENT_QUERY_KEY, userId],
+        });
+        queryClient.invalidateQueries({
+          queryKey: [...RECIPE_SUGGESTIONS_QUERY_KEY, userId],
         });
       }
     },

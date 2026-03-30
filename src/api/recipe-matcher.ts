@@ -6,7 +6,7 @@ import type {
   MatchedIngredient,
   MissingIngredient,
 } from './types';
-import { getExpiryStatus } from './types';
+import { getDaysUntilExpiry, getExpiryStatus } from './types';
 
 // ============================================================================
 // Ingredient Normalization
@@ -153,6 +153,18 @@ function isMatch(foodItemName: string, recipeIngNormalizedName: string): boolean
   return false;
 }
 
+function getExpiryUrgencyWeight(expiryDate: string | null): number {
+  const daysUntilExpiry = getDaysUntilExpiry(expiryDate);
+
+  if (daysUntilExpiry === null) return 0;
+  if (daysUntilExpiry <= 0) return 1;
+  if (daysUntilExpiry === 1) return 0.95;
+  if (daysUntilExpiry <= 3) return 0.8;
+  if (daysUntilExpiry <= 7) return 0.35;
+
+  return 0;
+}
+
 /**
  * Match a single recipe against inventory and return a RecipeSuggestion.
  */
@@ -199,13 +211,20 @@ function matchSingleRecipe(
   const coverageRatio = requiredTotal > 0 ? matchedIngredients.length / requiredTotal : 0;
 
   // Expiry bonus (20% weight) — ratio of expiring items used vs available expiring items
-  const expiringItemsInInventory = inventory.filter((item) => {
-    const status = getExpiryStatus(item.expiryDate);
-    return status === 'expiring' || status === 'soon';
-  });
+  const expiringItemsInInventory = inventory.filter(
+    (item) => getExpiryUrgencyWeight(item.expiryDate) > 0,
+  );
+  const totalExpiryUrgency = expiringItemsInInventory.reduce(
+    (sum, item) => sum + getExpiryUrgencyWeight(item.expiryDate),
+    0,
+  );
+  const matchedExpiryUrgency = matchedIngredients.reduce((sum, ingredient) => {
+    const matchedItem = inventory.find((item) => item.id === ingredient.foodItemId);
+    return sum + getExpiryUrgencyWeight(matchedItem?.expiryDate ?? null);
+  }, 0);
   const expiringUsageRatio =
-    expiringItemsInInventory.length > 0
-      ? expiringIngredientsUsed.length / expiringItemsInInventory.length
+    totalExpiryUrgency > 0
+      ? matchedExpiryUrgency / totalExpiryUrgency
       : 0;
 
   // Time bonus (10% weight) — reward shorter cook time (under 30 min)

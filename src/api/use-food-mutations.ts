@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { foodItemsApi } from './food-items.api';
+import { RECIPE_SUGGESTIONS_QUERY_KEY } from './use-recipe-suggestions';
 import { FOOD_ITEMS_QUERY_KEY } from './use-food-items';
 import { useAuthStore } from '@/store';
 import type { FoodItem, CreateFoodItemInput, UpdateFoodItemInput } from './types';
@@ -54,6 +55,7 @@ export function useAddFoodItem() {
       // Refetch to ensure cache is in sync
       if (userId) {
         queryClient.invalidateQueries({ queryKey: [...FOOD_ITEMS_QUERY_KEY, userId] });
+        queryClient.invalidateQueries({ queryKey: [...RECIPE_SUGGESTIONS_QUERY_KEY, userId] });
       }
     },
   });
@@ -102,6 +104,7 @@ export function useUpdateFoodItem() {
     onSettled: () => {
       if (userId) {
         queryClient.invalidateQueries({ queryKey: [...FOOD_ITEMS_QUERY_KEY, userId] });
+        queryClient.invalidateQueries({ queryKey: [...RECIPE_SUGGESTIONS_QUERY_KEY, userId] });
       }
     },
   });
@@ -146,6 +149,7 @@ export function useDeleteFoodItem() {
     onSettled: () => {
       if (userId) {
         queryClient.invalidateQueries({ queryKey: [...FOOD_ITEMS_QUERY_KEY, userId] });
+        queryClient.invalidateQueries({ queryKey: [...RECIPE_SUGGESTIONS_QUERY_KEY, userId] });
       }
     },
   });

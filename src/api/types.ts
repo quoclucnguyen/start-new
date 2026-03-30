@@ -334,6 +334,19 @@ export interface RecipeSuggestionItem {
   suggestion: RecipeSuggestion;
 }
 
+export interface TopExpiringIngredient {
+  name: string;
+  daysLeft: number;
+  recipesCount: number;
+}
+
+export interface RecipeSuggestionsResult {
+  suggestions: RecipeSuggestionItem[];
+  topExpiring: TopExpiringIngredient | null;
+  totalRecipes: number;
+  totalInventoryItems: number;
+}
+
 export interface RecipeSuggestionFilters {
   search?: string;
   maxCookTimeMinutes?: number;

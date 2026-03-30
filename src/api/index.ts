@@ -81,6 +81,13 @@ export {
 
 // Recipe Suggestions
 export {
+  recipeSuggestionsApi,
+  mockRecipeSuggestionsApi,
+  supabaseRecipeSuggestionsApi,
+  type IRecipeSuggestionsApi,
+} from './recipe-suggestions.api';
+
+export {
   useRecipeSuggestions,
   useRecipeSuggestionDetail,
   RECIPE_SUGGESTIONS_QUERY_KEY,
