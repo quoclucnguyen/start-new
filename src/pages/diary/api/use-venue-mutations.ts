@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { venuesApi } from './venues.api';
+import { supabaseVenuesApi } from './venues.api';
 import { VENUES_QUERY_KEY } from './use-venues';
 import { useAuthStore } from '@/store';
 import type { Venue, CreateVenueInput, UpdateVenueInput } from './types';
@@ -12,7 +12,7 @@ export function useAddVenue() {
   return useMutation({
     mutationFn: (input: CreateVenueInput) => {
       if (!userId) throw new Error('User not authenticated');
-      return venuesApi.create(input, userId);
+      return supabaseVenuesApi.create(input, userId);
     },
     onMutate: async (newInput) => {
       if (!userId) return;
@@ -60,7 +60,7 @@ export function useUpdateVenue() {
   return useMutation({
     mutationFn: (input: UpdateVenueInput) => {
       if (!userId) throw new Error('User not authenticated');
-      return venuesApi.update(input, userId);
+      return supabaseVenuesApi.update(input, userId);
     },
     onMutate: async (updatedInput) => {
       if (!userId) return;
@@ -98,7 +98,7 @@ export function useDeleteVenue() {
   return useMutation({
     mutationFn: (id: string) => {
       if (!userId) throw new Error('User not authenticated');
-      return venuesApi.delete(id, userId);
+      return supabaseVenuesApi.delete(id, userId);
     },
     onMutate: async (deletedId) => {
       if (!userId) return;

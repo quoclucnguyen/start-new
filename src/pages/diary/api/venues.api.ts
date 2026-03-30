@@ -270,6 +270,3 @@ export const mockVenuesApi: IVenuesApi = {
 // ============================================================================
 // Export
 // ============================================================================
-
-export const venuesApi: IVenuesApi =
-  import.meta.env.VITE_USE_MOCK_API === 'true' ? mockVenuesApi : supabaseVenuesApi;

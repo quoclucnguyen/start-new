@@ -27,10 +27,10 @@ export {
 } from './types';
 
 // API
-export { venuesApi, type IVenuesApi } from './venues.api';
-export { mealLogsApi, type IMealLogsApi } from './meal-logs.api';
-export { menuItemsApi, type IMenuItemsApi } from './menu-items.api';
-export { mealItemEntriesApi, type IMealItemEntriesApi } from './meal-item-entries.api';
+export { supabaseVenuesApi, type IVenuesApi } from './venues.api';
+export { supabaseMealLogsApi, type IMealLogsApi } from './meal-logs.api';
+export { supabaseMenuItemsApi, type IMenuItemsApi } from './menu-items.api';
+export { supabaseMealItemEntriesApi, type IMealItemEntriesApi } from './meal-item-entries.api';
 
 // Query hooks
 export { useVenues, useVenue, useVenueSearch, VENUES_QUERY_KEY } from './use-venues';

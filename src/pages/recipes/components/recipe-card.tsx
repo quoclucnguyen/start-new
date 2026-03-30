@@ -143,12 +143,12 @@ const RecipeCard = React.forwardRef<HTMLDivElement, RecipeCardProps>(
                   ) : null}
                   {missingIngredients.length > 0 ? (
                     <StatusPill icon={<ChefHat className="size-3.5" />} tone="neutral">
-                      {missingIngredients.length} thiếu<
+                      {missingIngredients.length} thiếu
                     </StatusPill>
                   ) : null}
                   {expiringIngredients.length > 0 ? (
                     <StatusPill icon={<AlertTriangle className="size-3.5" />} tone="warning">
-                      {expiringIngredients.length} sắp hết hạn<
+                      {expiringIngredients.length} sắp hết hạn
                     </StatusPill>
                   ) : null}
                 </div>

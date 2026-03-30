@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { recipesManagementApi } from './recipes-management.api';
+import { supabaseRecipesManagementApi } from './recipes-management.api';
 import { RECIPE_SUGGESTIONS_QUERY_KEY } from './use-recipe-suggestions';
 import { RECIPES_MANAGEMENT_QUERY_KEY } from './use-recipes-management';
 import { useAuthStore } from '@/store';
@@ -23,7 +23,7 @@ export function useCreateRecipe() {
   return useMutation({
     mutationFn: (input: CreateRecipeInput) => {
       if (!userId) throw new Error('User not authenticated');
-      return recipesManagementApi.create(input, userId);
+      return supabaseRecipesManagementApi.create(input, userId);
     },
     onMutate: async (newRecipeInput) => {
       if (!userId) return;
@@ -98,7 +98,7 @@ export function useUpdateRecipe() {
   return useMutation({
     mutationFn: (input: UpdateRecipeInput) => {
       if (!userId) throw new Error('User not authenticated');
-      return recipesManagementApi.update(input, userId);
+      return supabaseRecipesManagementApi.update(input, userId);
     },
     onMutate: async (updatedRecipe) => {
       if (!userId) return;
@@ -164,7 +164,7 @@ export function useReplaceRecipeIngredients() {
   >({
     mutationFn: ({ recipeId, ingredients }) => {
       if (!userId) throw new Error('User not authenticated');
-      return recipesManagementApi.replaceIngredients(recipeId, ingredients, userId);
+      return supabaseRecipesManagementApi.replaceIngredients(recipeId, ingredients, userId);
     },
     onSettled: (_data, _error, variables) => {
       if (userId) {
@@ -194,7 +194,7 @@ export function useReplaceRecipeSteps() {
   >({
     mutationFn: ({ recipeId, steps }) => {
       if (!userId) throw new Error('User not authenticated');
-      return recipesManagementApi.replaceSteps(recipeId, steps, userId);
+      return supabaseRecipesManagementApi.replaceSteps(recipeId, steps, userId);
     },
     onSettled: (_data, _error, variables) => {
       if (userId) {
@@ -220,7 +220,7 @@ export function useDuplicateRecipe() {
   return useMutation<RecipeDetail, Error, string>({
     mutationFn: (recipeId: string) => {
       if (!userId) throw new Error('User not authenticated');
-      return recipesManagementApi.duplicate(recipeId, userId);
+      return supabaseRecipesManagementApi.duplicate(recipeId, userId);
     },
     onSettled: () => {
       if (userId) {
@@ -246,7 +246,7 @@ export function useDeleteRecipe() {
   return useMutation({
     mutationFn: (recipeId: string) => {
       if (!userId) throw new Error('User not authenticated');
-      return recipesManagementApi.delete(recipeId, userId);
+      return supabaseRecipesManagementApi.delete(recipeId, userId);
     },
     onMutate: async (deletedId) => {
       if (!userId) return;

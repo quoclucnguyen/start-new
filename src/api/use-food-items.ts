@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { foodItemsApi } from './food-items.api';
+import { supabaseFoodItemsApi } from './food-items.api';
 import { useAuthStore } from '@/store';
 import type { FoodItem } from './types';
 
@@ -18,7 +18,7 @@ export function useFoodItems() {
       if (!userId) {
         throw new Error('User not authenticated');
       }
-      return foodItemsApi.getAll(userId);
+      return supabaseFoodItemsApi.getAll(userId);
     },
     enabled: !!userId,
   });
@@ -37,7 +37,7 @@ export function useFoodItem(id: string | null) {
       if (!userId) {
         throw new Error('User not authenticated');
       }
-      return id ? foodItemsApi.getById(id, userId) : Promise.resolve(null);
+      return id ? supabaseFoodItemsApi.getById(id, userId) : Promise.resolve(null);
     },
     enabled: !!id && !!userId,
   });

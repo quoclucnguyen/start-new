@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { shoppingListApi } from './shopping-list.api';
+import { supabaseShoppingListApi } from './shopping-list.api';
 import { useAuthStore } from '@/store';
 import type { ShoppingListItem } from './types';
 
@@ -18,7 +18,7 @@ export function useShoppingList() {
       if (!userId) {
         throw new Error('User not authenticated');
       }
-      return shoppingListApi.getAll(userId);
+      return supabaseShoppingListApi.getAll(userId);
     },
     enabled: !!userId,
     staleTime: 5 * 60 * 1000, // 5 minutes
@@ -38,7 +38,7 @@ export function useShoppingListItem(id: string | null) {
       if (!userId) {
         throw new Error('User not authenticated');
       }
-      return id ? shoppingListApi.getById(id, userId) : Promise.resolve(null);
+      return id ? supabaseShoppingListApi.getById(id, userId) : Promise.resolve(null);
     },
     enabled: !!id && !!userId,
     staleTime: 5 * 60 * 1000,

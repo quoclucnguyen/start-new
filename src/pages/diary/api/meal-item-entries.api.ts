@@ -198,6 +198,3 @@ export const mockMealItemEntriesApi: IMealItemEntriesApi = {
 // ============================================================================
 // Export
 // ============================================================================
-
-export const mealItemEntriesApi: IMealItemEntriesApi =
-  import.meta.env.VITE_USE_MOCK_API === 'true' ? mockMealItemEntriesApi : supabaseMealItemEntriesApi;

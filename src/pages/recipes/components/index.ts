@@ -1,5 +1,3 @@
-export * from './recipe-management-page';
-export * from './recipe-suggestions-page';
 export * from './recipe-card';
 export * from './recipe-list-item';
 export * from './recipe-detail-sheet';

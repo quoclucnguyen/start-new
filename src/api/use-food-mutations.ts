@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { foodItemsApi } from './food-items.api';
+import { supabaseFoodItemsApi } from './food-items.api';
 import { RECIPE_SUGGESTIONS_QUERY_KEY } from './use-recipe-suggestions';
 import { FOOD_ITEMS_QUERY_KEY } from './use-food-items';
 import { useAuthStore } from '@/store';
@@ -18,7 +18,7 @@ export function useAddFoodItem() {
       if (!userId) {
         throw new Error('User not authenticated');
       }
-      return foodItemsApi.create(input, userId);
+      return supabaseFoodItemsApi.create(input, userId);
     },
     onMutate: async (newItemInput) => {
       if (!userId) return;
@@ -74,7 +74,7 @@ export function useUpdateFoodItem() {
       if (!userId) {
         throw new Error('User not authenticated');
       }
-      return foodItemsApi.update(input, userId);
+      return supabaseFoodItemsApi.update(input, userId);
     },
     onMutate: async (updatedItem) => {
       if (!userId) return;
@@ -123,7 +123,7 @@ export function useDeleteFoodItem() {
       if (!userId) {
         throw new Error('User not authenticated');
       }
-      return foodItemsApi.delete(id, userId);
+      return supabaseFoodItemsApi.delete(id, userId);
     },
     onMutate: async (deletedId) => {
       if (!userId) return;

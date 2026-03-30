@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { menuItemsApi } from './menu-items.api';
+import { supabaseMenuItemsApi } from './menu-items.api';
 import { useAuthStore } from '@/store';
 import type { MenuItem } from './types';
 
@@ -14,7 +14,7 @@ export function useMenuItems(venueId: string | null) {
     queryFn: () => {
       if (!userId) throw new Error('User not authenticated');
       if (!venueId) return Promise.resolve([]);
-      return menuItemsApi.getByVenue(venueId, userId);
+      return supabaseMenuItemsApi.getByVenue(venueId, userId);
     },
     enabled: !!venueId && !!userId,
   });
@@ -28,7 +28,7 @@ export function useAllMenuItems() {
     queryKey: [...MENU_ITEMS_QUERY_KEY, userId, 'all'],
     queryFn: () => {
       if (!userId) throw new Error('User not authenticated');
-      return menuItemsApi.getAll(userId);
+      return supabaseMenuItemsApi.getAll(userId);
     },
     enabled: !!userId,
   });

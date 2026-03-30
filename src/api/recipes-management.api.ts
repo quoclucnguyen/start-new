@@ -717,9 +717,3 @@ export const mockRecipesManagementApi: IRecipesManagementApi = {
 // ============================================================================
 // Export active implementation
 // ============================================================================
-
-const USE_MOCK_API = import.meta.env.VITE_USE_MOCK_API === 'true';
-
-export const recipesManagementApi: IRecipesManagementApi = USE_MOCK_API
-  ? mockRecipesManagementApi
-  : supabaseRecipesManagementApi;

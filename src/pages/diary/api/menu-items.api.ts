@@ -240,6 +240,3 @@ export const mockMenuItemsApi: IMenuItemsApi = {
 // ============================================================================
 // Export
 // ============================================================================
-
-export const menuItemsApi: IMenuItemsApi =
-  import.meta.env.VITE_USE_MOCK_API === 'true' ? mockMenuItemsApi : supabaseMenuItemsApi;

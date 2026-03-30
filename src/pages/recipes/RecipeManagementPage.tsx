@@ -7,13 +7,13 @@ import {
   useDeleteRecipe,
   useDuplicateRecipe,
 } from '@/api/use-recipes-management-mutations';
-import { useRecipesManagementStore } from '@/pages/recipes/store/recipes-management.store';
+import { useRecipesManagementStore } from './store/recipes-management.store';
 import { SearchInput } from '@/components/shared';
 import { confirmDelete } from '@/components/shared';
-import { RecipeListItem } from './recipe-list-item';
-import { RecipeEditorSheet } from './recipe-editor-sheet';
-import { RecipeManagementEmptyState } from './recipe-management-empty-state';
-import { RecipesSectionNav } from './recipes-section-nav';
+import { RecipeListItem } from './components/recipe-list-item';
+import { RecipeEditorSheet } from './components/recipe-editor-sheet';
+import { RecipeManagementEmptyState } from './components/recipe-management-empty-state';
+import { RecipesSectionNav } from './components/recipes-section-nav';
 
 interface RecipeManagementPageProps {
   className?: string;

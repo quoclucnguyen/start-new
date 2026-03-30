@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { recipesManagementApi } from './recipes-management.api';
+import { supabaseRecipesManagementApi } from './recipes-management.api';
 import { useAuthStore } from '@/store';
 import type { Recipe, RecipeDetail } from './types';
 
@@ -18,7 +18,7 @@ export function useRecipesList(options?: { search?: string; tags?: string[] }) {
       if (!userId) {
         throw new Error('User not authenticated');
       }
-      return recipesManagementApi.list(userId, options);
+      return supabaseRecipesManagementApi.list(userId, options);
     },
     enabled: !!userId,
   });
@@ -37,7 +37,7 @@ export function useRecipeById(recipeId: string | null) {
       if (!userId) {
         throw new Error('User not authenticated');
       }
-      return recipeId ? recipesManagementApi.getById(recipeId, userId) : Promise.resolve(null);
+      return recipeId ? supabaseRecipesManagementApi.getById(recipeId, userId) : Promise.resolve(null);
     },
     enabled: !!recipeId && !!userId,
   });

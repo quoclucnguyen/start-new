@@ -335,9 +335,3 @@ export const mockShoppingListApi: IShoppingListApi = {
 // ============================================================================
 // Export active implementation
 // ============================================================================
-
-const USE_MOCK_API = import.meta.env.VITE_USE_MOCK_API === 'true';
-
-export const shoppingListApi: IShoppingListApi = USE_MOCK_API
-  ? mockShoppingListApi
-  : supabaseShoppingListApi;

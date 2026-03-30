@@ -8,7 +8,6 @@ import {
   supabaseRecipesManagementApi,
   type IRecipesManagementApi,
 } from './recipes-management.api';
-import { SEED_RECIPES } from './recipe-seed-data';
 import { getTopExpiringIngredient, matchRecipes } from './recipe-matcher';
 import { getDaysUntilExpiry } from './types';
 import type {
@@ -52,19 +51,10 @@ async function fetchAllRecipeDetails(
 ): Promise<RecipeDetail[]> {
   const recipes = await recipesApi.list(userId);
 
-  if (recipes.length === 0) {
-    return SEED_RECIPES;
-  }
-
   const details = await Promise.all(
     recipes.map((recipe) => recipesApi.getById(recipe.id, userId)),
   );
-  const resolved = details.filter((detail): detail is RecipeDetail => detail !== null);
-
-  const existingIds = new Set(resolved.map((recipe) => recipe.id));
-  const missingSeedRecipes = SEED_RECIPES.filter((recipe) => !existingIds.has(recipe.id));
-
-  return [...resolved, ...missingSeedRecipes];
+  return details.filter((detail): detail is RecipeDetail => detail !== null);
 }
 
 function applyFilters(
@@ -137,11 +127,6 @@ function createRecipeSuggestionsApi(
     },
 
     async getRecipeDetail(recipeId: string, userId: string): Promise<RecipeDetail | null> {
-      const seedRecipe = SEED_RECIPES.find((recipe) => recipe.id === recipeId);
-      if (seedRecipe) {
-        return seedRecipe;
-      }
-
       return recipesApi.getById(recipeId, userId);
     },
   };
@@ -156,9 +141,3 @@ export const mockRecipeSuggestionsApi = createRecipeSuggestionsApi(
   mockRecipesManagementApi,
   mockFoodItemsApi,
 );
-
-const USE_MOCK_API = import.meta.env.VITE_USE_MOCK_API === 'true';
-
-export const recipeSuggestionsApi: IRecipeSuggestionsApi = USE_MOCK_API
-  ? mockRecipeSuggestionsApi
-  : supabaseRecipeSuggestionsApi;

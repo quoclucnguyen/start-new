@@ -308,10 +308,3 @@ export const mockFoodItemsApi: IFoodItemsApi = {
 // ============================================================================
 // Export active implementation
 // ============================================================================
-
-// Use environment variable to switch between mock and Supabase
-const USE_MOCK_API = import.meta.env.VITE_USE_MOCK_API === 'true';
-
-export const foodItemsApi: IFoodItemsApi = USE_MOCK_API 
-  ? mockFoodItemsApi 
-  : supabaseFoodItemsApi;

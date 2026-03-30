@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { menuItemsApi } from './menu-items.api';
+import { supabaseMenuItemsApi } from './menu-items.api';
 import { MENU_ITEMS_QUERY_KEY } from './use-menu-items';
 import { useAuthStore } from '@/store';
 import type { MenuItem, CreateMenuItemInput, UpdateMenuItemInput } from './types';
@@ -12,7 +12,7 @@ export function useAddMenuItem() {
   return useMutation({
     mutationFn: (input: CreateMenuItemInput) => {
       if (!userId) throw new Error('User not authenticated');
-      return menuItemsApi.create(input, userId);
+      return supabaseMenuItemsApi.create(input, userId);
     },
     onMutate: async (newInput) => {
       if (!userId) return;
@@ -61,7 +61,7 @@ export function useUpdateMenuItem() {
   return useMutation({
     mutationFn: (input: UpdateMenuItemInput) => {
       if (!userId) throw new Error('User not authenticated');
-      return menuItemsApi.update(input, userId);
+      return supabaseMenuItemsApi.update(input, userId);
     },
     onSettled: () => {
       if (userId) {
@@ -79,7 +79,7 @@ export function useDeleteMenuItem() {
   return useMutation({
     mutationFn: (id: string) => {
       if (!userId) throw new Error('User not authenticated');
-      return menuItemsApi.delete(id, userId);
+      return supabaseMenuItemsApi.delete(id, userId);
     },
     onSettled: () => {
       if (userId) {

@@ -8,12 +8,12 @@ import type { RecipeSuggestionItem } from '@/api/types';
 import { SearchInput } from '@/components/shared';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { useRecipeSuggestionsStore } from '@/pages/recipes/store/recipe-suggestions.store';
-import { RecipeDetailSheet } from './recipe-detail-sheet';
-import { RecipeEmptyState } from './recipe-empty-state';
-import { RecipeFilters } from './recipe-filters';
-import { RecipeSuggestionList } from './recipe-suggestion-list';
-import { RecipesSectionNav } from './recipes-section-nav';
+import { useRecipeSuggestionsStore } from './store/recipe-suggestions.store';
+import { RecipeDetailSheet } from './components/recipe-detail-sheet';
+import { RecipeEmptyState } from './components/recipe-empty-state';
+import { RecipeFilters } from './components/recipe-filters';
+import { RecipeSuggestionList } from './components/recipe-suggestion-list';
+import { RecipesSectionNav } from './components/recipes-section-nav';
 
 interface RecipeSuggestionsPageProps {
   className?: string;

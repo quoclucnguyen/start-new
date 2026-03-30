@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { shoppingListApi } from './shopping-list.api';
+import { supabaseShoppingListApi } from './shopping-list.api';
 import { SHOPPING_LIST_QUERY_KEY } from './use-shopping-list';
 import { normalizeForMatching } from './recipe-matcher';
 import { useAuthStore } from '@/store';
@@ -25,7 +25,7 @@ export function useAddMissingToShoppingList() {
       if (!userId) throw new Error('User not authenticated');
 
       // Fetch existing shopping list for dedup
-      const existingItems = await shoppingListApi.getAll(userId);
+      const existingItems = await supabaseShoppingListApi.getAll(userId);
       const uncheckedNames = new Set(
         existingItems
           .filter((item) => !item.checked)
@@ -47,7 +47,7 @@ export function useAddMissingToShoppingList() {
           unit: 'pieces',
           notes: `Added from recipe suggestion`,
         };
-        const item = await shoppingListApi.create(input, userId);
+        const item = await supabaseShoppingListApi.create(input, userId);
         created.push(item);
       }
 

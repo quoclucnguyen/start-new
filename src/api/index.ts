@@ -2,9 +2,8 @@
 export * from './types';
 
 // API
-export { 
-  foodItemsApi, 
-  mockFoodItemsApi, 
+export {
+  mockFoodItemsApi,
   supabaseFoodItemsApi,
   type IFoodItemsApi,
 } from './food-items.api';
@@ -30,7 +29,8 @@ export { useAddFoodItem, useUpdateFoodItem, useDeleteFoodItem } from './use-food
 
 // Shopping list
 export {
-  shoppingListApi,
+  mockShoppingListApi,
+  supabaseShoppingListApi,
   type IShoppingListApi,
 } from './shopping-list.api';
 
@@ -63,7 +63,8 @@ export {
 
 // Recipe Management
 export {
-  recipesManagementApi,
+  mockRecipesManagementApi,
+  supabaseRecipesManagementApi,
   normalizeIngredientName,
   type IRecipesManagementApi,
 } from './recipes-management.api';
@@ -81,7 +82,6 @@ export {
 
 // Recipe Suggestions
 export {
-  recipeSuggestionsApi,
   mockRecipeSuggestionsApi,
   supabaseRecipeSuggestionsApi,
   type IRecipeSuggestionsApi,

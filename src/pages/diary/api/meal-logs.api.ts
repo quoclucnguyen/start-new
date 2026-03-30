@@ -11,7 +11,7 @@ import type {
   MealType,
   VenueStatus,
 } from './types';
-import { mealItemEntriesApi } from './meal-item-entries.api';
+import { supabaseMealItemEntriesApi } from './meal-item-entries.api';
 
 // ============================================================================
 // Interface
@@ -174,7 +174,7 @@ export const supabaseMealLogsApi: IMealLogsApi = {
 
     // Create item entries if provided
     if (input.items && input.items.length > 0) {
-      const entries = await mealItemEntriesApi.createBatch(mealLog.id, input.items);
+      const entries = await supabaseMealItemEntriesApi.createBatch(mealLog.id, input.items);
       mealLog.items = entries;
     }
 
@@ -330,6 +330,3 @@ export const mockMealLogsApi: IMealLogsApi = {
 // ============================================================================
 // Export
 // ============================================================================
-
-export const mealLogsApi: IMealLogsApi =
-  import.meta.env.VITE_USE_MOCK_API === 'true' ? mockMealLogsApi : supabaseMealLogsApi;

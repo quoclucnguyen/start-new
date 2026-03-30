@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { mealLogsApi } from './meal-logs.api';
+import { supabaseMealLogsApi } from './meal-logs.api';
 import { MEAL_LOGS_QUERY_KEY } from './use-meal-logs';
 import { useAuthStore } from '@/store';
 import type { MealLog, CreateMealLogInput, UpdateMealLogInput } from './types';
@@ -12,7 +12,7 @@ export function useAddMealLog() {
   return useMutation({
     mutationFn: (input: CreateMealLogInput) => {
       if (!userId) throw new Error('User not authenticated');
-      return mealLogsApi.create(input, userId);
+      return supabaseMealLogsApi.create(input, userId);
     },
     onMutate: async (newInput) => {
       if (!userId) return;
@@ -60,7 +60,7 @@ export function useUpdateMealLog() {
   return useMutation({
     mutationFn: (input: UpdateMealLogInput) => {
       if (!userId) throw new Error('User not authenticated');
-      return mealLogsApi.update(input, userId);
+      return supabaseMealLogsApi.update(input, userId);
     },
     onMutate: async (updatedInput) => {
       if (!userId) return;
@@ -98,7 +98,7 @@ export function useDeleteMealLog() {
   return useMutation({
     mutationFn: (id: string) => {
       if (!userId) throw new Error('User not authenticated');
-      return mealLogsApi.delete(id, userId);
+      return supabaseMealLogsApi.delete(id, userId);
     },
     onMutate: async (deletedId) => {
       if (!userId) return;
