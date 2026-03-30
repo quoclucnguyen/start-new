@@ -1,56 +1,80 @@
 import * as React from 'react';
-import { cn } from '@/lib/utils';
-import { AlertTriangle, Leaf, Sparkles } from 'lucide-react';
+import { useNavigate } from 'react-router';
 import { SpinLoading, Toast } from 'antd-mobile';
-import { useRecipeSuggestions } from '@/api/use-recipe-suggestions';
+import { AlertTriangle, Leaf, RefreshCw, Sparkles } from 'lucide-react';
 import { useAddMissingToShoppingList } from '@/api/use-recipe-suggestion-mutations';
-import { useRecipeSuggestionsStore } from '@/pages/recipes/store/recipe-suggestions.store';
+import { useRecipeSuggestions } from '@/api/use-recipe-suggestions';
 import type { RecipeSuggestionItem } from '@/api/types';
+import { SearchInput } from '@/components/shared';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+import { useRecipeSuggestionsStore } from '@/pages/recipes/store/recipe-suggestions.store';
+import { RecipeDetailSheet } from './recipe-detail-sheet';
+import { RecipeEmptyState } from './recipe-empty-state';
 import { RecipeFilters } from './recipe-filters';
 import { RecipeSuggestionList } from './recipe-suggestion-list';
-import { RecipeEmptyState } from './recipe-empty-state';
-import { RecipeDetailSheet } from './recipe-detail-sheet';
+import { RecipesSectionNav } from './recipes-section-nav';
 
 interface RecipeSuggestionsPageProps {
   className?: string;
 }
 
 const RecipeSuggestionsPage: React.FC<RecipeSuggestionsPageProps> = ({ className }) => {
+  const navigate = useNavigate();
   const {
     filters,
     selectedRecipeId,
     setSelectedRecipeId,
     toggleSuggestedOnly,
+    setSearch,
+    setDifficulty,
     setMaxCookTime,
     toggleTag,
     resetFilters,
   } = useRecipeSuggestionsStore();
 
-  const { data, isLoading, error } = useRecipeSuggestions(filters);
+  const {
+    data,
+    isLoading,
+    error,
+    refetch,
+    isFetching,
+  } = useRecipeSuggestions(filters);
   const addMissingMutation = useAddMissingToShoppingList();
 
-  // Collect all unique tags for filter chips
+  const suggestions = data?.suggestions ?? [];
+
   const availableTags = (() => {
-    if (!data?.suggestions) return [];
+    if (suggestions.length === 0) return [];
+
     const tagSet = new Set<string>();
-    data.suggestions.forEach((item) => {
+    suggestions.forEach((item) => {
       item.recipe.tags.forEach((tag) => tagSet.add(tag));
     });
     return Array.from(tagSet).sort();
   })();
 
-  // Find the suggestion for the selected recipe (for detail sheet)
   const selectedSuggestion =
-    selectedRecipeId && data?.suggestions
-      ? data.suggestions.find((s) => s.recipe.id === selectedRecipeId)?.suggestion ?? null
+    selectedRecipeId && suggestions.length > 0
+      ? suggestions.find((s) => s.recipe.id === selectedRecipeId)?.suggestion ?? null
       : null;
+
+  React.useEffect(() => {
+    const currentSuggestions = data?.suggestions;
+    if (!selectedRecipeId || !currentSuggestions || currentSuggestions.length === 0) return;
+
+    const hasSelectedRecipe = currentSuggestions.some((item) => item.recipe.id === selectedRecipeId);
+    if (!hasSelectedRecipe) {
+      setSelectedRecipeId(null);
+    }
+  }, [data?.suggestions, selectedRecipeId, setSelectedRecipeId]);
 
   const handleViewRecipe = (recipeId: string) => {
     setSelectedRecipeId(recipeId);
   };
 
   const handleAddMissing = (recipeId: string) => {
-    const suggestion = data?.suggestions.find((s) => s.recipe.id === recipeId);
+    const suggestion = suggestions.find((s) => s.recipe.id === recipeId);
     if (!suggestion) return;
 
     addMissingMutation.mutate(suggestion.suggestion.missingIngredients, {
@@ -60,17 +84,22 @@ const RecipeSuggestionsPage: React.FC<RecipeSuggestionsPageProps> = ({ className
             content: `${result.addedCount} ingredient${result.addedCount > 1 ? 's' : ''} added to Shopping List`,
             icon: 'success',
           });
-        } else {
-          Toast.show({
-            content: 'All ingredients already in your Shopping List',
-            icon: 'success',
-          });
+          return;
         }
+
+        Toast.show({
+          content: 'All ingredients already in your Shopping List',
+          icon: 'success',
+        });
       },
       onError: () => {
         Toast.show({ content: 'Failed to add ingredients', icon: 'fail' });
       },
     });
+  };
+
+  const handleRetry = () => {
+    void refetch();
   };
 
   const hasFilters = !!(
@@ -79,7 +108,7 @@ const RecipeSuggestionsPage: React.FC<RecipeSuggestionsPageProps> = ({ className
     filters.tags?.length ||
     (filters.difficulty && filters.difficulty !== 'all')
   );
-  const suggestions = data?.suggestions ?? [];
+
   const readyNowCount = suggestions.filter(
     (item) => item.suggestion.missingIngredients.length === 0 && item.suggestion.matchedIngredients.length > 0,
   ).length;
@@ -89,30 +118,65 @@ const RecipeSuggestionsPage: React.FC<RecipeSuggestionsPageProps> = ({ className
   const lowCoverage = suggestions.length > 0 && suggestions[0].suggestion.matchPercentage < 55;
 
   return (
-    <div className={cn('flex flex-col h-full bg-background', className)}>
-      {/* Header */}
+    <div className={cn('flex h-full flex-col bg-background', className)}>
       <div className="sticky top-0 z-50 bg-background/95 backdrop-blur-md">
-        <div className="flex items-center p-4 pb-2 justify-between">
-          <h2 className="text-xl font-bold leading-tight tracking-tight flex-1">
-            Suggestions
-          </h2>
+        <div className="flex flex-col gap-3 p-4 pb-3">
+          <div className="flex items-center justify-between gap-3">
+            <div>
+              <h1 className="text-xl font-bold leading-tight tracking-tight">Meal Suggestions</h1>
+              <p className="text-sm text-muted-foreground">Match recipes against what is already in your kitchen.</p>
+            </div>
+            {isFetching && !isLoading ? (
+              <div className="flex items-center gap-2 rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
+                <RefreshCw className="size-3.5 animate-spin" />
+                Refreshing
+              </div>
+            ) : null}
+          </div>
+
+          <RecipesSectionNav
+            actionLabel="Manage"
+            onAction={() => navigate('/recipes/manage')}
+          />
+
+          <SearchInput
+            value={filters.search ?? ''}
+            onChange={setSearch}
+            placeholder="Search recipes, ingredients, or tags"
+            showVoiceButton={false}
+          />
         </div>
       </div>
 
-      {/* Content */}
       <div className="flex-1 overflow-y-auto">
         {isLoading ? (
-          <div className="flex items-center justify-center py-16">
+          <div className="flex flex-col items-center justify-center gap-3 px-4 py-16 text-center">
             <SpinLoading style={{ '--size': '36px' }} />
+            <div>
+              <p className="text-sm font-semibold">Finding the best meals for your pantry</p>
+              <p className="text-sm text-muted-foreground">Matching recipes against your current inventory and saved recipes.</p>
+            </div>
           </div>
         ) : error ? (
-          <div className="text-center py-16 text-destructive px-4">
-            <p className="text-sm">Failed to load suggestions</p>
-            <p className="text-xs text-muted-foreground mt-1">{error.message}</p>
+          <div className="px-4 py-16">
+            <div className="rounded-[28px] border border-destructive/20 bg-destructive/5 p-6 text-center">
+              <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-destructive/10 text-destructive">
+                <AlertTriangle className="size-6" />
+              </div>
+              <h2 className="mt-4 text-lg font-bold">Couldn&apos;t load meal suggestions</h2>
+              <p className="mt-2 text-sm leading-6 text-muted-foreground">{error.message}</p>
+              <div className="mt-5 flex items-center justify-center gap-3">
+                <Button variant="secondary" onClick={handleRetry}>
+                  Try Again
+                </Button>
+                <Button onClick={() => navigate('/recipes/manage')}>
+                  Review Recipes
+                </Button>
+              </div>
+            </div>
           </div>
         ) : (
           <div className="flex flex-col pb-safe">
-            {/* Hero / Expiration Alert */}
             <div className="px-4 py-4">
               <div className="overflow-hidden rounded-[30px] border border-white/70 bg-[radial-gradient(circle_at_top_left,rgba(19,236,91,0.16),transparent_35%),linear-gradient(135deg,rgba(255,255,255,0.96),rgba(231,243,235,0.92)_50%,rgba(255,239,213,0.92))] p-5 shadow-[0_24px_60px_-32px_rgba(13,27,18,0.45)] dark:border-white/10 dark:bg-[radial-gradient(circle_at_top_left,rgba(19,236,91,0.18),transparent_30%),linear-gradient(135deg,rgba(28,46,36,0.98),rgba(20,34,25,0.96)_55%,rgba(58,43,24,0.92))]">
                 <div className="flex items-start justify-between gap-4">
@@ -121,9 +185,9 @@ const RecipeSuggestionsPage: React.FC<RecipeSuggestionsPageProps> = ({ className
                       <Sparkles className="size-3.5 text-primary" />
                       Meal suggestions
                     </div>
-                    <h1 className="max-w-[14ch] text-[30px] font-bold leading-[1.05] tracking-tight">
+                    <h2 className="max-w-[14ch] text-[30px] font-bold leading-[1.05] tracking-tight">
                       Cook what you already have.
-                    </h1>
+                    </h2>
                     <p className="mt-3 max-w-[34ch] text-sm leading-6 text-muted-foreground">
                       Suggestions are ranked by pantry match, expiring ingredients, and quick prep so tonight&apos;s choice is easier.
                     </p>
@@ -136,11 +200,7 @@ const RecipeSuggestionsPage: React.FC<RecipeSuggestionsPageProps> = ({ className
                 <div className="mt-5 grid grid-cols-3 gap-2">
                   <SummaryStat label="Ready now" value={readyNowCount} accent="success" />
                   <SummaryStat label="Use soon" value={expiringMealCount} accent="warning" />
-                  <SummaryStat
-                    label="Matched"
-                    value={suggestions.length}
-                    accent="neutral"
-                  />
+                  <SummaryStat label="Matched" value={suggestions.length} accent="neutral" />
                 </div>
 
                 {data?.topExpiring ? (
@@ -170,13 +230,13 @@ const RecipeSuggestionsPage: React.FC<RecipeSuggestionsPageProps> = ({ className
               </div>
             </div>
 
-            {/* Filter Chips */}
             <div className="px-4 pb-4">
               <RecipeFilters
                 activeFilters={filters}
                 availableTags={availableTags}
                 onToggleSuggestedOnly={toggleSuggestedOnly}
                 onSetMaxCookTime={setMaxCookTime}
+                onSetDifficulty={setDifficulty}
                 onToggleTag={toggleTag}
               />
             </div>
@@ -187,7 +247,6 @@ const RecipeSuggestionsPage: React.FC<RecipeSuggestionsPageProps> = ({ className
               </div>
             ) : null}
 
-            {/* Suggestion Feed */}
             <div className="px-4">
               {data && data.suggestions.length > 0 ? (
                 <RecipeSuggestionList
@@ -201,6 +260,18 @@ const RecipeSuggestionsPage: React.FC<RecipeSuggestionsPageProps> = ({ className
                   hasFilters={hasFilters}
                   inventoryCount={data?.totalInventoryItems ?? 0}
                   onResetFilters={resetFilters}
+                  action={
+                    hasFilters ? undefined : (
+                      <div className="flex items-center gap-3">
+                        <Button variant="secondary" onClick={() => navigate('/add')}>
+                          Add Pantry Item
+                        </Button>
+                        <Button onClick={() => navigate('/recipes/manage?new=1')}>
+                          New Recipe
+                        </Button>
+                      </div>
+                    )
+                  }
                 />
               )}
             </div>
@@ -208,7 +279,6 @@ const RecipeSuggestionsPage: React.FC<RecipeSuggestionsPageProps> = ({ className
         )}
       </div>
 
-      {/* Recipe Detail Sheet */}
       <RecipeDetailSheet
         recipeId={selectedRecipeId}
         suggestion={selectedSuggestion}
@@ -219,9 +289,6 @@ const RecipeSuggestionsPage: React.FC<RecipeSuggestionsPageProps> = ({ className
   );
 };
 
-/**
- * Convert days remaining to a readable day name.
- */
 function getDayName(daysLeft: number): string {
   if (daysLeft <= 0) return 'today';
   if (daysLeft === 1) return 'tomorrow';

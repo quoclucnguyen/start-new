@@ -14,3 +14,4 @@ export * from './recipe-empty-state';
 export * from './recipe-management-empty-state';
 export * from './recipe-ingredients-panel';
 export * from './add-missing-ingredients-button';
+export * from './recipes-section-nav';

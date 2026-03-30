@@ -6,7 +6,7 @@ import { MainBottomNav } from './main-bottom-nav';
 import { Plus } from 'lucide-react';
 
 /** Routes that provide their own FAB */
-const ROUTES_WITH_OWN_FAB = ['/list'];
+const ROUTES_WITH_OWN_FAB = ['/list', '/recipes', '/recipes/manage'];
 
 interface MainLayoutProps {
   /** Show floating action button */

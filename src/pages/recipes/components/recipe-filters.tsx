@@ -4,6 +4,7 @@ import type { FilterChip } from '@/components/shared';
 
 interface RecipeFiltersProps {
   activeFilters: {
+    search?: string;
     suggestedOnly?: boolean;
     maxCookTimeMinutes?: number;
     difficulty?: string;
@@ -12,6 +13,7 @@ interface RecipeFiltersProps {
   availableTags: string[];
   onToggleSuggestedOnly: () => void;
   onSetMaxCookTime: (minutes: number | undefined) => void;
+  onSetDifficulty: (difficulty: 'all' | 'easy' | 'medium' | 'hard') => void;
   onToggleTag: (tag: string) => void;
   className?: string;
 }
@@ -48,10 +50,12 @@ const RecipeFilters: React.FC<RecipeFiltersProps> = ({
   availableTags,
   onToggleSuggestedOnly,
   onSetMaxCookTime,
+  onSetDifficulty,
   onToggleTag,
   className,
 }) => {
   const is30Min = activeFilters.maxCookTimeMinutes === 30;
+  const activeDifficulty = activeFilters.difficulty ?? 'all';
 
   return (
     <div className={cn('flex gap-2 overflow-x-auto no-scrollbar pb-1', className)}>
@@ -73,6 +77,27 @@ const RecipeFilters: React.FC<RecipeFiltersProps> = ({
         }
       >
         Under 30m
+      </FilterChipButton>
+
+      <FilterChipButton
+        active={activeDifficulty === 'easy'}
+        onClick={() => onSetDifficulty(activeDifficulty === 'easy' ? 'all' : 'easy')}
+      >
+        Easy
+      </FilterChipButton>
+
+      <FilterChipButton
+        active={activeDifficulty === 'medium'}
+        onClick={() => onSetDifficulty(activeDifficulty === 'medium' ? 'all' : 'medium')}
+      >
+        Medium
+      </FilterChipButton>
+
+      <FilterChipButton
+        active={activeDifficulty === 'hard'}
+        onClick={() => onSetDifficulty(activeDifficulty === 'hard' ? 'all' : 'hard')}
+      >
+        Hard
       </FilterChipButton>
 
       {availableTags.map((tag) => (

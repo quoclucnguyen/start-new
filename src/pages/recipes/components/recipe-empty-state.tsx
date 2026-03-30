@@ -9,6 +9,7 @@ interface RecipeEmptyStateProps {
   hasFilters: boolean;
   inventoryCount?: number;
   onResetFilters?: () => void;
+  action?: React.ReactNode;
   className?: string;
 }
 
@@ -17,6 +18,7 @@ const RecipeEmptyState: React.FC<RecipeEmptyStateProps> = ({
   hasFilters,
   inventoryCount = 0,
   onResetFilters,
+  action,
   className,
 }) => {
   if (!hasInventory) {
@@ -33,6 +35,7 @@ const RecipeEmptyState: React.FC<RecipeEmptyStateProps> = ({
         }
         title="No pantry items yet"
         description="Add a few ingredients from your kitchen and this space will start proposing meals that use what you already have."
+        action={action}
       />
     );
   }
@@ -56,7 +59,7 @@ const RecipeEmptyState: React.FC<RecipeEmptyStateProps> = ({
             <Button variant="secondary" onClick={onResetFilters}>
               Reset Filters
             </Button>
-          ) : null
+          ) : action ?? null
         }
       />
     );
@@ -81,6 +84,7 @@ const RecipeEmptyState: React.FC<RecipeEmptyStateProps> = ({
         <AlertTriangle className="mt-0.5 size-4 shrink-0 text-orange-600 dark:text-orange-300" />
         <span>Try adding eggs, rice, onions, tomatoes, or pasta for stronger match coverage.</span>
       </div>
+      {action ? <div className="mt-4">{action}</div> : null}
     </div>
   );
 };

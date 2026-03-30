@@ -1,6 +1,6 @@
 import * as React from 'react';
+import { useSearchParams } from 'react-router';
 import { cn } from '@/lib/utils';
-import { Plus } from 'lucide-react';
 import { SpinLoading, Toast } from 'antd-mobile';
 import { useRecipesList } from '@/api/use-recipes-management';
 import {
@@ -10,23 +10,35 @@ import {
 import { useRecipesManagementStore } from '@/pages/recipes/store/recipes-management.store';
 import { SearchInput } from '@/components/shared';
 import { confirmDelete } from '@/components/shared';
-import { Button } from '@/components/ui/button';
 import { RecipeListItem } from './recipe-list-item';
 import { RecipeEditorSheet } from './recipe-editor-sheet';
 import { RecipeManagementEmptyState } from './recipe-management-empty-state';
+import { RecipesSectionNav } from './recipes-section-nav';
 
 interface RecipeManagementPageProps {
   className?: string;
 }
 
 const RecipeManagementPage: React.FC<RecipeManagementPageProps> = ({ className }) => {
+  const [searchParams, setSearchParams] = useSearchParams();
   const {
     search,
     selectedTags,
+    isEditorOpen,
     setSearch,
     openCreateEditor,
     openEditEditor,
   } = useRecipesManagementStore();
+
+  React.useEffect(() => {
+    if (searchParams.get('new') !== '1' || isEditorOpen) return;
+
+    openCreateEditor();
+
+    const next = new URLSearchParams(searchParams);
+    next.delete('new');
+    setSearchParams(next, { replace: true });
+  }, [isEditorOpen, openCreateEditor, searchParams, setSearchParams]);
 
   const { data: recipes = [], isLoading, error } = useRecipesList({
     search: search || undefined,
@@ -62,12 +74,11 @@ const RecipeManagementPage: React.FC<RecipeManagementPageProps> = ({ className }
     <div className={cn('flex flex-col h-full bg-background', className)}>
       {/* Header */}
       <div className="px-4 pt-4 pb-2 flex flex-col gap-3">
+        <RecipesSectionNav actionLabel="New Recipe" onAction={openCreateEditor} />
+
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-bold">Công thức của tôi</h1>
-          <Button size="sm" onClick={openCreateEditor} className="gap-1">
-            <Plus className="size-4" />
-            Mới
-          </Button>
+          <span className="text-sm text-muted-foreground">{recipes.length} recipes</span>
         </div>
 
         <SearchInput

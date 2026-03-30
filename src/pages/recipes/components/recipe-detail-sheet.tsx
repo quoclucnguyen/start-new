@@ -2,6 +2,7 @@ import * as React from 'react';
 import { cn } from '@/lib/utils';
 import { Clock, Users } from 'lucide-react';
 import { BottomSheet } from '@/components/shared';
+import { Button } from '@/components/ui/button';
 import { RecipeIngredientsPanel } from './recipe-ingredients-panel';
 import { AddMissingIngredientsButton } from './add-missing-ingredients-button';
 import { useRecipeSuggestionDetail } from '@/api/use-recipe-suggestions';
@@ -35,13 +36,33 @@ const RecipeDetailSheet: React.FC<RecipeDetailSheetProps> = ({
   visible,
   onClose,
 }) => {
-  const { data: recipe, isLoading } = useRecipeSuggestionDetail(visible ? recipeId : null);
+  const {
+    data: recipe,
+    error,
+    isLoading,
+    refetch,
+    isFetching,
+  } = useRecipeSuggestionDetail(visible ? recipeId : null);
 
   return (
     <BottomSheet visible={visible} onClose={onClose} height="92vh">
       {isLoading ? (
         <div className="flex items-center justify-center py-16">
           <SpinLoading style={{ '--size': '36px' }} />
+        </div>
+      ) : error ? (
+        <div className="flex flex-col items-center justify-center gap-3 px-6 py-16 text-center">
+          <p className="text-sm font-semibold">Failed to load recipe details</p>
+          <p className="text-sm text-muted-foreground">{error.message}</p>
+          <Button
+            variant="secondary"
+            onClick={() => {
+              void refetch();
+            }}
+            disabled={isFetching}
+          >
+            Try Again
+          </Button>
         </div>
       ) : !recipe ? (
         <div className="flex items-center justify-center py-16 text-muted-foreground">
