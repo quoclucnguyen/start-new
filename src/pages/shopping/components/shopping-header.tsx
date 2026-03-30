@@ -24,7 +24,7 @@ const ShoppingHeader = React.forwardRef<HTMLElement, ShoppingHeaderProps>(
           text: (
             <div className="flex items-center gap-2">
               <Package size={16} />
-              Move {checkedCount} to Inventory
+              Chuyển {checkedCount} món vào kho
             </div>
           ),
         },
@@ -33,7 +33,7 @@ const ShoppingHeader = React.forwardRef<HTMLElement, ShoppingHeaderProps>(
           text: (
             <div className="flex items-center gap-2 text-destructive">
               <Trash2 size={16} />
-              Delete Checked ({checkedCount})
+              Xóa đã chọn ({checkedCount})
             </div>
           ),
         },
@@ -58,11 +58,11 @@ const ShoppingHeader = React.forwardRef<HTMLElement, ShoppingHeaderProps>(
         {...props}
       >
         <div className="flex-1">
-          <h2 className="text-2xl font-bold leading-tight tracking-tight">Shopping List</h2>
+          <h2 className="text-2xl font-bold leading-tight tracking-tight">Danh sách mua sắm</h2>
           <p className="text-xs text-muted-foreground font-medium">
             {totalCount === 0
-              ? 'No items'
-              : `${uncheckedCount} item${uncheckedCount !== 1 ? 's' : ''} left to buy`}
+              ? 'Chưa có món nào'
+              : `${uncheckedCount} món còn cần mua`}
           </p>
         </div>
         {actions.length > 0 && (

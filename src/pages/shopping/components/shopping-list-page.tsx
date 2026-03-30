@@ -53,7 +53,7 @@ function sortShoppingList(
 function groupByCategory(items: ShoppingListItemType[]): Map<string, ShoppingListItemType[]> {
   const groups = new Map<string, ShoppingListItemType[]>();
   for (const item of items) {
-    const cat = item.category || 'Other';
+    const cat = item.category || 'Khác';
     const group = groups.get(cat) || [];
     group.push(item);
     groups.set(cat, group);

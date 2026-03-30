@@ -14,18 +14,18 @@ interface RestockAlertProps extends React.HTMLAttributes<HTMLDivElement> {
 const RestockAlert = React.forwardRef<HTMLDivElement, RestockAlertProps>(
   ({ 
     className, 
-    title = 'Restock Alert', 
+    title = 'Nhắc nhở mua lại', 
     items, 
     message,
-    actionLabel = 'Add All to List',
+    actionLabel = 'Thêm tất cả vào danh sách',
     onAction,
     ...props 
   }, ref) => {
     const formattedItems = items.length > 1 
-      ? `${items.slice(0, -1).join(', ')} and ${items[items.length - 1]}`
+      ? `${items.slice(0, -1).join(', ')} và ${items[items.length - 1]}`
       : items[0];
 
-    const defaultMessage = `${formattedItems} expired yesterday. Add to list?`;
+    const defaultMessage = `${formattedItems} đã hết hạn hôm qua. Thêm vào danh sách?`;
 
     return (
       <div ref={ref} className={cn('relative', className)} {...props}>
