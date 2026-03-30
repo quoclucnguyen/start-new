@@ -18,8 +18,8 @@ interface DashboardTopBarProps {
  * - Shows notification bell with badge on the right
  */
 export const DashboardTopBar: React.FC<DashboardTopBarProps> = ({
-  title = 'My Kitchen',
-  subtitle = 'Good Morning,',
+  title = 'Bếp của tôi',
+  subtitle = 'Chào buổi sáng,',
   notificationCount = 0,
   onNotificationClick,
 }) => {
@@ -36,7 +36,7 @@ export const DashboardTopBar: React.FC<DashboardTopBarProps> = ({
       leftAction={
         <UserAvatar
           src={avatarUrl}
-          alt={userName || 'User Profile'}
+          alt={userName || 'Hồ sơ người dùng'}
           showStatus
         />
       }

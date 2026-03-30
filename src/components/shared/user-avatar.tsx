@@ -42,7 +42,7 @@ const UserAvatar = React.forwardRef<HTMLDivElement, UserAvatarProps>(
       <div ref={ref} className={cn('relative inline-block', className)} {...props}>
         <Avatar
           src={src || ''}
-          alt={alt || name || 'User avatar'}
+          alt={alt || name || 'Ảnh đại diện'}
           style={{ '--size': sizeClasses[size], '--border-radius': '50%' }}
           className="border-2 border-primary"
           fallback={

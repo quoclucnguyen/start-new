@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 import { ConfigProvider } from 'antd-mobile';
-import enUS from 'antd-mobile/es/locales/en-US';
+import viVN from 'antd-mobile/es/locales/vi-VN';
 
 interface AppShellProps extends React.HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
@@ -10,7 +10,7 @@ interface AppShellProps extends React.HTMLAttributes<HTMLDivElement> {
 const AppShell = React.forwardRef<HTMLDivElement, AppShellProps>(
   ({ className, children, ...props }, ref) => {
     return (
-      <ConfigProvider locale={enUS}>
+      <ConfigProvider locale={viVN}>
         <div
           ref={ref}
           className={cn(

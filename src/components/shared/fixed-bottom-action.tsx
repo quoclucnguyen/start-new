@@ -54,7 +54,7 @@ const FixedBottomAction = React.forwardRef<HTMLDivElement, FixedBottomActionProp
                 onClick={primaryOnClick}
                 disabled={primaryLoading || primaryDisabled}
               >
-                {primaryLoading ? 'Saving...' : primaryLabel}
+                {primaryLoading ? 'Đang lưu...' : primaryLabel}
               </Button>
             )}
           </div>
