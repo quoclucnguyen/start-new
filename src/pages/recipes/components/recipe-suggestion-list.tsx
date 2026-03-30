@@ -30,7 +30,7 @@ const RecipeSuggestionList: React.FC<RecipeSuggestionListProps> = ({
         <RecipeCard
           title={featured.recipe.title}
           imageUrl={featured.recipe.imageUrl ?? ''}
-          cookTime={`${featured.recipe.cookTimeMinutes} min`}
+          cookTime={`${featured.recipe.cookTimeMinutes} phút`}
           difficulty={capitalize(featured.recipe.difficulty) as 'Easy' | 'Medium' | 'Hard'}
           matchPercentage={featured.suggestion.matchPercentage}
           matchedIngredients={featured.suggestion.matchedIngredients.length}
@@ -44,8 +44,8 @@ const RecipeSuggestionList: React.FC<RecipeSuggestionListProps> = ({
           featured={isFeatured}
           featureLabel={
             featured.suggestion.expiringIngredientsUsed.length > 0
-              ? 'Use It Up'
-              : 'Top Match'
+              ? 'Sử dụng ngay'
+              : 'Khớp nhất'
           }
           onCook={() => onViewRecipe(featured.recipe.id)}
           onAddMissing={
@@ -61,10 +61,10 @@ const RecipeSuggestionList: React.FC<RecipeSuggestionListProps> = ({
       {rest.length > 0 && (
         <>
           <SectionHeader
-            title="Suggested for You"
+            title="Gợi ý cho bạn"
             action={
               <span className="text-sm text-muted-foreground">
-                Based on your pantry items
+                Dựa trên nguyên liệu trong tủ bếp của bạn
               </span>
             }
           />
@@ -73,7 +73,7 @@ const RecipeSuggestionList: React.FC<RecipeSuggestionListProps> = ({
               key={item.recipe.id}
               title={item.recipe.title}
               imageUrl={item.recipe.imageUrl ?? ''}
-              cookTime={`${item.recipe.cookTimeMinutes} min`}
+              cookTime={`${item.recipe.cookTimeMinutes} phút`}
               difficulty={capitalize(item.recipe.difficulty) as 'Easy' | 'Medium' | 'Hard'}
               matchPercentage={item.suggestion.matchPercentage}
               matchedIngredients={item.suggestion.matchedIngredients.length}

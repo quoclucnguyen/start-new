@@ -50,7 +50,7 @@ const IngredientEditorList: React.FC<IngredientEditorListProps> = ({
   return (
     <div className={cn('flex flex-col gap-2', className)}>
       <div className="flex items-center justify-between">
-        <h4 className="text-sm font-bold">Ingredients</h4>
+        <h4 className="text-sm font-bold">Nguyên liệu</h4>
         <Button variant="ghost" size="sm" onClick={addIngredient} className="h-8 gap-1">
           <Plus className="size-3.5" />
           Add
@@ -59,7 +59,7 @@ const IngredientEditorList: React.FC<IngredientEditorListProps> = ({
 
       {value.length === 0 && (
         <p className="text-sm text-muted-foreground text-center py-4">
-          No ingredients yet. Tap "Add" to start.
+          Chưa có nguyên liệu. Nhấn "Thêm" để bắt đầu.
         </p>
       )}
 
@@ -91,14 +91,14 @@ const IngredientEditorList: React.FC<IngredientEditorListProps> = ({
           {/* Fields */}
           <div className="flex-1 min-w-0 flex flex-col gap-2">
             <Input
-              placeholder="Ingredient name"
+              placeholder="Tên nguyên liệu"
               value={item.name}
               onChange={(e) => updateIngredient(index, { name: e.target.value })}
               className="h-9"
             />
             <div className="flex gap-2">
               <Input
-                placeholder="Qty"
+                placeholder="SL"
                 type="number"
                 inputMode="decimal"
                 value={item.quantity ?? ''}
@@ -110,7 +110,7 @@ const IngredientEditorList: React.FC<IngredientEditorListProps> = ({
                 className="h-9 w-20"
               />
               <Input
-                placeholder="Unit"
+                placeholder="ĐVT"
                 value={item.unit ?? ''}
                 onChange={(e) => updateIngredient(index, { unit: e.target.value })}
                 className="h-9 flex-1"

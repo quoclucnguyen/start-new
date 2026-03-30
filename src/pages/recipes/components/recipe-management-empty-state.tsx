@@ -13,8 +13,8 @@ const RecipeManagementEmptyState: React.FC<RecipeManagementEmptyStateProps> = ({
   return (
     <EmptyState
       icon={<ChefHat className="size-12" />}
-      title="No recipes yet"
-      description="Create your first recipe to get started with meal planning and cooking."
+      title="Chưa có công thức nào"
+      description="Tạo công thức đầu tiên để bắt đầu lập kế hoạch bữa ăn và nấu ăn."
       action={
         <Button onClick={onCreateRecipe} className="gap-1.5">
           <Plus className="size-4" />

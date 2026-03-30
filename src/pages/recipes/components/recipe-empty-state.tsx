@@ -33,8 +33,8 @@ const RecipeEmptyState: React.FC<RecipeEmptyStateProps> = ({
             <Leaf className="size-8" />
           </div>
         }
-        title="No pantry items yet"
-        description="Add a few ingredients from your kitchen and this space will start proposing meals that use what you already have."
+        title="Chưa có nguyên liệu nào"
+        description="Thêm một vài nguyên liệu từ bếp của bạn và không gian này sẽ bắt đầu đề xuất các bữa ăn sử dụng những gì bạn đã có."
         action={action}
       />
     );
@@ -52,8 +52,8 @@ const RecipeEmptyState: React.FC<RecipeEmptyStateProps> = ({
             <SlidersHorizontal className="size-8" />
           </div>
         }
-        title="No meals match these filters"
-        description="Broaden the cook time or remove a tag to bring more meal suggestions back into the list."
+        title="Không có bữa ăn nào khớp bộ lọc"
+        description="Mở rộng thời gian nấu hoặc bỏ một thẻ để hiển thị thêm gợi ý bữa ăn."
         action={
           onResetFilters ? (
             <Button variant="secondary" onClick={onResetFilters}>
@@ -75,14 +75,14 @@ const RecipeEmptyState: React.FC<RecipeEmptyStateProps> = ({
       <div className="mb-4 flex size-14 items-center justify-center rounded-2xl bg-orange-500/12 text-orange-700 dark:text-orange-300">
         <Soup className="size-7" />
       </div>
-      <h3 className="text-lg font-bold">Pantry coverage is still thin</h3>
+      <h3 className="text-lg font-bold">Tủ bếp vẫn còn ít nguyên liệu</h3>
       <p className="mt-2 text-sm leading-6 text-muted-foreground">
-        We only found {inventoryCount} ingredient{inventoryCount === 1 ? '' : 's'} in your pantry,
-        so meal matching is limited right now. Add a few staples or fresh produce to unlock better suggestions.
+        Chúng tôi chỉ tìm thấy {inventoryCount} nguyên liệu trong tủ bếp của bạn,
+        vì vậy khả năng khớp bữa ăn hiện tại còn hạn chế. Hãy thêm một vài nguyên liệu cơ bản hoặc rau tươi để nhận gợi ý tốt hơn.
       </p>
       <div className="mt-4 flex items-start gap-2 rounded-2xl bg-background/70 p-3 text-sm text-muted-foreground dark:bg-black/10">
         <AlertTriangle className="mt-0.5 size-4 shrink-0 text-orange-600 dark:text-orange-300" />
-        <span>Try adding eggs, rice, onions, tomatoes, or pasta for stronger match coverage.</span>
+        <span>Thử thêm trứng, cơm, hành, cà chua hoặc mì để tăng độ khớp.</span>
       </div>
       {action ? <div className="mt-4">{action}</div> : null}
     </div>

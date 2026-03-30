@@ -22,19 +22,19 @@ const AddMissingIngredientsButton: React.FC<AddMissingIngredientsButtonProps> = 
       onSuccess: (result) => {
         if (result.addedCount > 0) {
           Toast.show({
-            content: `${result.addedCount} ingredient${result.addedCount > 1 ? 's' : ''} added to Shopping List`,
+            content: `${result.addedCount} nguyên liệu đã được thêm vào Danh sách mua sắm`,
             icon: 'success',
           });
         } else {
           Toast.show({
-            content: 'All ingredients already in your Shopping List',
+            content: 'Tất cả nguyên liệu đã có trong Danh sách mua sắm',
             icon: 'success',
           });
         }
       },
       onError: () => {
         Toast.show({
-          content: 'Failed to add ingredients',
+          content: 'Thêm nguyên liệu thất bại',
           icon: 'fail',
         });
       },
@@ -52,8 +52,8 @@ const AddMissingIngredientsButton: React.FC<AddMissingIngredientsButtonProps> = 
     >
       <ShoppingCart className="size-4" />
       {addMutation.isPending
-        ? 'Adding...'
-        : `Add ${missingIngredients.length} Missing`}
+        ? 'Đang thêm...'
+        : `Thêm ${missingIngredients.length} nguyên liệu thiếu`}
     </Button>
   );
 };

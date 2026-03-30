@@ -47,7 +47,7 @@ const StepEditorList: React.FC<StepEditorListProps> = ({
   return (
     <div className={cn('flex flex-col gap-2', className)}>
       <div className="flex items-center justify-between">
-        <h4 className="text-sm font-bold">Steps</h4>
+        <h4 className="text-sm font-bold">Các bước</h4>
         <Button variant="ghost" size="sm" onClick={addStep} className="h-8 gap-1">
           <Plus className="size-3.5" />
           Add
@@ -56,7 +56,7 @@ const StepEditorList: React.FC<StepEditorListProps> = ({
 
       {value.length === 0 && (
         <p className="text-sm text-muted-foreground text-center py-4">
-          No steps yet. Tap "Add" to start.
+          Chưa có bước nào. Nhấn "Thêm" để bắt đầu.
         </p>
       )}
 
@@ -91,7 +91,7 @@ const StepEditorList: React.FC<StepEditorListProps> = ({
           {/* Fields */}
           <div className="flex-1 min-w-0 flex flex-col gap-2">
             <textarea
-              placeholder="Describe this step..."
+              placeholder="Mô tả bước này..."
               value={item.instruction}
               onChange={(e) => updateStep(index, { instruction: e.target.value })}
               className={cn(
@@ -103,7 +103,7 @@ const StepEditorList: React.FC<StepEditorListProps> = ({
             />
             <div className="flex items-center gap-2">
               <Input
-                placeholder="Minutes"
+                placeholder="Phút"
                 type="number"
                 inputMode="numeric"
                 value={item.estimatedMinutes ?? ''}
@@ -114,7 +114,7 @@ const StepEditorList: React.FC<StepEditorListProps> = ({
                 }
                 className="h-8 w-24"
               />
-              <span className="text-xs text-muted-foreground">min</span>
+              <span className="text-xs text-muted-foreground">phút</span>
             </div>
           </div>
 

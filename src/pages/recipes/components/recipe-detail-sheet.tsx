@@ -52,7 +52,7 @@ const RecipeDetailSheet: React.FC<RecipeDetailSheetProps> = ({
         </div>
       ) : error ? (
         <div className="flex flex-col items-center justify-center gap-3 px-6 py-16 text-center">
-          <p className="text-sm font-semibold">Failed to load recipe details</p>
+          <p className="text-sm font-semibold">Không thể tải chi tiết công thức</p>
           <p className="text-sm text-muted-foreground">{error.message}</p>
           <Button
             variant="secondary"
@@ -92,11 +92,11 @@ const RecipeDetailSheet: React.FC<RecipeDetailSheetProps> = ({
               <div className="flex items-center gap-3 flex-wrap">
                 <span className="flex items-center gap-1 text-sm text-muted-foreground">
                   <Clock className="size-4" />
-                  {recipe.cookTimeMinutes} min
+                  {recipe.cookTimeMinutes} phút
                 </span>
                 <span className="flex items-center gap-1 text-sm text-muted-foreground">
                   <Users className="size-4" />
-                  {recipe.servings} servings
+                  {recipe.servings} phần
                 </span>
                 <DifficultyBadge difficulty={recipe.difficulty} />
               </div>
@@ -120,7 +120,7 @@ const RecipeDetailSheet: React.FC<RecipeDetailSheetProps> = ({
             {suggestion && (
               <div className="bg-muted/50 p-3 rounded-lg">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm font-semibold">Ingredient Match</span>
+                  <span className="text-sm font-semibold">Khớp nguyên liệu</span>
                   <span className="text-sm font-bold text-primary">
                     {suggestion.matchPercentage}%
                   </span>
@@ -141,7 +141,7 @@ const RecipeDetailSheet: React.FC<RecipeDetailSheetProps> = ({
             {/* Ingredients Panel */}
             {suggestion ? (
               <div>
-                <h3 className="text-lg font-bold mb-3">Ingredients</h3>
+                <h3 className="text-lg font-bold mb-3">Nguyên liệu</h3>
                 <RecipeIngredientsPanel
                   recipe={recipe}
                   matchedIngredients={suggestion.matchedIngredients}
@@ -158,7 +158,7 @@ const RecipeDetailSheet: React.FC<RecipeDetailSheetProps> = ({
               </div>
             ) : (
               <div>
-                <h3 className="text-lg font-bold mb-3">Ingredients</h3>
+                <h3 className="text-lg font-bold mb-3">Nguyên liệu</h3>
                 <div className="flex flex-col gap-2">
                   {recipe.ingredients.map((ing) => (
                     <div
@@ -174,7 +174,7 @@ const RecipeDetailSheet: React.FC<RecipeDetailSheetProps> = ({
                           </span>
                         )}
                         {ing.optional && (
-                          <span className="text-muted-foreground/60 italic ml-1">(optional)</span>
+                          <span className="text-muted-foreground/60 italic ml-1">(tùy chọn)</span>
                         )}
                       </span>
                     </div>
@@ -186,7 +186,7 @@ const RecipeDetailSheet: React.FC<RecipeDetailSheetProps> = ({
             {/* Steps */}
             {recipe.steps.length > 0 && (
               <div>
-                <h3 className="text-lg font-bold mb-3">Instructions</h3>
+                <h3 className="text-lg font-bold mb-3">Hướng dẫn</h3>
                 <div className="flex flex-col gap-4">
                   {recipe.steps
                     .sort((a, b) => a.stepNumber - b.stepNumber)

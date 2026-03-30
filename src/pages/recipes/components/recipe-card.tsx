@@ -37,7 +37,7 @@ const RecipeCard = React.forwardRef<HTMLDivElement, RecipeCardProps>(
     missingIngredients = [],
     expiringIngredients = [],
     featured = false,
-    featureLabel = 'Use It Up',
+    featureLabel = 'Sử dụng ngay',
     onCook,
     onAddMissing,
     showActions = true,
@@ -83,7 +83,7 @@ const RecipeCard = React.forwardRef<HTMLDivElement, RecipeCardProps>(
               <div className="mb-2 flex flex-wrap gap-2">
                 {matchPercentage !== undefined ? (
                   <div className="rounded-full bg-white/18 px-3 py-1 text-xs font-semibold backdrop-blur-sm">
-                    {matchPercentage}% matched
+                    {matchPercentage}% khớp
                   </div>
                 ) : null}
                 {readyToCook ? (
@@ -131,7 +131,7 @@ const RecipeCard = React.forwardRef<HTMLDivElement, RecipeCardProps>(
             {matchPercentage !== undefined && (
               <div className="rounded-2xl border border-border/70 bg-muted/35 p-3">
                 <div className="mb-2 flex items-center justify-between text-xs font-semibold uppercase tracking-[0.16em] text-muted-foreground">
-                  <span>Ingredient coverage</span>
+                  <span>Độ bao phủ nguyên liệu</span>
                   <span>{matchPercentage}%</span>
                 </div>
                 <Progress value={matchPercentage} variant={progressVariant} className="h-2" />
@@ -143,12 +143,12 @@ const RecipeCard = React.forwardRef<HTMLDivElement, RecipeCardProps>(
                   ) : null}
                   {missingIngredients.length > 0 ? (
                     <StatusPill icon={<ChefHat className="size-3.5" />} tone="neutral">
-                      {missingIngredients.length} missing
+                      {missingIngredients.length} thiếu<
                     </StatusPill>
                   ) : null}
                   {expiringIngredients.length > 0 ? (
                     <StatusPill icon={<AlertTriangle className="size-3.5" />} tone="warning">
-                      {expiringIngredients.length} expiring soon
+                      {expiringIngredients.length} sắp hết hạn<
                     </StatusPill>
                   ) : null}
                 </div>
@@ -160,21 +160,21 @@ const RecipeCard = React.forwardRef<HTMLDivElement, RecipeCardProps>(
               <div className="grid gap-2 rounded-2xl bg-muted/45 p-3 text-sm">
                 {expiringIngredients.length > 0 && (
                   <IngredientRow
-                    label="Use first"
+                    label="Sử dụng trước"
                     value={expiringIngredients.join(', ')}
                     tone="warning"
                   />
                 )}
                 {useIngredients.length > 0 && (
                   <IngredientRow
-                    label="In your kitchen"
+                    label="Trong bếp của bạn"
                     value={useIngredients.join(', ')}
                     tone="success"
                   />
                 )}
                 {missingIngredients.length > 0 && (
                   <IngredientRow
-                    label="Still needed"
+                    label="Cần bổ sung"
                     value={missingIngredients.join(', ')}
                     tone="muted"
                   />
@@ -192,7 +192,7 @@ const RecipeCard = React.forwardRef<HTMLDivElement, RecipeCardProps>(
                 )}
                 <Button className={cn('flex-1', !onAddMissing && 'w-full')} onClick={onCook}>
                   <ChefHat className="size-4" />
-                  {featured ? 'Cook Now' : 'View Recipe'}
+                  {featured ? 'Nấu ngay' : 'Xem công thức'}
                 </Button>
               </div>
             )}

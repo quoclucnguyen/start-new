@@ -36,7 +36,7 @@ const RecipeIngredientsPanel: React.FC<RecipeIngredientsPanelProps> = ({
       {matchedIngredients.length > 0 && (
         <div>
           <h4 className="text-sm font-semibold text-primary mb-2">
-            Available ({matchedIngredients.length})
+            Có sẵn ({matchedIngredients.length})
           </h4>
           <div className="flex flex-wrap gap-2">
             {sortedIngredients
@@ -52,7 +52,7 @@ const RecipeIngredientsPanel: React.FC<RecipeIngredientsPanelProps> = ({
       {missingIngredients.length > 0 && (
         <div>
           <h4 className="text-sm font-semibold text-muted-foreground mb-2">
-            Missing ({missingIngredients.length})
+            Thiếu ({missingIngredients.length})
           </h4>
           <div className="flex flex-wrap gap-2">
             {missingIngredients.map((ing) => (

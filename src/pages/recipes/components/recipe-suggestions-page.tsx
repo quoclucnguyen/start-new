@@ -81,19 +81,19 @@ const RecipeSuggestionsPage: React.FC<RecipeSuggestionsPageProps> = ({ className
       onSuccess: (result) => {
         if (result.addedCount > 0) {
           Toast.show({
-            content: `${result.addedCount} ingredient${result.addedCount > 1 ? 's' : ''} added to Shopping List`,
+            content: `${result.addedCount} nguyên liệu đã được thêm vào Danh sách mua sắm`,
             icon: 'success',
           });
           return;
         }
 
         Toast.show({
-          content: 'All ingredients already in your Shopping List',
+          content: 'Tất cả nguyên liệu đã có trong Danh sách mua sắm',
           icon: 'success',
         });
       },
       onError: () => {
-        Toast.show({ content: 'Failed to add ingredients', icon: 'fail' });
+        Toast.show({ content: 'Thêm nguyên liệu thất bại', icon: 'fail' });
       },
     });
   };
@@ -123,8 +123,8 @@ const RecipeSuggestionsPage: React.FC<RecipeSuggestionsPageProps> = ({ className
         <div className="flex flex-col gap-3 p-4 pb-3">
           <div className="flex items-center justify-between gap-3">
             <div>
-              <h1 className="text-xl font-bold leading-tight tracking-tight">Meal Suggestions</h1>
-              <p className="text-sm text-muted-foreground">Match recipes against what is already in your kitchen.</p>
+              <h1 className="text-xl font-bold leading-tight tracking-tight">Gợi ý bữa ăn</h1>
+              <p className="text-sm text-muted-foreground">Khớp công thức với những gì đã có trong bếp của bạn.</p>
             </div>
             {isFetching && !isLoading ? (
               <div className="flex items-center gap-2 rounded-full bg-muted px-3 py-1 text-xs font-semibold text-muted-foreground">
@@ -135,14 +135,14 @@ const RecipeSuggestionsPage: React.FC<RecipeSuggestionsPageProps> = ({ className
           </div>
 
           <RecipesSectionNav
-            actionLabel="Manage"
+            actionLabel="Quản lý"
             onAction={() => navigate('/recipes/manage')}
           />
 
           <SearchInput
             value={filters.search ?? ''}
             onChange={setSearch}
-            placeholder="Search recipes, ingredients, or tags"
+            placeholder="Tìm công thức, nguyên liệu hoặc thẻ"
             showVoiceButton={false}
           />
         </div>
@@ -153,8 +153,8 @@ const RecipeSuggestionsPage: React.FC<RecipeSuggestionsPageProps> = ({ className
           <div className="flex flex-col items-center justify-center gap-3 px-4 py-16 text-center">
             <SpinLoading style={{ '--size': '36px' }} />
             <div>
-              <p className="text-sm font-semibold">Finding the best meals for your pantry</p>
-              <p className="text-sm text-muted-foreground">Matching recipes against your current inventory and saved recipes.</p>
+              <p className="text-sm font-semibold">Đang tìm bữa ăn phù hợp nhất cho tủ bếp của bạn</p>
+              <p className="text-sm text-muted-foreground">Đang khớp công thức với kho nguyên liệu và công thức đã lưu của bạn.</p>
             </div>
           </div>
         ) : error ? (
@@ -163,7 +163,7 @@ const RecipeSuggestionsPage: React.FC<RecipeSuggestionsPageProps> = ({ className
               <div className="mx-auto flex size-14 items-center justify-center rounded-full bg-destructive/10 text-destructive">
                 <AlertTriangle className="size-6" />
               </div>
-              <h2 className="mt-4 text-lg font-bold">Couldn&apos;t load meal suggestions</h2>
+              <h2 className="mt-4 text-lg font-bold">Không thể tải gợi ý bữa ăn</h2>
               <p className="mt-2 text-sm leading-6 text-muted-foreground">{error.message}</p>
               <div className="mt-5 flex items-center justify-center gap-3">
                 <Button variant="secondary" onClick={handleRetry}>
@@ -189,7 +189,7 @@ const RecipeSuggestionsPage: React.FC<RecipeSuggestionsPageProps> = ({ className
                       Cook what you already have.
                     </h2>
                     <p className="mt-3 max-w-[34ch] text-sm leading-6 text-muted-foreground">
-                      Suggestions are ranked by pantry match, expiring ingredients, and quick prep so tonight&apos;s choice is easier.
+                      Gợi ý được xếp hạng theo độ khớp tủ bếp, nguyên liệu sắp hết hạn và thời gian chuẩn bị nhanh để bạn dễ chọn bữa ăn tối hơn.
                     </p>
                   </div>
                   <div className="flex size-16 shrink-0 items-center justify-center rounded-[22px] bg-emerald-500/12 text-emerald-700 dark:text-primary">
@@ -198,9 +198,9 @@ const RecipeSuggestionsPage: React.FC<RecipeSuggestionsPageProps> = ({ className
                 </div>
 
                 <div className="mt-5 grid grid-cols-3 gap-2">
-                  <SummaryStat label="Ready now" value={readyNowCount} accent="success" />
-                  <SummaryStat label="Use soon" value={expiringMealCount} accent="warning" />
-                  <SummaryStat label="Matched" value={suggestions.length} accent="neutral" />
+                  <SummaryStat label="Sẵn sàng" value={readyNowCount} accent="success" />
+                  <SummaryStat label="Sử dụng sớm" value={expiringMealCount} accent="warning" />
+                  <SummaryStat label="Đã khớp" value={suggestions.length} accent="neutral" />
                 </div>
 
                 {data?.topExpiring ? (
@@ -214,14 +214,14 @@ const RecipeSuggestionsPage: React.FC<RecipeSuggestionsPageProps> = ({ className
                           Expiring soon
                         </p>
                         <p className="mt-1 text-base font-semibold leading-6">
-                          Build a meal around {data.topExpiring.name}.
+                          Hãy nấu món gì với {data.topExpiring.name}.
                         </p>
                         <p className="mt-1 text-sm leading-6 text-muted-foreground">
-                          {data.topExpiring.recipesCount} suggestion
-                          {data.topExpiring.recipesCount === 1 ? '' : 's'} can use it
+                          {data.topExpiring.recipesCount} gợi ý
+                          có thể dùng nó
                           {data.topExpiring.daysLeft <= 1
-                            ? ' today.'
-                            : ` before ${getDayName(data.topExpiring.daysLeft)}.`}
+                             ? ' hôm nay.'
+                            : ` trước ${getDayName(data.topExpiring.daysLeft)}.`}
                         </p>
                       </div>
                     </div>
@@ -264,7 +264,7 @@ const RecipeSuggestionsPage: React.FC<RecipeSuggestionsPageProps> = ({ className
                     hasFilters ? undefined : (
                       <div className="flex items-center gap-3">
                         <Button variant="secondary" onClick={() => navigate('/add')}>
-                          Add Pantry Item
+                          Thêm nguyên liệu
                         </Button>
                         <Button onClick={() => navigate('/recipes/manage?new=1')}>
                           New Recipe
@@ -295,7 +295,7 @@ function getDayName(daysLeft: number): string {
 
   const date = new Date();
   date.setDate(date.getDate() + daysLeft);
-  return date.toLocaleDateString('en-US', { weekday: 'long' });
+  return date.toLocaleDateString('vi-VN', { weekday: 'long' });
 }
 
 interface SummaryStatProps {
@@ -335,13 +335,13 @@ function LowIngredientNotice({ suggestions, inventoryCount }: LowIngredientNotic
           <AlertTriangle className="size-5" />
         </div>
         <div className="min-w-0 flex-1">
-          <p className="text-sm font-semibold">Low ingredient coverage</p>
+          <p className="text-sm font-semibold">Độ bao phủ nguyên liệu thấp</p>
           <p className="mt-1 text-sm leading-6 text-muted-foreground">
-            You have {inventoryCount} pantry item{inventoryCount === 1 ? '' : 's'}, so most meals still need a few basics.
+            Bạn có {inventoryCount} nguyên liệu trong tủ bếp, vì vậy hầu hết các bữa ăn vẫn cần thêm vài nguyên liệu cơ bản.
           </p>
           {nextNeeds.length > 0 ? (
             <p className="mt-2 text-sm leading-6 text-foreground">
-              Add {nextNeeds.join(', ')} to unlock stronger matches for {bestMatch.recipe.title}.
+              Thêm {nextNeeds.join(', ')} để tăng độ khớp cho {bestMatch.recipe.title}.
             </p>
           ) : null}
         </div>

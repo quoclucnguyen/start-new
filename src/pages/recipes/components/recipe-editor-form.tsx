@@ -29,9 +29,9 @@ interface RecipeEditorFormProps {
 }
 
 const DIFFICULTY_OPTIONS: { value: RecipeDifficulty; label: string }[] = [
-  { value: 'easy', label: 'Easy' },
-  { value: 'medium', label: 'Medium' },
-  { value: 'hard', label: 'Hard' },
+  { value: 'easy', label: 'Dễ' },
+  { value: 'medium', label: 'Trung bình' },
+  { value: 'hard', label: 'Khó' },
 ];
 
 function getDefaultValues(recipe?: RecipeDetail | null): RecipeEditorFormValues {
@@ -119,9 +119,9 @@ const RecipeEditorForm: React.FC<RecipeEditorFormProps> = ({
     <form onSubmit={handleSubmit} className={cn('flex flex-col gap-5 px-4 pb-8', className)}>
       {/* Title */}
       <div className="flex flex-col gap-1">
-        <label className="text-sm font-bold">Title *</label>
+        <label className="text-sm font-bold">Tên công thức *</label>
         <Input
-          placeholder="Recipe title"
+          placeholder="Tên công thức"
           value={values.title}
           onChange={(e) => updateField('title', e.target.value)}
           className="h-11"
@@ -130,9 +130,9 @@ const RecipeEditorForm: React.FC<RecipeEditorFormProps> = ({
 
       {/* Description */}
       <div className="flex flex-col gap-1">
-        <label className="text-sm font-bold">Description</label>
+        <label className="text-sm font-bold">Mô tả</label>
         <textarea
-          placeholder="Brief description (optional)"
+          placeholder="Mô tả ngắn (tùy chọn)"
           value={values.description}
           onChange={(e) => updateField('description', e.target.value)}
           className={cn(
@@ -147,7 +147,7 @@ const RecipeEditorForm: React.FC<RecipeEditorFormProps> = ({
       {/* Cook time + Prep time */}
       <div className="grid grid-cols-2 gap-3">
         <div className="flex flex-col gap-1">
-          <label className="text-sm font-bold">Cook time (min) *</label>
+          <label className="text-sm font-bold">Thời gian nấu (phút) *</label>
           <Input
             type="number"
             inputMode="numeric"
@@ -157,7 +157,7 @@ const RecipeEditorForm: React.FC<RecipeEditorFormProps> = ({
           />
         </div>
         <div className="flex flex-col gap-1">
-          <label className="text-sm font-bold">Prep time (min)</label>
+          <label className="text-sm font-bold">Thời gian chuẩn bị (phút)</label>
           <Input
             type="number"
             inputMode="numeric"
@@ -170,7 +170,7 @@ const RecipeEditorForm: React.FC<RecipeEditorFormProps> = ({
 
       {/* Servings */}
       <div className="flex flex-col gap-1">
-        <label className="text-sm font-bold">Servings *</label>
+        <label className="text-sm font-bold">Khẩu phần *</label>
         <Input
           type="number"
           inputMode="numeric"
@@ -182,7 +182,7 @@ const RecipeEditorForm: React.FC<RecipeEditorFormProps> = ({
 
       {/* Difficulty */}
       <div className="flex flex-col gap-1">
-        <label className="text-sm font-bold">Difficulty</label>
+        <label className="text-sm font-bold">Độ khó</label>
         <div className="flex gap-2">
           {DIFFICULTY_OPTIONS.map((opt) => (
             <button
@@ -204,14 +204,14 @@ const RecipeEditorForm: React.FC<RecipeEditorFormProps> = ({
 
       {/* Tags */}
       <div className="flex flex-col gap-1">
-        <label className="text-sm font-bold">Tags</label>
+        <label className="text-sm font-bold">Thẻ</label>
         <Input
-          placeholder="e.g. italian, quick, vegetarian"
+          placeholder="vd: Ý, nhanh, chay"
           value={values.tags}
           onChange={(e) => updateField('tags', e.target.value)}
           className="h-11"
         />
-        <p className="text-xs text-muted-foreground">Separate with commas</p>
+        <p className="text-xs text-muted-foreground">Ngăn cách bằng dấu phẩy</p>
       </div>
 
       {/* Divider */}
@@ -239,7 +239,7 @@ const RecipeEditorForm: React.FC<RecipeEditorFormProps> = ({
           disabled={!isValid || isSubmitting}
           className="w-full h-12 text-base font-bold"
         >
-          {isSubmitting ? 'Saving...' : initialValues ? 'Save Changes' : 'Create Recipe'}
+          {isSubmitting ? 'Đang lưu...' : initialValues ? 'Lưu thay đổi' : 'Tạo công thức'}
         </Button>
       </div>
     </form>

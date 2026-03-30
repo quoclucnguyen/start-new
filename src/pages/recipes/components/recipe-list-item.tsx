@@ -21,9 +21,9 @@ const difficultyColors: Record<RecipeDifficulty, string> = {
 };
 
 const difficultyLabels: Record<RecipeDifficulty, string> = {
-  easy: 'Easy',
-  medium: 'Medium',
-  hard: 'Hard',
+  easy: 'Dễ',
+  medium: 'TB',
+  hard: 'Khó',
 };
 
 const RecipeListItem = React.forwardRef<HTMLDivElement, RecipeListItemProps>(
@@ -35,7 +35,7 @@ const RecipeListItem = React.forwardRef<HTMLDivElement, RecipeListItemProps>(
 
       if (!isSystemRecipe && onEdit) {
         actions.push({
-          text: 'Edit',
+          text: 'Sửa',
           key: 'edit',
           onClick: () => onEdit(recipe.id),
         });
@@ -43,7 +43,7 @@ const RecipeListItem = React.forwardRef<HTMLDivElement, RecipeListItemProps>(
 
       if (onDuplicate) {
         actions.push({
-          text: 'Duplicate',
+          text: 'Nhân đôi',
           key: 'duplicate',
           onClick: () => onDuplicate(recipe.id),
         });
@@ -51,7 +51,7 @@ const RecipeListItem = React.forwardRef<HTMLDivElement, RecipeListItemProps>(
 
       if (!isSystemRecipe && onDelete) {
         actions.push({
-          text: 'Delete',
+          text: 'Xóa',
           key: 'delete',
           danger: true,
           onClick: () => onDelete(recipe.id),
@@ -106,7 +106,7 @@ const RecipeListItem = React.forwardRef<HTMLDivElement, RecipeListItemProps>(
           <div className="flex items-center gap-2 mt-2 flex-wrap">
             <span className="flex items-center gap-1 text-xs text-muted-foreground">
               <Clock className="size-3" />
-              {totalTime} min
+              {totalTime} phút
             </span>
             <span
               className={cn(
@@ -118,7 +118,7 @@ const RecipeListItem = React.forwardRef<HTMLDivElement, RecipeListItemProps>(
             </span>
             {recipe.servings > 0 && (
               <span className="text-xs text-muted-foreground">
-                {recipe.servings} serving{recipe.servings !== 1 ? 's' : ''}
+                {recipe.servings} phần
               </span>
             )}
             {isSystemRecipe && (

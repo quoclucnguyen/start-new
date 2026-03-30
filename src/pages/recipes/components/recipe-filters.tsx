@@ -63,7 +63,7 @@ const RecipeFilters: React.FC<RecipeFiltersProps> = ({
         active={!!activeFilters.suggestedOnly}
         onClick={onToggleSuggestedOnly}
       >
-        Suggested
+        Gợi ý
       </FilterChipButton>
 
       <FilterChipButton
@@ -76,28 +76,28 @@ const RecipeFilters: React.FC<RecipeFiltersProps> = ({
           </svg>
         }
       >
-        Under 30m
+        Dưới 30p
       </FilterChipButton>
 
       <FilterChipButton
         active={activeDifficulty === 'easy'}
         onClick={() => onSetDifficulty(activeDifficulty === 'easy' ? 'all' : 'easy')}
       >
-        Easy
+        Dễ
       </FilterChipButton>
 
       <FilterChipButton
         active={activeDifficulty === 'medium'}
         onClick={() => onSetDifficulty(activeDifficulty === 'medium' ? 'all' : 'medium')}
       >
-        Medium
+        TB
       </FilterChipButton>
 
       <FilterChipButton
         active={activeDifficulty === 'hard'}
         onClick={() => onSetDifficulty(activeDifficulty === 'hard' ? 'all' : 'hard')}
       >
-        Hard
+        Khó
       </FilterChipButton>
 
       {availableTags.map((tag) => (

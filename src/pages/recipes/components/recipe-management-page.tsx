@@ -74,11 +74,11 @@ const RecipeManagementPage: React.FC<RecipeManagementPageProps> = ({ className }
     <div className={cn('flex flex-col h-full bg-background', className)}>
       {/* Header */}
       <div className="px-4 pt-4 pb-2 flex flex-col gap-3">
-        <RecipesSectionNav actionLabel="New Recipe" onAction={openCreateEditor} />
+        <RecipesSectionNav actionLabel="Thêm công thức" onAction={openCreateEditor} />
 
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-bold">Công thức của tôi</h1>
-          <span className="text-sm text-muted-foreground">{recipes.length} recipes</span>
+          <span className="text-sm text-muted-foreground">{recipes.length} công thức</span>
         </div>
 
         <SearchInput

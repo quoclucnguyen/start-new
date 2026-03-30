@@ -5,8 +5,8 @@ import { FilterChips } from '@/components/shared';
 import { Button } from '@/components/ui/button';
 
 const recipeNavItems = [
-  { id: '/recipes', label: 'Suggestions', icon: <Sparkles className="size-4" /> },
-  { id: '/recipes/manage', label: 'My Recipes', icon: <ChefHat className="size-4" /> },
+  { id: '/recipes', label: 'Gợi ý', icon: <Sparkles className="size-4" /> },
+  { id: '/recipes/manage', label: 'Công thức của tôi', icon: <ChefHat className="size-4" /> },
 ] as const;
 
 interface RecipesSectionNavProps {
