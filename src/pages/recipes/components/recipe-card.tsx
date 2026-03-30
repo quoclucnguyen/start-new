@@ -72,7 +72,7 @@ const RecipeCard = React.forwardRef<HTMLDivElement, RecipeCardProps>(
                 style={{ backgroundImage: `url(${safeImageUrl})` }}
               />
             ) : null}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent" />
+            <div className="absolute inset-0 bg-linear-to-t from-black/60 via-black/10 to-transparent" />
             {featured && (
               <div className="absolute left-3 top-3 flex items-center gap-1 rounded-full bg-white/90 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-foreground shadow-sm backdrop-blur-sm dark:bg-black/80">
                 <Sparkles className="size-3.5" />

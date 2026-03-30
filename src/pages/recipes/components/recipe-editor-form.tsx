@@ -138,7 +138,7 @@ const RecipeEditorForm: React.FC<RecipeEditorFormProps> = ({
           className={cn(
             'w-full rounded-lg border border-border bg-background px-3 py-2 text-sm',
             'placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/30',
-            'resize-none min-h-[60px]',
+            'resize-none min-h-15',
           )}
           rows={2}
         />
