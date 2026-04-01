@@ -10,7 +10,7 @@ import type {
   RecipeStep,
   CreateRecipeInput,
   UpdateRecipeInput,
-} from './types';
+} from '@/api/types';
 
 /**
  * Hook to create a new recipe with optimistic update

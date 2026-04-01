@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabaseRecipesManagementApi } from './recipes-management.api';
 import { useAuthStore } from '@/store';
-import type { Recipe, RecipeDetail } from './types';
+import type { Recipe, RecipeDetail } from '@/api/types';
 
 export const RECIPES_MANAGEMENT_QUERY_KEY = ['recipes-management'] as const;
 

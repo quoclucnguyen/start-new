@@ -1,15 +1,15 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabaseShoppingListApi } from './shopping-list.api';
 import { SHOPPING_LIST_QUERY_KEY } from './use-shopping-list';
-import { FOOD_ITEMS_QUERY_KEY } from './use-food-items';
-import { supabaseFoodItemsApi } from './food-items.api';
+import { FOOD_ITEMS_QUERY_KEY } from '@/pages/inventory/api/use-food-items';
+import { supabaseFoodItemsApi } from '@/pages/inventory/api/food-items.api';
 import { useAuthStore } from '@/store';
 import type {
   ShoppingListItem,
   CreateShoppingListItemInput,
   UpdateShoppingListItemInput,
   CreateFoodItemInput,
-} from './types';
+} from '@/api/types';
 
 /**
  * Hook to add a new shopping list item with optimistic update

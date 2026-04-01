@@ -5,7 +5,7 @@ import { BottomSheet } from '@/components/shared';
 import { Button } from '@/components/ui/button';
 import { RecipeIngredientsPanel } from './recipe-ingredients-panel';
 import { AddMissingIngredientsButton } from './add-missing-ingredients-button';
-import { useRecipeSuggestionDetail } from '@/api/use-recipe-suggestions';
+import { useRecipeSuggestionDetail } from '../api/use-recipe-suggestions';
 import { SpinLoading } from 'antd-mobile';
 import type { RecipeSuggestion } from '@/api/types';
 

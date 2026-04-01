@@ -5,8 +5,8 @@ import type {
   RecipeSuggestionItem,
   MatchedIngredient,
   MissingIngredient,
-} from './types';
-import { getDaysUntilExpiry, getExpiryStatus } from './types';
+} from '@/api/types';
+import { getDaysUntilExpiry, getExpiryStatus } from '@/api/types';
 
 // ============================================================================
 // Ingredient Normalization

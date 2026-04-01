@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { categoriesApi, storageLocationsApi } from './settings.api';
-import type { CategoryConfig, StorageLocationConfig } from './types';
+import type { CategoryConfig, StorageLocationConfig } from '@/api/types';
 
 // ============================================================================
 // Query Keys

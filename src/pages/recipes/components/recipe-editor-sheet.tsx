@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { BottomSheet } from '@/components/shared';
 import { SpinLoading, Dialog } from 'antd-mobile';
-import { useRecipeById } from '@/api/use-recipes-management';
+import { useRecipeById } from '../api/use-recipes-management';
 import {
   useCreateRecipe,
   useUpdateRecipe,
   useReplaceRecipeIngredients,
   useReplaceRecipeSteps,
-} from '@/api/use-recipes-management-mutations';
+} from '../api/use-recipes-management-mutations';
 import { useRecipesManagementStore } from '@/pages/recipes/store/recipes-management.store';
 import { RecipeEditorForm } from './recipe-editor-form';
 import type { RecipeEditorFormValues } from './recipe-editor-form';

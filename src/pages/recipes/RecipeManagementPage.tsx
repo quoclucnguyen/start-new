@@ -2,11 +2,11 @@ import * as React from 'react';
 import { useSearchParams } from 'react-router';
 import { cn } from '@/lib/utils';
 import { SpinLoading, Toast } from 'antd-mobile';
-import { useRecipesList } from '@/api/use-recipes-management';
+import { useRecipesList } from './api/use-recipes-management';
 import {
   useDeleteRecipe,
   useDuplicateRecipe,
-} from '@/api/use-recipes-management-mutations';
+} from './api/use-recipes-management-mutations';
 import { useRecipesManagementStore } from './store/recipes-management.store';
 import { SearchInput } from '@/components/shared';
 import { confirmDelete } from '@/components/shared';

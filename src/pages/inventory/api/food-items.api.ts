@@ -1,13 +1,13 @@
 import { getSupabaseClient } from '@/lib/supabaseClient';
-import type { 
-  FoodItem, 
-  CreateFoodItemInput, 
-  UpdateFoodItemInput, 
+import type {
+  FoodItem,
+  CreateFoodItemInput,
+  UpdateFoodItemInput,
   DbFoodItem,
   FoodCategory,
   StorageLocation,
   QuantityUnit,
-} from './types';
+} from '@/api/types';
 
 /**
  * Abstract API interface for food items.
@@ -49,7 +49,7 @@ function mapDbToFoodItem(row: DbFoodItem): FoodItem {
  * Map frontend CreateFoodItemInput to database insert row
  */
 function mapCreateInputToDb(
-  input: CreateFoodItemInput, 
+  input: CreateFoodItemInput,
   userId: string
 ): Omit<DbFoodItem, 'id' | 'created_at' | 'updated_at' | 'last_modified' | 'deleted' | 'synced'> {
   return {
@@ -100,7 +100,7 @@ function mapUpdateInputToDb(
 export const supabaseFoodItemsApi: IFoodItemsApi = {
   async getAll(userId: string): Promise<FoodItem[]> {
     const supabase = getSupabaseClient();
-    
+
     const { data, error } = await supabase
       .from('food_items')
       .select('*')
@@ -118,7 +118,7 @@ export const supabaseFoodItemsApi: IFoodItemsApi = {
 
   async getById(id: string, userId: string): Promise<FoodItem | null> {
     const supabase = getSupabaseClient();
-    
+
     const { data, error } = await supabase
       .from('food_items')
       .select('*')
@@ -141,9 +141,9 @@ export const supabaseFoodItemsApi: IFoodItemsApi = {
 
   async create(input: CreateFoodItemInput, userId: string): Promise<FoodItem> {
     const supabase = getSupabaseClient();
-    
+
     const dbRow = mapCreateInputToDb(input, userId);
-    
+
     const { data, error } = await supabase
       .from('food_items')
       .insert(dbRow)
@@ -160,9 +160,9 @@ export const supabaseFoodItemsApi: IFoodItemsApi = {
 
   async update(input: UpdateFoodItemInput, userId: string): Promise<FoodItem> {
     const supabase = getSupabaseClient();
-    
+
     const dbRow = mapUpdateInputToDb(input);
-    
+
     const { data, error } = await supabase
       .from('food_items')
       .update(dbRow)
@@ -186,12 +186,12 @@ export const supabaseFoodItemsApi: IFoodItemsApi = {
 
   async delete(id: string, userId: string): Promise<void> {
     const supabase = getSupabaseClient();
-    
+
     // Soft delete: set deleted = true instead of actually deleting
     const { error } = await supabase
       .from('food_items')
-      .update({ 
-        deleted: true, 
+      .update({
+        deleted: true,
         updated_at: new Date().toISOString(),
         last_modified: new Date().toISOString(),
       })

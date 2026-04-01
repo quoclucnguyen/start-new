@@ -1,305 +1,381 @@
 # Database Schema Documentation
 
-Detailed schema documentation for all tables in the Food Inventory Manager database.
+Detailed schema documentation for all tables in the `public` schema.
 
-## Table: users
+## Conventions
 
-User profiles linked to Supabase Authentication.
+- PK: UUID primary keys (mostly `gen_random_uuid()`)
+- Auth linkage: user-owned tables reference `auth.users(id)`
+- Naming: snake_case at DB level
+- RLS: enabled on all tables
 
-### Columns
+---
 
-| Column | Type | Nullable | Default | Description |
-|--------|------|----------|---------|-------------|
-| id | uuid | NO | - | Primary key, references auth.users |
-| telegram_id | bigint | NO | - | Telegram user ID (unique) |
-| chat_id | bigint | NO | - | Telegram chat ID for notifications |
-| email | text | NO | - | User email (unique) |
-| first_name | text | YES | - | User's first name |
-| last_name | text | YES | - | User's last name |
-| username | text | YES | - | Telegram username |
-| last_login | timestamptz | YES | - | Last login timestamp |
-| created_at | timestamptz | YES | now() | Account creation time |
-| updated_at | timestamptz | YES | now() | Last update time |
+## Table: `users`
 
-### Constraints
-- Primary Key: `id`
-- Foreign Key: `id` → `auth.users.id`
+User profile table linked 1:1 with Supabase Auth.
+
+| Column | Type | Nullable | Default |
+|---|---|---|---|
+| id | uuid | NO | - |
+| telegram_id | bigint | NO | - |
+| chat_id | bigint | NO | - |
+| email | text | NO | - |
+| first_name | text | YES | - |
+| last_name | text | YES | - |
+| username | text | YES | - |
+| last_login | timestamptz | YES | - |
+| created_at | timestamptz | YES | `now()` |
+| updated_at | timestamptz | YES | `now()` |
+
+Constraints:
+- PK: `id`
+- FK: `id -> auth.users.id`
 - Unique: `telegram_id`, `email`
 
 ---
 
-## Table: user_settings
+## Table: `user_settings`
 
-User preferences and application settings.
+| Column | Type | Nullable | Default |
+|---|---|---|---|
+| id | uuid | NO | `gen_random_uuid()` |
+| user_id | uuid | NO | - |
+| preferences | jsonb | YES | `'{}'::jsonb` |
+| gemini_api_key | text | YES | - |
+| created_at | timestamptz | YES | `now()` |
+| updated_at | timestamptz | YES | `now()` |
 
-### Columns
-
-| Column | Type | Nullable | Default | Description |
-|--------|------|----------|---------|-------------|
-| id | uuid | NO | gen_random_uuid() | Primary key |
-| user_id | uuid | NO | - | References auth.users |
-| gemini_api_key | text | YES | - | Gemini API key for AI features |
-| preferences | jsonb | YES | '{}'::jsonb | User preferences JSON |
-| created_at | timestamptz | YES | now() | Creation time |
-| updated_at | timestamptz | YES | now() | Last update time |
-
-### Constraints
-- Primary Key: `id`
-- Foreign Key: `user_id` → `auth.users.id`
+Constraints:
+- PK: `id`
+- FK: `user_id -> auth.users.id`
 - Unique: `user_id`
 
 ---
 
-## Table: food_items
+## Table: `food_items`
 
-Main food inventory tracking with expiry dates.
+| Column | Type | Nullable | Default |
+|---|---|---|---|
+| id | uuid | NO | `gen_random_uuid()` |
+| user_id | uuid | NO | - |
+| name | text | NO | - |
+| quantity | numeric | NO | - |
+| unit | text | NO | - |
+| expiration_date | date | YES | - |
+| category | text | YES | - |
+| image_url | text | YES | - |
+| created_at | timestamptz | YES | `(now() AT TIME ZONE 'Asia/Ho_Chi_Minh'::text)` |
+| purchase_date | date | YES | - |
+| notes | text | YES | - |
+| updated_at | timestamptz | YES | `now()` |
+| last_modified | timestamptz | YES | `now()` |
+| deleted | boolean | YES | `false` |
+| synced | boolean | YES | `false` |
+| storage | text | YES | `'pantry'::text` |
 
-### Columns
-
-| Column | Type | Nullable | Default | Description |
-|--------|------|----------|---------|-------------|
-| id | uuid | NO | gen_random_uuid() | Primary key |
-| user_id | uuid | NO | - | References auth.users |
-| name | text | NO | - | Food item name |
-| quantity | numeric | NO | - | Quantity amount |
-| unit | text | NO | - | Unit of measurement |
-| expiration_date | date | YES | - | Expiration date |
-| category | text | YES | - | Food category |
-| storage | text | NO | 'pantry' | Storage location |
-| image_url | text | YES | - | Image URL |
-| purchase_date | date | YES | - | Purchase date |
-| notes | text | YES | - | Additional notes |
-| created_at | timestamptz | YES | (now() AT TIME ZONE 'Asia/Ho_Chi_Minh') | Creation time |
-| updated_at | timestamptz | YES | now() | Last update time |
-| last_modified | timestamptz | YES | now() | Last modification time |
-| deleted | boolean | YES | false | Soft delete flag |
-| synced | boolean | YES | false | Sync status |
-
-### Constraints
-- Primary Key: `id`
-- Foreign Key: `user_id` → `auth.users.id`
+Constraints:
+- PK: `id`
+- FK: `user_id -> auth.users.id`
 
 ---
 
-## Table: cosmetics
+## Table: `cosmetics`
 
-Cosmetics inventory with expiry tracking.
+| Column | Type | Nullable | Default |
+|---|---|---|---|
+| id | uuid | NO | `gen_random_uuid()` |
+| user_id | uuid | NO | - |
+| name | text | NO | - |
+| brand | text | YES | - |
+| category | text | YES | - |
+| expiry_date | date | YES | - |
+| opened_date | date | YES | - |
+| status | text | YES | `'active'::text` |
+| notes | text | YES | - |
+| image_url | text | YES | - |
+| created_at | timestamptz | NO | `now()` |
+| updated_at | timestamptz | NO | `now()` |
 
-### Columns
-
-| Column | Type | Nullable | Default | Description |
-|--------|------|----------|---------|-------------|
-| id | uuid | NO | gen_random_uuid() | Primary key |
-| user_id | uuid | NO | - | References auth.users |
-| name | text | NO | - | Cosmetic product name |
-| brand | text | YES | - | Brand name |
-| category | text | YES | - | Cosmetic category |
-| expiry_date | date | YES | - | Expiry date |
-| opened_date | date | YES | - | Date opened |
-| status | text | YES | 'active' | Product status |
-| image_url | text | YES | - | Image URL |
-| notes | text | YES | - | Additional notes |
-| created_at | timestamptz | NO | now() | Creation time |
-| updated_at | timestamptz | NO | now() | Last update time |
-
-### Constraints
-- Primary Key: `id`
-- Foreign Key: `user_id` → `auth.users.id`
+Constraints:
+- PK: `id`
+- FK: `user_id -> auth.users.id`
 
 ---
 
-## Table: categories
+## Table: `expiring_items_queue`
 
-Configurable food categories with visual customization.
+| Column | Type | Nullable | Default |
+|---|---|---|---|
+| id | uuid | NO | `gen_random_uuid()` |
+| food_item_id | uuid | YES | - |
+| cosmetic_id | uuid | YES | - |
+| user_id | uuid | NO | - |
+| chat_id | bigint | NO | - |
+| item_name | text | NO | - |
+| quantity | numeric | NO | - |
+| unit | text | NO | - |
+| expiration_date | date | NO | - |
+| category | text | NO | - |
+| days_until_expiry | integer | NO | - |
+| notification_priority | text | NO | - |
+| status | text | NO | `'pending'::text` |
+| scheduled_at | timestamptz | YES | - |
+| created_at | timestamptz | NO | `(now() AT TIME ZONE 'Asia/Ho_Chi_Minh'::text)` |
+| updated_at | timestamptz | NO | `(now() AT TIME ZONE 'Asia/Ho_Chi_Minh'::text)` |
+| processed_at | timestamptz | YES | - |
 
-### Columns
-
-| Column | Type | Nullable | Default | Description |
-|--------|------|----------|---------|-------------|
-| id | uuid | NO | gen_random_uuid() | Primary key |
-| name | text | NO | - | Category name |
-| icon | text | NO | '📦' | Icon emoji |
-| color | text | NO | '#6b7280' | Display color |
-| show_in_filters | boolean | YES | true | Show in filter UI |
-| sort_order | integer | NO | 0 | Display order |
-| created_at | timestamptz | YES | now() | Creation time |
-
-### Constraints
-- Primary Key: `id`
-
----
-
-## Table: storage_locations
-
-Configurable storage locations with visual customization.
-
-### Columns
-
-| Column | Type | Nullable | Default | Description |
-|--------|------|----------|---------|-------------|
-| id | uuid | NO | gen_random_uuid() | Primary key |
-| name | text | NO | - | Location name |
-| icon | text | NO | '📦' | Icon emoji |
-| color | text | NO | '#6b7280' | Display color |
-| show_in_filters | boolean | YES | true | Show in filter UI |
-| sort_order | integer | NO | 0 | Display order |
-| created_at | timestamptz | YES | now() | Creation time |
-
-### Constraints
-- Primary Key: `id`
+Constraints:
+- PK: `id`
+- FK: `user_id -> auth.users.id`
+- FK: `food_item_id -> food_items.id`
+- FK: `cosmetic_id -> cosmetics.id`
+- Check: `notification_priority IN ('urgent','high','medium','low')`
+- Check: `status IN ('pending','processing','sent','failed')`
 
 ---
 
-## Table: shopping_list
+## Table: `categories`
 
-Shopping list management with food item linking.
+| Column | Type | Nullable | Default |
+|---|---|---|---|
+| id | uuid | NO | `gen_random_uuid()` |
+| name | text | NO | - |
+| icon | text | NO | `'📦'::text` |
+| color | text | NO | `'#6b7280'::text` |
+| show_in_filters | boolean | YES | `true` |
+| sort_order | integer | NO | `0` |
+| created_at | timestamptz | YES | `now()` |
 
-### Columns
-
-| Column | Type | Nullable | Default | Description |
-|--------|------|----------|---------|-------------|
-| id | uuid | NO | gen_random_uuid() | Primary key |
-| user_id | uuid | NO | - | References auth.users |
-| name | text | NO | - | Item name |
-| category | text | NO | - | Item category |
-| quantity | numeric | NO | 1 | Quantity to buy |
-| unit | text | NO | 'pieces' | Unit of measurement |
-| checked | boolean | NO | false | Purchase completed |
-| linked_food_item_id | uuid | YES | - | Links to food_items |
-| notes | text | YES | - | Additional notes |
-| purchased_at | timestamptz | YES | - | When purchased |
-| created_at | timestamptz | NO | now() | Creation time |
-| updated_at | timestamptz | NO | now() | Last update time |
-| last_modified | timestamptz | NO | now() | Last modification time |
-| deleted | boolean | NO | false | Soft delete flag |
-| synced | boolean | NO | false | Sync status |
-
-### Constraints
-- Primary Key: `id`
-- Foreign Key: `user_id` → `auth.users.id`
-- Foreign Key: `linked_food_item_id` → `food_items.id`
+Constraints:
+- PK: `id`
 
 ---
 
-## Table: recipes
+## Table: `storage_locations`
 
-Recipe management with metadata and tags.
+| Column | Type | Nullable | Default |
+|---|---|---|---|
+| id | uuid | NO | `gen_random_uuid()` |
+| name | text | NO | - |
+| icon | text | NO | `'📦'::text` |
+| color | text | NO | `'#6b7280'::text` |
+| show_in_filters | boolean | YES | `true` |
+| sort_order | integer | NO | `0` |
+| created_at | timestamptz | YES | `now()` |
 
-### Columns
+Constraints:
+- PK: `id`
 
-| Column | Type | Nullable | Default | Description |
-|--------|------|----------|---------|-------------|
-| id | uuid | NO | gen_random_uuid() | Primary key |
-| user_id | uuid | YES | - | References auth.users (nullable for system recipes) |
-| title | text | NO | - | Recipe title |
-| description | text | YES | - | Recipe description |
-| image_url | text | YES | - | Recipe image |
-| prep_time_minutes | integer | YES | - | Preparation time |
-| cook_time_minutes | integer | NO | - | Cooking time (> 0) |
-| difficulty | text | NO | - | Difficulty: easy/medium/hard |
-| servings | integer | NO | 1 | Number of servings (> 0) |
-| tags | text[] | NO | '{}' | Text array of tags |
-| visibility | text | NO | 'private' | Visibility: private/shared |
-| source | text | NO | 'user' | Source: system/user |
-| created_at | timestamptz | NO | now() | Creation time |
-| updated_at | timestamptz | NO | now() | Last update time |
-| last_modified | timestamptz | NO | now() | Last modification time |
-| deleted | boolean | NO | false | Soft delete flag |
-| synced | boolean | NO | false | Sync status |
+---
 
-### Constraints
-- Primary Key: `id`
-- Foreign Key: `user_id` → `auth.users.id`
+## Table: `shopping_list`
+
+| Column | Type | Nullable | Default |
+|---|---|---|---|
+| id | uuid | NO | `gen_random_uuid()` |
+| user_id | uuid | NO | - |
+| name | text | NO | - |
+| category | text | NO | - |
+| quantity | numeric | NO | `1` |
+| unit | text | NO | `'pieces'::text` |
+| notes | text | YES | - |
+| checked | boolean | NO | `false` |
+| linked_food_item_id | uuid | YES | - |
+| created_at | timestamptz | NO | `now()` |
+| updated_at | timestamptz | NO | `now()` |
+| last_modified | timestamptz | NO | `now()` |
+| purchased_at | timestamptz | YES | - |
+| deleted | boolean | NO | `false` |
+| synced | boolean | NO | `false` |
+
+Constraints:
+- PK: `id`
+- FK: `user_id -> auth.users.id`
+- FK: `linked_food_item_id -> food_items.id`
+
+---
+
+## Table: `recipes`
+
+| Column | Type | Nullable | Default |
+|---|---|---|---|
+| id | uuid | NO | `gen_random_uuid()` |
+| user_id | uuid | YES | - |
+| title | text | NO | - |
+| description | text | YES | - |
+| image_url | text | YES | - |
+| cook_time_minutes | integer | NO | - |
+| prep_time_minutes | integer | YES | - |
+| servings | integer | NO | `1` |
+| difficulty | text | NO | - |
+| tags | text[] | NO | `'{}'::text[]` |
+| visibility | text | NO | `'private'::text` |
+| source | text | NO | `'user'::text` |
+| created_at | timestamptz | NO | `now()` |
+| updated_at | timestamptz | NO | `now()` |
+| last_modified | timestamptz | NO | `now()` |
+| deleted | boolean | NO | `false` |
+| synced | boolean | NO | `false` |
+
+Constraints:
+- PK: `id`
+- FK: `user_id -> auth.users.id`
 - Check: `cook_time_minutes > 0`
-- Check: `difficulty IN ('easy', 'medium', 'hard')`
 - Check: `servings > 0`
-- Check: `visibility IN ('private', 'shared')`
-- Check: `source IN ('system', 'user')`
+- Check: `difficulty IN ('easy','medium','hard')`
+- Check: `visibility IN ('private','shared')`
+- Check: `source IN ('system','user')`
 
 ---
 
-## Table: recipe_ingredients
+## Table: `recipe_ingredients`
 
-Recipe ingredients with quantities and ordering.
+| Column | Type | Nullable | Default |
+|---|---|---|---|
+| id | uuid | NO | `gen_random_uuid()` |
+| recipe_id | uuid | NO | - |
+| name | text | NO | - |
+| normalized_name | text | NO | - |
+| quantity | numeric | YES | - |
+| unit | text | YES | - |
+| optional | boolean | NO | `false` |
+| sort_order | integer | NO | `0` |
+| created_at | timestamptz | NO | `now()` |
 
-### Columns
-
-| Column | Type | Nullable | Default | Description |
-|--------|------|----------|---------|-------------|
-| id | uuid | NO | gen_random_uuid() | Primary key |
-| recipe_id | uuid | NO | - | References recipes |
-| name | text | NO | - | Ingredient name |
-| normalized_name | text | NO | - | Normalized name for matching |
-| quantity | numeric | YES | - | Quantity amount |
-| unit | text | YES | - | Unit of measurement |
-| optional | boolean | NO | false | Is optional ingredient |
-| sort_order | integer | NO | 0 | Display order |
-| created_at | timestamptz | NO | now() | Creation time |
-
-### Constraints
-- Primary Key: `id`
-- Foreign Key: `recipe_id` → `recipes.id`
+Constraints:
+- PK: `id`
+- FK: `recipe_id -> recipes.id`
 
 ---
 
-## Table: recipe_steps
+## Table: `recipe_steps`
 
-Recipe preparation steps with time estimates.
+| Column | Type | Nullable | Default |
+|---|---|---|---|
+| id | uuid | NO | `gen_random_uuid()` |
+| recipe_id | uuid | NO | - |
+| step_number | integer | NO | - |
+| instruction | text | NO | - |
+| estimated_minutes | integer | YES | - |
+| created_at | timestamptz | NO | `now()` |
 
-### Columns
-
-| Column | Type | Nullable | Default | Description |
-|--------|------|----------|---------|-------------|
-| id | uuid | NO | gen_random_uuid() | Primary key |
-| recipe_id | uuid | NO | - | References recipes |
-| step_number | integer | NO | - | Step order (> 0) |
-| instruction | text | NO | - | Step instructions |
-| estimated_minutes | integer | YES | - | Time estimate for step |
-| created_at | timestamptz | NO | now() | Creation time |
-
-### Constraints
-- Primary Key: `id`
-- Foreign Key: `recipe_id` → `recipes.id`
+Constraints:
+- PK: `id`
+- FK: `recipe_id -> recipes.id`
 - Check: `step_number > 0`
 
 ---
 
-## Table: expiring_items_queue
+## Table: `venues`
 
-Queue for managing expiry notifications via Telegram.
+| Column | Type | Nullable | Default |
+|---|---|---|---|
+| id | uuid | NO | `gen_random_uuid()` |
+| user_id | uuid | NO | - |
+| name | text | NO | - |
+| address | text | YES | - |
+| latitude | double precision | YES | - |
+| longitude | double precision | YES | - |
+| status | text | NO | `'neutral'::text` |
+| tags | text[] | YES | `'{}'::text[]` |
+| notes | text | YES | - |
+| image_url | text | YES | - |
+| created_at | timestamptz | NO | `now()` |
+| updated_at | timestamptz | NO | `now()` |
+| last_modified | timestamptz | NO | `now()` |
+| deleted | boolean | NO | `false` |
+| synced | boolean | NO | `false` |
 
-### Columns
-
-| Column | Type | Nullable | Default | Description |
-|--------|------|----------|---------|-------------|
-| id | uuid | NO | gen_random_uuid() | Primary key |
-| user_id | uuid | NO | - | References auth.users |
-| chat_id | bigint | NO | - | Telegram chat ID |
-| food_item_id | uuid | YES | - | References food_items |
-| cosmetic_id | uuid | YES | - | References cosmetics |
-| item_name | text | NO | - | Item name |
-| quantity | numeric | NO | - | Item quantity |
-| unit | text | NO | - | Unit of measurement |
-| expiration_date | date | NO | - | Expiration date |
-| category | text | NO | - | Item category |
-| days_until_expiry | integer | NO | - | Days until expiration |
-| notification_priority | text | NO | - | Priority: urgent/high/medium/low |
-| status | text | NO | 'pending' | Status: pending/processing/sent/failed |
-| scheduled_at | timestamptz | YES | - | Scheduled notification time |
-| processed_at | timestamptz | YES | - | Actual processing time |
-| created_at | timestamptz | NO | (now() AT TIME ZONE 'Asia/Ho_Chi_Minh') | Creation time |
-| updated_at | timestamptz | NO | (now() AT TIME ZONE 'Asia/Ho_Chi_Minh') | Last update time |
-
-### Constraints
-- Primary Key: `id`
-- Foreign Key: `user_id` → `auth.users.id`
-- Foreign Key: `food_item_id` → `food_items.id`
-- Foreign Key: `cosmetic_id` → `cosmetics.id`
-- Check: `notification_priority IN ('urgent', 'high', 'medium', 'low')`
-- Check: `status IN ('pending', 'processing', 'sent', 'failed')`
+Constraints:
+- PK: `id`
+- FK: `user_id -> auth.users.id`
+- Check: `status IN ('favorite','blacklisted','neutral')`
 
 ---
 
-## Timezone Note
+## Table: `menu_items`
 
-All timestamps in `food_items` and `expiring_items_queue` tables use `Asia/Ho_Chi_Minh` timezone, while other tables use UTC.
+| Column | Type | Nullable | Default |
+|---|---|---|---|
+| id | uuid | NO | `gen_random_uuid()` |
+| user_id | uuid | NO | - |
+| venue_id | uuid | NO | - |
+| name | text | NO | - |
+| last_price | numeric | YES | - |
+| personal_rating | smallint | YES | - |
+| is_favorite | boolean | NO | `false` |
+| is_blacklisted | boolean | NO | `false` |
+| notes | text | YES | - |
+| image_url | text | YES | - |
+| created_at | timestamptz | NO | `now()` |
+| updated_at | timestamptz | NO | `now()` |
+| deleted | boolean | NO | `false` |
+
+Constraints:
+- PK: `id`
+- FK: `user_id -> auth.users.id`
+- FK: `venue_id -> venues.id`
+- Check: `personal_rating IS NULL OR (personal_rating BETWEEN 1 AND 5)`
+
+---
+
+## Table: `meal_logs`
+
+| Column | Type | Nullable | Default |
+|---|---|---|---|
+| id | uuid | NO | `gen_random_uuid()` |
+| user_id | uuid | NO | - |
+| venue_id | uuid | YES | - |
+| meal_type | text | NO | - |
+| total_cost | numeric | NO | - |
+| overall_rating | smallint | YES | - |
+| notes | text | YES | - |
+| photos | text[] | YES | `'{}'::text[]` |
+| tags | text[] | YES | `'{}'::text[]` |
+| logged_at | timestamptz | NO | `now()` |
+| created_at | timestamptz | NO | `now()` |
+| updated_at | timestamptz | NO | `now()` |
+| last_modified | timestamptz | NO | `now()` |
+| deleted | boolean | NO | `false` |
+| synced | boolean | NO | `false` |
+
+Constraints:
+- PK: `id`
+- FK: `user_id -> auth.users.id`
+- FK: `venue_id -> venues.id`
+- Check: `meal_type IN ('delivery','dine_in','ready_made')`
+- Check: `overall_rating IS NULL OR (overall_rating BETWEEN 1 AND 5)`
+
+---
+
+## Table: `meal_item_entries`
+
+| Column | Type | Nullable | Default |
+|---|---|---|---|
+| id | uuid | NO | `gen_random_uuid()` |
+| meal_log_id | uuid | NO | - |
+| menu_item_id | uuid | YES | - |
+| item_name | text | NO | - |
+| price | numeric | YES | - |
+| quantity | smallint | NO | `1` |
+| rating | smallint | YES | - |
+| notes | text | YES | - |
+
+Constraints:
+- PK: `id`
+- FK: `meal_log_id -> meal_logs.id`
+- FK: `menu_item_id -> menu_items.id`
+- Check: `rating IS NULL OR (rating BETWEEN 1 AND 5)`
+
+---
+
+## Trigger Snapshot
+
+Detected triggers in `public`:
+
+- `venues_updated_at` (BEFORE UPDATE on `venues`)
+- `menu_items_updated_at` (BEFORE UPDATE on `menu_items`)
+- `meal_logs_updated_at` (BEFORE UPDATE on `meal_logs`)
+- `set_shopping_list_timestamps_trigger` (BEFORE UPDATE on `shopping_list`)
+- `expiring_items_queue` (AFTER INSERT webhook trigger on `expiring_items_queue`)

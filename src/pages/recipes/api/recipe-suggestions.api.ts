@@ -2,21 +2,21 @@ import {
   mockFoodItemsApi,
   supabaseFoodItemsApi,
   type IFoodItemsApi,
-} from './food-items.api';
+} from '@/pages/inventory/api/food-items.api';
 import {
   mockRecipesManagementApi,
   supabaseRecipesManagementApi,
   type IRecipesManagementApi,
 } from './recipes-management.api';
 import { getTopExpiringIngredient, matchRecipes } from './recipe-matcher';
-import { getDaysUntilExpiry } from './types';
+import { getDaysUntilExpiry } from '@/api/types';
 import type {
   FoodItem,
   RecipeDetail,
   RecipeSuggestionFilters,
   RecipeSuggestionItem,
   RecipeSuggestionsResult,
-} from './types';
+} from '@/api/types';
 
 export interface IRecipeSuggestionsApi {
   list(userId: string, filters?: RecipeSuggestionFilters): Promise<RecipeSuggestionsResult>;

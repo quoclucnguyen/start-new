@@ -4,7 +4,7 @@ import { useAuthStore } from '@/store';
 import type {
   RecipeDetail,
   RecipeSuggestionFilters,
-} from './types';
+} from '@/api/types';
 
 export const RECIPE_SUGGESTIONS_QUERY_KEY = ['recipe-suggestions'] as const;
 

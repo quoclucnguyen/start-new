@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabaseShoppingListApi } from './shopping-list.api';
 import { useAuthStore } from '@/store';
-import type { ShoppingListItem } from './types';
+import type { ShoppingListItem } from '@/api/types';
 
 export const SHOPPING_LIST_QUERY_KEY = ['shopping-list'] as const;
 

@@ -2,15 +2,15 @@ import * as React from 'react';
 import { cn } from '@/lib/utils';
 import { Plus } from 'lucide-react';
 import { Toast, Dialog, SpinLoading } from 'antd-mobile';
-import { useShoppingList } from '@/api/use-shopping-list';
+import { useShoppingList } from '../api/use-shopping-list';
 import {
   useAddShoppingListItem,
   useToggleShoppingItemChecked,
   useDeleteShoppingListItem,
   useDeleteCheckedItems,
   useMovePurchasedToInventory,
-} from '@/api/use-shopping-list-mutations';
-import { useCategories } from '@/api/use-settings';
+} from '../api/use-shopping-list-mutations';
+import { useCategories } from '@/pages/inventory/api/use-settings';
 import { useShoppingStore } from '@/pages/shopping/store/shopping.store';
 import { ShoppingListItem } from './shopping-list-item';
 import { ShoppingEmptyState } from './shopping-empty-state';

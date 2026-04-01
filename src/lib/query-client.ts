@@ -1,7 +1,7 @@
 import { QueryClient } from '@tanstack/react-query';
 import { persistQueryClient } from '@tanstack/query-persist-client-core';
 import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister';
-import { OPENFOODFACTS_QUERY_KEY } from '@/api/openfoodfacts';
+import { OPENFOODFACTS_QUERY_KEY } from '@/pages/inventory/api/openfoodfacts';
 
 // Cache times
 const GC_TIME_DEFAULT = 1000 * 60 * 5; // 5 minutes

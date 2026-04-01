@@ -1,244 +1,177 @@
 # Database Entity Relationship Diagram
 
-Visual representation of the Food Inventory Manager database structure.
+Visual representation of the current `public` schema (Supabase).
 
-## Legend
+```mermaid
+erDiagram
+    AUTH_USERS {
+      uuid id PK
+    }
 
-```
-┌─────────────────┐
-│   Table Name    │
-├─────────────────┤
-│ PK  primary_key │
-│ FK  foreign_key │
-│    column_name  │
-└─────────────────┘
+    USERS {
+      uuid id PK, FK
+      bigint telegram_id
+      bigint chat_id
+      text email
+    }
 
-     │
-     │ Relationship
-     │
-     ▼
+    USER_SETTINGS {
+      uuid id PK
+      uuid user_id FK
+      jsonb preferences
+      text gemini_api_key
+    }
 
-  1:1  = One-to-One
-  1:N  = One-to-Many
-  N:1  = Many-to-One
-  ?    = Optional (nullable)
-```
+    FOOD_ITEMS {
+      uuid id PK
+      uuid user_id FK
+      text name
+      numeric quantity
+      text unit
+      date expiration_date
+      text category
+      text storage
+    }
 
-## Complete Database Schema
+    COSMETICS {
+      uuid id PK
+      uuid user_id FK
+      text name
+      text brand
+      date expiry_date
+      text status
+    }
 
-```
-                    ┌─────────────────┐
-                    │   auth.users    │
-                    │ (Supabase Auth) │
-                    └────────┬────────┘
-                             │
-           ┌─────────────────┼─────────────────┐
-           │                 │                 │
-           │ 1:1             │ 1:N             │ 1:N
-           │                 │                 │
-           ▼                 ▼                 ▼
-    ┌─────────────┐  ┌──────────────┐  ┌──────────────┐
-    │    users    │  │ user_settings│  │ food_items   │
-    ├─────────────┤  ├──────────────┤  ├──────────────┤
-    │ PK id       │  │ PK id        │  │ PK id        │
-    │    telegram │  │ FK user_id   │  │ FK user_id   │
-    │    chat_id  │  │    gemini_   │  │    name      │
-    │    email    │  │    api_key   │  │    quantity  │
-    │    first_   │  │    preferen  │  │    unit      │
-    │    last_    │  └──────────────┘  │    expiratio │
-    │    username │                     │    category  │
-    │    last_log │                     │    storage   │
-    │    created  │                     │    image_url │
-    │    updated  │                     │    purchase  │
-    └─────────────┘                     │    notes     │
-                                         │    created  │
-                                         │    updated  │
-                                         │    last_mod │
-                                         │    deleted  │
-                                         │    synced   │
-                                         └──────┬───────┘
-                                                │
-                                                │ 1:N
-                                                │
-                                                ▼
-                                         ┌──────────────────┐
-                                         │expiring_items_   │
-                                         │     queue        │
-                                         ├──────────────────┤
-                                         │ PK id            │
-                                         │ FK user_id       │
-                                         │    chat_id       │
-                                         │ FK food_item_id ?│
-                                         │ FK cosmetic_id  ?│
-                                         │    item_name     │
-                                         │    quantity      │
-                                         │    unit          │
-                                         │    expiration    │
-                                         │    category      │
-                                         │    days_until    │
-                                         │    notific_prior │
-                                         │    status        │
-                                         │    scheduled_at  │
-                                         │    processed_at  │
-                                         │    created_at    │
-                                         │    updated_at    │
-                                         └──────────────────┘
+    EXPIRING_ITEMS_QUEUE {
+      uuid id PK
+      uuid user_id FK
+      uuid food_item_id FK
+      uuid cosmetic_id FK
+      bigint chat_id
+      text item_name
+      date expiration_date
+      text status
+    }
 
-    ┌─────────────┐                ┌──────────────┐
-    │ cosmetics   │                │ shopping_list│
-    ├─────────────┤                ├──────────────┤
-    │ PK id       │                │ PK id        │
-    │ FK user_id  │                │ FK user_id   │
-    │    name     │                │    name      │
-    │    brand    │                │    category  │
-    │    category │                │    quantity  │
-    │    expiry   │                │    unit      │
-    │    opened   │                │    checked   │
-    │    status   │                │ FK linked_   │
-    │    image    │                │    food_item?│
-    │    notes    │                │    notes     │
-    │    created  │                │    purchased │
-    │    updated  │                │    created   │
-    └──────┬──────┘                │    updated   │
-           │                       │    last_mod  │
-           │ 1:N                   │    deleted   │
-           │                       │    synced    │
-           ▼                       └──────────────┘
-    ┌──────────────────┐
-    │expiring_items_   │
-    │     queue        │
-    │ (cosmetic_id FK) │
-    └──────────────────┘
+    CATEGORIES {
+      uuid id PK
+      text name
+      text icon
+      text color
+    }
 
-    ┌───────────────────────────────────┐
-    │           recipes                 │
-    ├───────────────────────────────────┤
-    │ PK id                             │
-    │ FK user_id ?                      │
-    │    title                          │
-    │    description                    │
-    │    image_url                      │
-    │    prep_time_minutes              │
-    │    cook_time_minutes              │
-    │    difficulty                     │
-    │    servings                       │
-    │    tags                           │
-    │    visibility                     │
-    │    source                         │
-    │    created_at                     │
-    │    updated_at                     │
-    │    last_modified                  │
-    │    deleted                        │
-    │    synced                         │
-    └────────┬──────────────────────────┘
-             │
-     ┌───────┴────────┐
-     │                │
-     │ 1:N            │ 1:N
-     │                │
-     ▼                ▼
-┌──────────────┐  ┌──────────────┐
-│recipe_       │  │recipe_steps  │
-│ingredients   │  ├──────────────┤
-├──────────────┤  │ PK id        │
-│ PK id        │  │ FK recipe_id │
-│ FK recipe_id │  │    step_num  │
-│    name      │  │    instruct  │
-│    normalized│  │    estimated │
-│    quantity  │  │    created   │
-│    unit      │  └──────────────┘
-│    optional  │
-│    sort_order│
-│    created   │
-└──────────────┘
+    STORAGE_LOCATIONS {
+      uuid id PK
+      text name
+      text icon
+      text color
+    }
 
-    ┌─────────────┐       ┌──────────────────┐
-    │ categories  │       │storage_locations │
-    ├─────────────┤       ├──────────────────┤
-    │ PK id       │       │ PK id            │
-    │    name     │       │    name          │
-    │    icon     │       │    icon          │
-    │    color    │       │    color         │
-    │    show_in_ │       │    show_in_      │
-    │    filters  │       │    filters       │
-    │    sort_ord │       │    sort_order    │
-    │    created  │       │    created       │
-    └─────────────┘       └──────────────────┘
+    SHOPPING_LIST {
+      uuid id PK
+      uuid user_id FK
+      uuid linked_food_item_id FK
+      text name
+      numeric quantity
+      boolean checked
+    }
+
+    RECIPES {
+      uuid id PK
+      uuid user_id FK
+      text title
+      text difficulty
+      text source
+      boolean deleted
+    }
+
+    RECIPE_INGREDIENTS {
+      uuid id PK
+      uuid recipe_id FK
+      text name
+      numeric quantity
+      boolean optional
+    }
+
+    RECIPE_STEPS {
+      uuid id PK
+      uuid recipe_id FK
+      integer step_number
+      text instruction
+    }
+
+    VENUES {
+      uuid id PK
+      uuid user_id FK
+      text name
+      text status
+      boolean deleted
+    }
+
+    MENU_ITEMS {
+      uuid id PK
+      uuid user_id FK
+      uuid venue_id FK
+      text name
+      numeric last_price
+      smallint personal_rating
+    }
+
+    MEAL_LOGS {
+      uuid id PK
+      uuid user_id FK
+      uuid venue_id FK
+      text meal_type
+      numeric total_cost
+      timestamptz logged_at
+    }
+
+    MEAL_ITEM_ENTRIES {
+      uuid id PK
+      uuid meal_log_id FK
+      uuid menu_item_id FK
+      text item_name
+      numeric price
+      smallint quantity
+    }
+
+    AUTH_USERS ||--|| USERS : "id"
+    AUTH_USERS ||--|| USER_SETTINGS : "user_id"
+    AUTH_USERS ||--o{ FOOD_ITEMS : "user_id"
+    AUTH_USERS ||--o{ COSMETICS : "user_id"
+    AUTH_USERS ||--o{ SHOPPING_LIST : "user_id"
+    AUTH_USERS ||--o{ RECIPES : "user_id (nullable)"
+    AUTH_USERS ||--o{ EXPIRING_ITEMS_QUEUE : "user_id"
+    AUTH_USERS ||--o{ VENUES : "user_id"
+    AUTH_USERS ||--o{ MENU_ITEMS : "user_id"
+    AUTH_USERS ||--o{ MEAL_LOGS : "user_id"
+
+    FOOD_ITEMS ||--o{ EXPIRING_ITEMS_QUEUE : "food_item_id (nullable)"
+    COSMETICS ||--o{ EXPIRING_ITEMS_QUEUE : "cosmetic_id (nullable)"
+    FOOD_ITEMS ||--o{ SHOPPING_LIST : "linked_food_item_id (nullable)"
+
+    RECIPES ||--o{ RECIPE_INGREDIENTS : "recipe_id"
+    RECIPES ||--o{ RECIPE_STEPS : "recipe_id"
+
+    VENUES ||--o{ MENU_ITEMS : "venue_id"
+    VENUES ||--o{ MEAL_LOGS : "venue_id (nullable)"
+    MEAL_LOGS ||--o{ MEAL_ITEM_ENTRIES : "meal_log_id"
+    MENU_ITEMS ||--o{ MEAL_ITEM_ENTRIES : "menu_item_id (nullable)"
 ```
 
-## Relationship Summary
+## Referential Action Notes
 
-### Core User Data
-- **auth.users** (Supabase Auth)
-  - 1:1 → **users** (profile data)
-  - 1:1 → **user_settings** (preferences)
-  - 1:N → **food_items** (inventory)
-  - 1:N → **cosmetics** (inventory)
-  - 1:N → **shopping_list** (items)
-  - 1:N → **recipes** (created recipes)
-  - 1:N → **expiring_items_queue** (notifications)
+- `CASCADE` delete examples:
+  - `expiring_items_queue.food_item_id -> food_items.id`
+  - `expiring_items_queue.cosmetic_id -> cosmetics.id`
+  - `recipe_ingredients.recipe_id -> recipes.id`
+  - `recipe_steps.recipe_id -> recipes.id`
+  - `meal_item_entries.meal_log_id -> meal_logs.id`
+- `SET NULL` delete:
+  - `shopping_list.linked_food_item_id -> food_items.id`
+- Many auth-linked FKs are `NO ACTION` on delete; some are `CASCADE` (see `relationships.md` matrix).
 
-### Inventory Management
-- **food_items** → **expiring_items_queue** (expiry notifications)
-- **cosmetics** → **expiring_items_queue** (expiry notifications)
-- **shopping_list** → **food_items** (optional inventory linking)
+## Non-FK Logical References
 
-### Recipe Management
-- **recipes** → **recipe_ingredients** (has many ingredients)
-- **recipes** → **recipe_steps** (has many steps)
-
-### Configuration Data
-- **categories** (standalone, referenced by food_items.category)
-- **storage_locations** (standalone, referenced by food_items.storage)
-
-## Key Design Patterns
-
-### User Isolation
-- All user data tables have `user_id` foreign key
-- RLS policies enforce user data isolation
-- Complete separation between users' data
-
-### Flexible References
-- **expiring_items_queue** can reference either food_items OR cosmetics
-- **shopping_list** can optionally reference food_items
-- **recipes** can have null user_id for system recipes
-
-### Timestamp Tracking
-- Most tables have `created_at` and `updated_at`
-- Some tables have additional timestamps (last_modified, processed_at)
-- Timezone varies (UTC vs Asia/Ho_Chi_Minh)
-
-### Soft Delete & Sync
-- Several tables have `deleted` flag for soft delete
-- `synced` flag for offline-first functionality
-- `last_modified` for synchronization logic
-
-## Cardinality Notes
-
-### 1:1 Relationships
-- users ↔ auth.users
-- user_settings ↔ auth.users
-
-### 1:N Relationships
-- auth.users → food_items
-- auth.users → cosmetics
-- auth.users → shopping_list
-- auth.users → recipes (when user_id is not null)
-- recipes → recipe_ingredients
-- recipes → recipe_steps
-- food_items → expiring_items_queue
-- cosmetics → expiring_items_queue
-
-### Optional Relationships (nullable FKs)
-- shopping_list → food_items (linked_food_item_id)
-- expiring_items_queue → food_items (food_item_id)
-- expiring_items_queue → cosmetics (cosmetic_id)
-- recipes → auth.users (user_id - for system recipes)
-
-## Standalone Tables
-
-These tables don't have foreign keys to other tables:
-- **categories** - Referenced by food_items.category column (not a FK)
-- **storage_locations** - Referenced by food_items.storage column (not a FK)
-
-These are configuration tables that use string references rather than foreign keys for flexibility in user-defined categories and locations.
+- `food_items.category` logically references category names in `categories`
+- `food_items.storage` logically references names in `storage_locations`

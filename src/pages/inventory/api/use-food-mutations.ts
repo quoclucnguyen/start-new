@@ -1,9 +1,9 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabaseFoodItemsApi } from './food-items.api';
-import { RECIPE_SUGGESTIONS_QUERY_KEY } from './use-recipe-suggestions';
+import { RECIPE_SUGGESTIONS_QUERY_KEY } from '@/pages/recipes/api/use-recipe-suggestions';
 import { FOOD_ITEMS_QUERY_KEY } from './use-food-items';
 import { useAuthStore } from '@/store';
-import type { FoodItem, CreateFoodItemInput, UpdateFoodItemInput } from './types';
+import type { FoodItem, CreateFoodItemInput, UpdateFoodItemInput } from '@/api/types';
 
 /**
  * Hook to add a new food item with optimistic update
@@ -24,7 +24,7 @@ export function useAddFoodItem() {
       if (!userId) return;
 
       const queryKey = [...FOOD_ITEMS_QUERY_KEY, userId];
-      
+
       // Cancel outgoing refetches
       await queryClient.cancelQueries({ queryKey });
 
@@ -39,7 +39,7 @@ export function useAddFoodItem() {
         updatedAt: new Date().toISOString(),
       };
 
-      queryClient.setQueryData<FoodItem[]>(queryKey, (old) => 
+      queryClient.setQueryData<FoodItem[]>(queryKey, (old) =>
         old ? [...old, optimisticItem] : [optimisticItem]
       );
 
@@ -80,7 +80,7 @@ export function useUpdateFoodItem() {
       if (!userId) return;
 
       const queryKey = [...FOOD_ITEMS_QUERY_KEY, userId];
-      
+
       await queryClient.cancelQueries({ queryKey });
 
       const previousItems = queryClient.getQueryData<FoodItem[]>(queryKey);
@@ -129,7 +129,7 @@ export function useDeleteFoodItem() {
       if (!userId) return;
 
       const queryKey = [...FOOD_ITEMS_QUERY_KEY, userId];
-      
+
       await queryClient.cancelQueries({ queryKey });
 
       const previousItems = queryClient.getQueryData<FoodItem[]>(queryKey);

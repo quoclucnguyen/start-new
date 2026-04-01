@@ -1,14 +1,16 @@
-// Types
+// Types (shared, stays here)
 export * from './types';
 
-// API
+// ============================================================================
+// Inventory API (moved to pages/inventory/api)
+// ============================================================================
 export {
   mockFoodItemsApi,
   supabaseFoodItemsApi,
   type IFoodItemsApi,
-} from './food-items.api';
+} from '@/pages/inventory/api/food-items.api';
 
-export { categoriesApi, storageLocationsApi } from './settings.api';
+export { categoriesApi, storageLocationsApi } from '@/pages/inventory/api/settings.api';
 
 // OpenFoodFacts API
 export {
@@ -19,31 +21,13 @@ export {
   type IOpenFoodFactsApi,
   type ScannedProductData,
   type OpenFoodFactsProduct,
-} from './openfoodfacts';
+} from '@/pages/inventory/api/openfoodfacts';
 
 // Query hooks
-export { useFoodItems, useFoodItem, FOOD_ITEMS_QUERY_KEY } from './use-food-items';
+export { useFoodItems, useFoodItem, FOOD_ITEMS_QUERY_KEY } from '@/pages/inventory/api/use-food-items';
 
 // Mutation hooks
-export { useAddFoodItem, useUpdateFoodItem, useDeleteFoodItem } from './use-food-mutations';
-
-// Shopping list
-export {
-  mockShoppingListApi,
-  supabaseShoppingListApi,
-  type IShoppingListApi,
-} from './shopping-list.api';
-
-export { useShoppingList, useShoppingListItem, SHOPPING_LIST_QUERY_KEY } from './use-shopping-list';
-
-export {
-  useAddShoppingListItem,
-  useUpdateShoppingListItem,
-  useToggleShoppingItemChecked,
-  useDeleteShoppingListItem,
-  useDeleteCheckedItems,
-  useMovePurchasedToInventory,
-} from './use-shopping-list-mutations';
+export { useAddFoodItem, useUpdateFoodItem, useDeleteFoodItem } from '@/pages/inventory/api/use-food-mutations';
 
 // Settings hooks
 export {
@@ -59,17 +43,39 @@ export {
   useReorderStorageLocations,
   CATEGORIES_QUERY_KEY,
   STORAGE_LOCATIONS_QUERY_KEY,
-} from './use-settings';
+} from '@/pages/inventory/api/use-settings';
 
-// Recipe Management
+// ============================================================================
+// Shopping API (moved to pages/shopping/api)
+// ============================================================================
+export {
+  mockShoppingListApi,
+  supabaseShoppingListApi,
+  type IShoppingListApi,
+} from '@/pages/shopping/api/shopping-list.api';
+
+export { useShoppingList, useShoppingListItem, SHOPPING_LIST_QUERY_KEY } from '@/pages/shopping/api/use-shopping-list';
+
+export {
+  useAddShoppingListItem,
+  useUpdateShoppingListItem,
+  useToggleShoppingItemChecked,
+  useDeleteShoppingListItem,
+  useDeleteCheckedItems,
+  useMovePurchasedToInventory,
+} from '@/pages/shopping/api/use-shopping-list-mutations';
+
+// ============================================================================
+// Recipes API (moved to pages/recipes/api)
+// ============================================================================
 export {
   mockRecipesManagementApi,
   supabaseRecipesManagementApi,
   normalizeIngredientName,
   type IRecipesManagementApi,
-} from './recipes-management.api';
+} from '@/pages/recipes/api/recipes-management.api';
 
-export { useRecipesList, useRecipeById, RECIPES_MANAGEMENT_QUERY_KEY } from './use-recipes-management';
+export { useRecipesList, useRecipeById, RECIPES_MANAGEMENT_QUERY_KEY } from '@/pages/recipes/api/use-recipes-management';
 
 export {
   useCreateRecipe,
@@ -78,24 +84,23 @@ export {
   useReplaceRecipeSteps,
   useDuplicateRecipe,
   useDeleteRecipe,
-} from './use-recipes-management-mutations';
+} from '@/pages/recipes/api/use-recipes-management-mutations';
 
-// Recipe Suggestions
 export {
   mockRecipeSuggestionsApi,
   supabaseRecipeSuggestionsApi,
   type IRecipeSuggestionsApi,
-} from './recipe-suggestions.api';
+} from '@/pages/recipes/api/recipe-suggestions.api';
 
 export {
   useRecipeSuggestions,
   useRecipeSuggestionDetail,
   RECIPE_SUGGESTIONS_QUERY_KEY,
-} from './use-recipe-suggestions';
+} from '@/pages/recipes/api/use-recipe-suggestions';
 
-export { useAddMissingToShoppingList } from './use-recipe-suggestion-mutations';
+export { useAddMissingToShoppingList } from '@/pages/recipes/api/use-recipe-suggestion-mutations';
 
-export { matchRecipes, getTopExpiringIngredient, normalizeForMatching } from './recipe-matcher';
+export { matchRecipes, getTopExpiringIngredient, normalizeForMatching } from '@/pages/recipes/api/recipe-matcher';
 
 // Food Diary (moved to diary route)
 export * from '@/pages/diary/api';

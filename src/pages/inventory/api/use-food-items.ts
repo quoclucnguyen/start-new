@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { supabaseFoodItemsApi } from './food-items.api';
 import { useAuthStore } from '@/store';
-import type { FoodItem } from './types';
+import type { FoodItem } from '@/api/types';
 
 export const FOOD_ITEMS_QUERY_KEY = ['food-items'] as const;
 

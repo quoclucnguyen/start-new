@@ -4,7 +4,7 @@ import type {
   StorageLocationConfig,
   DbCategory,
   DbStorageLocation,
-} from './types';
+} from '@/api/types';
 
 const supabase = getSupabaseClient();
 

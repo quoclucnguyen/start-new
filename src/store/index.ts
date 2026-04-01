@@ -1,5 +1,5 @@
 // Shared stores only (route-specific stores are in their respective route folders)
-export { useUIStore, type SortOption } from './ui-store';
+export { useUIStore, type SortOption } from '@/pages/inventory/store/ui.store';
 
 // Re-export route-specific stores for backward compatibility
 export { useAuthStore } from '@/pages/login/store/auth.store';

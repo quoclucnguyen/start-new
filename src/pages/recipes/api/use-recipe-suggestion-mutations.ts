@@ -1,13 +1,13 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabaseShoppingListApi } from './shopping-list.api';
-import { SHOPPING_LIST_QUERY_KEY } from './use-shopping-list';
+import { supabaseShoppingListApi } from '@/pages/shopping/api/shopping-list.api';
+import { SHOPPING_LIST_QUERY_KEY } from '@/pages/shopping/api/use-shopping-list';
 import { normalizeForMatching } from './recipe-matcher';
 import { useAuthStore } from '@/store';
 import type {
   MissingIngredient,
   ShoppingListItem,
   CreateShoppingListItemInput,
-} from './types';
+} from '@/api/types';
 
 /**
  * Hook to add missing recipe ingredients to the shopping list.

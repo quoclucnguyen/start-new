@@ -3,7 +3,7 @@ import { cn } from '@/lib/utils';
 import { ShoppingCart } from 'lucide-react';
 import { Toast } from 'antd-mobile';
 import { Button } from '@/components/ui/button';
-import { useAddMissingToShoppingList } from '@/api/use-recipe-suggestion-mutations';
+import { useAddMissingToShoppingList } from '../api/use-recipe-suggestion-mutations';
 import type { MissingIngredient } from '@/api/types';
 
 interface AddMissingIngredientsButtonProps {

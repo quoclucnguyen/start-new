@@ -38,17 +38,17 @@ const defaultFilters: Filters = {
 export const useUIStore = create<UIState>((set) => ({
   // Filters
   filters: defaultFilters,
-  setSearch: (search) => set((state) => ({ 
-    filters: { ...state.filters, search } 
+  setSearch: (search) => set((state) => ({
+    filters: { ...state.filters, search }
   })),
-  setCategory: (category) => set((state) => ({ 
-    filters: { ...state.filters, category } 
+  setCategory: (category) => set((state) => ({
+    filters: { ...state.filters, category }
   })),
-  setStorage: (storage) => set((state) => ({ 
-    filters: { ...state.filters, storage } 
+  setStorage: (storage) => set((state) => ({
+    filters: { ...state.filters, storage }
   })),
-  setSort: (sort) => set((state) => ({ 
-    filters: { ...state.filters, sort } 
+  setSort: (sort) => set((state) => ({
+    filters: { ...state.filters, sort }
   })),
   resetFilters: () => set({ filters: defaultFilters }),
 

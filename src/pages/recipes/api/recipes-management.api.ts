@@ -12,7 +12,7 @@ import type {
   RecipeDifficulty,
   RecipeVisibility,
   RecipeSource,
-} from './types';
+} from '@/api/types';
 
 /**
  * Abstract API interface for recipe management.

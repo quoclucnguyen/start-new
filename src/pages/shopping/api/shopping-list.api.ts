@@ -6,7 +6,7 @@ import type {
   DbShoppingListItem,
   FoodCategory,
   QuantityUnit,
-} from './types';
+} from '@/api/types';
 
 /**
  * Abstract API interface for shopping list items.

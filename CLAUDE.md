@@ -30,7 +30,7 @@ npm run lint             # Run ESLint
 
 ### Data Flow Pattern
 
-1. **API Layer** (`src/api/`): Abstract interfaces + implementations
+1. **API Layer** (per-page `api/` folder): Abstract interfaces + Supabase implementations
 2. **Query Hooks**: `useFoodItems()` for reads, mutations (`useAddFoodItem()`, etc.) for writes
 3. **Optimistic Updates**: All mutations use `onMutate` → rollback on error → `invalidateQueries`
 4. **UI State**: Zustand only for filters/modals, never for server data
@@ -46,33 +46,65 @@ const { filters, setSearch, editingItemId } = useUIStore();
 
 ### Directory Structure
 
+Each page module is **self-contained** with its own `api/`, `components/`, `store/`, and `hooks/` folders.
+
 ```
 src/
-├── api/                    # Data layer: types, API interface, React Query hooks
-│   ├── types.ts            # Domain types (FoodItem, ExpiryStatus, helpers)
-│   ├── food-items.api.ts   # Food item CRUD operations
-│   ├── settings.api.ts     # Settings and configuration
-│   ├── openfoodfacts/      # OpenFoodFacts API integration
-│   ├── use-food-items.ts   # Query hooks for food items
-│   ├── use-food-mutations.ts # Mutation hooks with optimistic updates
-│   └── use-settings.ts     # Settings hooks
-├── store/                  # Zustand stores (UI state only, NOT server data)
-│   ├── auth.store.ts       # Authentication state with Telegram integration
-│   └── ui-store.ts         # Filters, edit modal, delete confirmation
-├── components/
-│   ├── ui/                 # Base UI components (shadcn-style: cva variants, forwardRef)
-│   ├── food/               # Food-related components (FoodItemCard, FoodForm, pickers)
-│   ├── layout/             # AppShell, TopAppBar, BottomNavigation
-│   ├── shared/             # SearchInput, FilterChips, SectionHeader, BottomSheet
-│   ├── auth/               # Authentication components
-│   ├── scanner/            # Barcode/camera scanner components
-│   ├── shopping/           # Shopping list components
-│   ├── recipes/            # Recipe components
-│   └── notifications/      # Notification components
-├── pages/                  # Route components
-├── lib/                    # Utilities (cn, query-client, supabaseClient, tma, image-upload)
-├── hooks/                  # Custom React hooks
-└── App.tsx                 # Main app with MemoryRouter
+├── api/                        # SHARED only
+│   ├── types.ts                # All domain types (FoodItem, Recipe, ShoppingListItem, etc.)
+│   └── index.ts                # Barrel re-export of all page APIs (for backward compat)
+├── store/                      # SHARED only
+│   └── index.ts                # Barrel re-export of all page stores
+├── components/                 # SHARED components only
+│   ├── ui/                     # Base UI primitives (shadcn-style: cva variants, forwardRef)
+│   ├── layout/                 # AppShell, TopAppBar, BottomNavigation
+│   ├── shared/                 # SearchInput, FilterChips, SectionHeader, BottomSheet
+│   ├── notifications/          # Notification list and items
+│   └── AuthGuard.tsx           # Route protection component
+├── pages/
+│   ├── inventory/
+│   │   ├── api/                # food-items.api.ts, settings.api.ts, use-food-items.ts,
+│   │   │   │                   # use-food-mutations.ts, use-settings.ts
+│   │   │   └── openfoodfacts/  # OpenFoodFacts API integration + hooks
+│   │   ├── components/         # FoodItemCard, FoodForm, pickers, scanner UI
+│   │   ├── hooks/              # use-barcode-scanner.ts
+│   │   └── store/              # ui.store.ts (filters, editingItemId, deleteConfirmId)
+│   ├── shopping/
+│   │   ├── api/                # shopping-list.api.ts, use-shopping-list.ts,
+│   │   │                       # use-shopping-list-mutations.ts
+│   │   ├── components/         # ShoppingListPage, ShoppingListItem, ShoppingForm
+│   │   └── store/              # shopping.store.ts (category filter)
+│   ├── recipes/
+│   │   ├── api/                # recipes-management.api.ts, recipe-suggestions.api.ts,
+│   │   │                       # use-recipes-management.ts, use-recipe-suggestions.ts,
+│   │   │                       # use-recipes-management-mutations.ts,
+│   │   │                       # use-recipe-suggestion-mutations.ts, recipe-matcher.ts
+│   │   ├── components/         # RecipeCard, RecipeDetailSheet, RecipeEditorSheet, etc.
+│   │   └── store/              # recipes-management.store.ts, recipe-suggestions.store.ts
+│   ├── diary/
+│   │   ├── api/                # venues.api.ts, meal-logs.api.ts, menu-items.api.ts,
+│   │   │                       # use-venues.ts, use-meal-logs.ts, use-menu-items.ts, etc.
+│   │   ├── components/         # MealLogCard, VenuePicker, DishEntryForm, etc.
+│   │   └── store/              # diary.store.ts (selected date, sort, type filter)
+│   └── login/
+│       ├── components/         # EmailPasswordForm
+│       └── store/              # auth.store.ts (Supabase session, TMA token exchange)
+├── lib/                        # Utilities (cn, query-client, supabaseClient, tma, image-upload)
+├── hooks/                      # index.ts re-exports from inventory/hooks
+└── App.tsx                     # Main app with MemoryRouter
+```
+
+### Import Convention
+
+When writing code **inside** a page module, import from the module's own `api/` directly (relative or `@/pages/<module>/api/`):
+
+```tsx
+// Inside pages/shopping/components/foo.tsx - prefer local import
+import { useShoppingList } from '../api/use-shopping-list';
+
+// Cross-module or shared lib - use barrel
+import { useFoodItems } from '@/api';
+import { useUIStore } from '@/store';
 ```
 
 ## Component Conventions
@@ -96,7 +128,7 @@ The app supports both Telegram Mini App authentication and email/password login:
 3. **Auth state**: Managed via `useAuthStore` Zustand store
 4. **Route protection**: `AuthGuard` component wraps authenticated routes
 
-See [src/store/auth.store.ts](src/store/auth.store.ts) and [src/lib/tma.ts](src/lib/tma.ts).
+See [src/pages/login/store/auth.store.ts](src/pages/login/store/auth.store.ts) and [src/lib/tma.ts](src/lib/tma.ts).
 
 ## Domain Types
 
@@ -138,9 +170,9 @@ Use utilities: `bg-primary`, `text-destructive`, `text-muted-foreground`, `bg-se
 ## Key Files Reference
 
 - [src/api/types.ts](src/api/types.ts) - All domain types and helper functions
-- [src/api/use-food-mutations.ts](src/api/use-food-mutations.ts) - Optimistic update pattern
-- [src/store/auth.store.ts](src/store/auth.store.ts) - Authentication state management
-- [src/store/ui-store.ts](src/store/ui-store.ts) - UI filters and modal state
+- [src/pages/inventory/api/use-food-mutations.ts](src/pages/inventory/api/use-food-mutations.ts) - Optimistic update pattern example
+- [src/pages/login/store/auth.store.ts](src/pages/login/store/auth.store.ts) - Authentication state management
+- [src/pages/inventory/store/ui.store.ts](src/pages/inventory/store/ui.store.ts) - Inventory UI filters and modal state
 - [src/lib/query-client.ts](src/lib/query-client.ts) - TanStack Query config with localStorage persistence
 - [src/index.css](src/index.css) - Tailwind v4 theme configuration
 - [src/App.tsx](src/App.tsx) - Routing structure with MemoryRouter
