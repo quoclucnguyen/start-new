@@ -1,0 +1,22 @@
+{
+  "title": "Canh cà chua trứng",
+  "description": "Món nhanh cho bữa tối",
+  "sourceUrl": "https://example.com/tomato-egg-soup",
+  "imageUrl": "https://images.example.com/tomato-egg-soup.jpg",
+  "cookTimeMinutes": 15,
+  "prepTimeMinutes": 5,
+  "servings": 2,
+  "difficulty": "easy",
+  "visibility": "private",
+  "tags": ["quick", "soup", "home-cooking"],
+  "ingredients": [
+    { "name": "cà chua", "quantity": 2, "unit": "pieces" },
+    { "name": "trứng gà", "quantity": 2, "unit": "pieces" },
+    { "name": "hành lá", "quantity": 1, "unit": "stalk", "optional": true }
+  ],
+  "steps": [
+    { "instruction": "Xào cà chua đến mềm.", "estimatedMinutes": 4 },
+    { "instruction": "Thêm nước và đun sôi nhẹ.", "estimatedMinutes": 5 },
+    { "instruction": "Đánh trứng và rót vào nồi, nêm nếm rồi tắt bếp.", "estimatedMinutes": 6 }
+  ]
+}

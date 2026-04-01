@@ -1,7 +1,7 @@
-import * as React from 'react';
-import { EmptyState } from '@/components/shared';
-import { Button } from '@/components/ui/button';
-import { ChefHat, Plus } from 'lucide-react';
+import * as React from "react";
+import { EmptyState } from "@/components/shared";
+import { Button } from "@/components/ui/button";
+import { ChefHat, Plus } from "lucide-react";
 
 interface RecipeManagementEmptyStateProps {
   onCreateRecipe: () => void;
@@ -18,7 +18,7 @@ const RecipeManagementEmptyState: React.FC<RecipeManagementEmptyStateProps> = ({
       action={
         <Button onClick={onCreateRecipe} className="gap-1.5">
           <Plus className="size-4" />
-          Create Recipe
+          Tạo công thức
         </Button>
       }
     />
