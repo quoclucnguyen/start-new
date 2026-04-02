@@ -3,15 +3,13 @@ import { useSearchParams } from "react-router";
 import { cn } from "@/lib/utils";
 import { SpinLoading, Toast } from "antd-mobile";
 import { useRecipesList } from "./api/use-recipes-management";
-import {
-  useDeleteRecipe,
-  useDuplicateRecipe,
-} from "./api/use-recipes-management-mutations";
+import { useDeleteRecipe } from "./api/use-recipes-management-mutations";
 import { useRecipesManagementStore } from "./store/recipes-management.store";
 import { SearchInput } from "@/components/shared";
 import { confirmDelete } from "@/components/shared";
 import { RecipeListItem } from "./components/recipe-list-item";
 import { RecipeEditorSheet } from "./components/recipe-editor-sheet";
+import { RecipeDetailSheet } from "./components/recipe-detail-sheet";
 import { RecipeManagementEmptyState } from "./components/recipe-management-empty-state";
 import { RecipesSectionNav } from "./components/recipes-section-nav";
 
@@ -31,6 +29,9 @@ const RecipeManagementPage: React.FC<RecipeManagementPageProps> = ({
     openCreateEditor,
     openEditEditor,
   } = useRecipesManagementStore();
+  const [selectedRecipeId, setSelectedRecipeId] = React.useState<string | null>(
+    null,
+  );
 
   React.useEffect(() => {
     if (searchParams.get("new") !== "1" || isEditorOpen) return;
@@ -52,7 +53,6 @@ const RecipeManagementPage: React.FC<RecipeManagementPageProps> = ({
   });
 
   const deleteMutation = useDeleteRecipe();
-  const duplicateMutation = useDuplicateRecipe();
 
   const handleDelete = async (id: string) => {
     const recipe = recipes.find((r) => r.id === id);
@@ -65,14 +65,6 @@ const RecipeManagementPage: React.FC<RecipeManagementPageProps> = ({
           Toast.show({ content: "Xóa công thức thất bại", icon: "fail" }),
       });
     }
-  };
-
-  const handleDuplicate = (id: string) => {
-    duplicateMutation.mutate(id, {
-      onSuccess: () =>
-        Toast.show({ content: "Đã nhân đôi công thức", icon: "success" }),
-      onError: () => Toast.show({ content: "Nhân đôi thất bại", icon: "fail" }),
-    });
   };
 
   // Separate user and system recipes
@@ -140,10 +132,10 @@ const RecipeManagementPage: React.FC<RecipeManagementPageProps> = ({
                   <RecipeListItem
                     key={recipe.id}
                     recipe={recipe}
+                    onView={setSelectedRecipeId}
                     onEdit={openEditEditor}
-                    onDuplicate={handleDuplicate}
                     onDelete={handleDelete}
-                    onClick={() => openEditEditor(recipe.id)}
+                    onClick={() => setSelectedRecipeId(recipe.id)}
                   />
                 ))}
               </>
@@ -159,7 +151,10 @@ const RecipeManagementPage: React.FC<RecipeManagementPageProps> = ({
                   <RecipeListItem
                     key={recipe.id}
                     recipe={recipe}
-                    onDuplicate={handleDuplicate}
+                    onView={setSelectedRecipeId}
+                    onEdit={openEditEditor}
+                    onDelete={handleDelete}
+                    onClick={() => setSelectedRecipeId(recipe.id)}
                   />
                 ))}
               </>
@@ -170,6 +165,11 @@ const RecipeManagementPage: React.FC<RecipeManagementPageProps> = ({
 
       {/* Editor Sheet */}
       <RecipeEditorSheet />
+      <RecipeDetailSheet
+        recipeId={selectedRecipeId}
+        visible={!!selectedRecipeId}
+        onClose={() => setSelectedRecipeId(null)}
+      />
     </div>
   );
 };

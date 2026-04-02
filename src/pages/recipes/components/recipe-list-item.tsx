@@ -12,8 +12,8 @@ type ActionSheetActions = Parameters<typeof ActionSheet.show>[0]["actions"];
 
 interface RecipeListItemProps extends React.HTMLAttributes<HTMLDivElement> {
   recipe: Recipe;
+  onView?: (id: string) => void;
   onEdit?: (id: string) => void;
-  onDuplicate?: (id: string) => void;
   onDelete?: (id: string) => void;
 }
 
@@ -31,7 +31,7 @@ const difficultyLabels: Record<RecipeDifficulty, string> = {
 };
 
 const RecipeListItem = React.forwardRef<HTMLDivElement, RecipeListItemProps>(
-  ({ className, recipe, onEdit, onDuplicate, onDelete, ...props }, ref) => {
+  ({ className, recipe, onView, onEdit, onDelete, ...props }, ref) => {
     const isSystemRecipe = recipe.source === "system";
     const actionSheetHandlerRef = React.useRef<ActionSheetShowHandler | null>(
       null,
@@ -49,7 +49,15 @@ const RecipeListItem = React.forwardRef<HTMLDivElement, RecipeListItemProps>(
 
       const actions: ActionSheetActions = [];
 
-      if (!isSystemRecipe && onEdit) {
+      if (onView) {
+        actions.push({
+          text: "Xem chi tiết",
+          key: "view",
+          onClick: () => onView(recipe.id),
+        });
+      }
+
+      if (onEdit) {
         actions.push({
           text: "Sửa",
           key: "edit",
@@ -57,15 +65,7 @@ const RecipeListItem = React.forwardRef<HTMLDivElement, RecipeListItemProps>(
         });
       }
 
-      if (onDuplicate) {
-        actions.push({
-          text: "Nhân đôi",
-          key: "duplicate",
-          onClick: () => onDuplicate(recipe.id),
-        });
-      }
-
-      if (!isSystemRecipe && onDelete) {
+      if (onDelete) {
         actions.push({
           text: "Xóa",
           key: "delete",

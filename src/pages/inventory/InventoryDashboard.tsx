@@ -4,15 +4,30 @@ import { SearchInput } from '@/components/shared/search-input';
 import { FilterChips, type FilterChip } from '@/components/shared/filter-chips';
 import { SectionHeader } from '@/components/shared/section-header';
 import { EmptyState } from '@/components/shared/empty-state';
+import { confirmDelete } from '@/components/shared/confirmation-dialog';
 import { FoodItemCard } from '@/pages/inventory/components/food-item-card';
+import { FoodItemDetailSheet } from '@/pages/inventory/components/food-item-detail-sheet';
 import { IconButton } from '@/components/ui/icon-button';
 import { EditFoodItemSheet } from './EditFoodItemSheet';
-import { useFoodItems, useCategories, useStorageLocations, getExpiryStatus, getExpiryText } from '@/api';
+import {
+  useFoodItems,
+  useCategories,
+  useStorageLocations,
+  useDeleteFoodItem,
+  getExpiryStatus,
+  getExpiryText,
+} from '@/api';
 import { useUIStore } from '@/store';
-import type { FoodItem, FoodCategory, StorageLocation, CategoryConfig } from '@/api/types';
-import { SpinLoading } from 'antd-mobile';
-import { 
-  ArrowUpDown, 
+import type {
+  FoodItem,
+  FoodCategory,
+  StorageLocation,
+  CategoryConfig,
+  StorageLocationConfig,
+} from '@/api/types';
+import { ActionSheet, SpinLoading, Toast } from 'antd-mobile';
+import {
+  ArrowUpDown,
   Package,
 } from 'lucide-react';
 
@@ -21,6 +36,8 @@ export const InventoryDashboard: React.FC = () => {
   const { data: items = [], isLoading, error } = useFoodItems();
   const { data: categoriesData = [] } = useCategories();
   const { data: storageLocationsData = [] } = useStorageLocations();
+  const deleteFoodItem = useDeleteFoodItem();
+  const [selectedDetailItemId, setSelectedDetailItemId] = React.useState<string | null>(null);
   
   const {
     filters,
@@ -38,6 +55,14 @@ export const InventoryDashboard: React.FC = () => {
       return acc;
     }, {} as Record<string, CategoryConfig>);
   }, [categoriesData]);
+
+  // Create a lookup map for storage locations by id
+  const storageMap = React.useMemo(() => {
+    return storageLocationsData.reduce((acc, loc) => {
+      acc[loc.id] = loc;
+      return acc;
+    }, {} as Record<string, StorageLocationConfig>);
+  }, [storageLocationsData]);
 
   // Category filters - derived from settings
   const categories: FilterChip[] = React.useMemo(() => {
@@ -122,7 +147,57 @@ export const InventoryDashboard: React.FC = () => {
   }, [items]);
 
   const handleItemClick = (item: FoodItem) => {
-    setEditingItemId(item.id);
+    setSelectedDetailItemId(item.id);
+  };
+
+  const handleDeleteItem = async (item: FoodItem) => {
+    const confirmed = await confirmDelete(item.name);
+    if (!confirmed) return;
+
+    deleteFoodItem.mutate(item.id, {
+      onSuccess: () => {
+        Toast.show({
+          content: 'Đã xóa món',
+          position: 'bottom',
+        });
+        if (selectedDetailItemId === item.id) {
+          setSelectedDetailItemId(null);
+        }
+      },
+      onError: (error) => {
+        Toast.show({
+          content: error.message || 'Xóa món thất bại',
+          position: 'bottom',
+        });
+      },
+    });
+  };
+
+  const openItemActions = (item: FoodItem, event: React.MouseEvent) => {
+    event.stopPropagation();
+
+    ActionSheet.show({
+      actions: [
+        {
+          text: 'Xem chi tiết',
+          key: 'view',
+          onClick: () => setSelectedDetailItemId(item.id),
+        },
+        {
+          text: 'Chỉnh sửa',
+          key: 'edit',
+          onClick: () => setEditingItemId(item.id),
+        },
+        {
+          text: 'Xóa',
+          key: 'delete',
+          danger: true,
+          onClick: () => {
+            void handleDeleteItem(item);
+          },
+        },
+      ],
+    });
   };
 
   const handleAddClick = () => {
@@ -155,6 +230,7 @@ export const InventoryDashboard: React.FC = () => {
           </span>
         }
         onClick={() => handleItemClick(item)}
+        onMoreClick={(event) => openItemActions(item, event)}
         className="cursor-pointer"
       />
     );
@@ -256,6 +332,14 @@ export const InventoryDashboard: React.FC = () => {
         itemId={editingItemId}
         visible={!!editingItemId}
         onClose={() => setEditingItemId(null)}
+      />
+
+      <FoodItemDetailSheet
+        itemId={selectedDetailItemId}
+        visible={!!selectedDetailItemId}
+        onClose={() => setSelectedDetailItemId(null)}
+        categoryMap={categoryMap}
+        storageMap={storageMap}
       />
     </div>
   );

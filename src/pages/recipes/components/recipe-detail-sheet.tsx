@@ -205,7 +205,7 @@ const RecipeDetailSheet: React.FC<RecipeDetailSheetProps> = ({
                           {step.estimatedMinutes && (
                             <span className="text-xs text-muted-foreground mt-1 inline-flex items-center gap-1">
                               <Clock className="size-3" />
-                              ~{step.estimatedMinutes} min
+                              ~{step.estimatedMinutes} phút
                             </span>
                           )}
                         </div>

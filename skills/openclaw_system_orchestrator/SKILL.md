@@ -61,7 +61,8 @@ OpenClaw **không gọi MCP Supabase trực tiếp**. Mọi lệnh MCP Supabase 
 - App layer map sang camelCase (ví dụ `expiration_date` ↔ `expiryDate`).
 - Nhiều bảng dùng **soft delete** với cột `deleted`:
   - Khi đọc data nghiệp vụ, thường cần thêm `deleted = false`.
-- Mọi ghi dữ liệu phải có scope rõ ràng bằng `user_id` và/hoặc ID cụ thể.
+- **Chỉ INSERT bắt buộc có `user_id`** để xác định ai tạo dữ liệu.
+- Với SELECT/UPDATE/DELETE, **không bắt buộc filter theo `user_id`**; ưu tiên scope bằng ID cụ thể/điều kiện hẹp.
 
 ### 4) FK paths quan trọng
 
@@ -154,7 +155,7 @@ npx mcporter list supabase --schema
    - Insert/update/delete runtime data (non-DDL) in Supabase.
    - mcporter tool: `execute_sql` (INSERT/UPDATE/DELETE).
    - **Luôn SELECT trước** qua mcporter để kiểm tra hiện trạng.
-   - Scope bằng `user_id` và/hoặc specific IDs.
+   - **INSERT phải có `user_id`**; UPDATE/DELETE dùng specific IDs hoặc điều kiện hẹp, không bắt buộc `user_id`.
 
 4. **schema_change**
    - DDL only (tables/columns/indexes/policies/functions).
@@ -165,7 +166,7 @@ npx mcporter list supabase --schema
 ## Global Operating Procedure
 
 1. Classify request into one of the intents above.
-2. Collect required inputs (IDs, user_id scope, target environment, expected outcome).
+2. Collect required inputs (IDs/bộ lọc cụ thể, `user_id` nếu là INSERT, target environment, expected outcome).
 3. **Schema discovery**: chạy `npx mcporter call 'supabase.list_tables(schemas: ["public"], verbose: true)'` để nắm bảng/cột/PK/FK trước khi viết SQL.
 4. Run lowest-risk validation first:
    - `npx mcporter call 'supabase.execute_sql(query: "SELECT ...")'` để kiểm tra hiện trạng.
@@ -182,9 +183,11 @@ npx mcporter list supabase --schema
 - Never execute destructive or broad write actions without explicit user confirmation.
 - Never interpolate untrusted text directly into shell commands — dùng function-call syntax của mcporter để escaping an toàn.
 - **Luôn dùng `apply_migration` cho DDL** — không dùng `execute_sql` cho CREATE/ALTER/DROP.
-- **Luôn dùng `execute_sql` cho DML** (INSERT/UPDATE/DELETE) với WHERE clause chứa `user_id` hoặc specific IDs.
+- **Luôn dùng `execute_sql` cho DML** (INSERT/UPDATE/DELETE).
+- Với UPDATE/DELETE, luôn có WHERE clause target hẹp (specific IDs/business keys) — không chạy broad writes.
+- Với INSERT, luôn include `user_id` để ghi nhận người tạo.
 - For `schema_change`, always use migration flow and include rollback considerations.
-- For data writes, always scope by `user_id` and/or specific IDs where possible.
+- For SELECT/UPDATE/DELETE, không bắt buộc scope theo `user_id`; ưu tiên specific IDs hoặc điều kiện nghiệp vụ rõ ràng.
 - Chạy `get_advisors` (type: security) sau mỗi schema change.
 - SQL examples phải bám đúng tên cột/bảng thật trong schema hiện tại (không suy diễn).
 
@@ -194,7 +197,7 @@ npx mcporter list supabase --schema
 
 For domain operations:
 
-1. Identify affected entities and key filters (`user_id`, date range, status).
+1. Identify affected entities and key filters (specific IDs, date range, status).
 2. `npx mcporter call 'supabase.list_tables(schemas: ["public"], verbose: true)'` để xem cấu trúc bảng nếu chưa rõ.
 3. `npx mcporter call 'supabase.execute_sql(query: "SELECT ...")'` để đọc current state.
 4. `npx mcporter call 'supabase.execute_sql(query: "INSERT/UPDATE/DELETE ...")'` để thực hiện targeted changes.
@@ -204,7 +207,7 @@ For domain operations:
 
 ```bash
 # Step 1: Kiểm tra hiện trạng
-npx mcporter call 'supabase.execute_sql(query: "SELECT * FROM food_items WHERE user_id = '\''...'\'' AND name ILIKE '\''%sữa%'\''")'
+npx mcporter call 'supabase.execute_sql(query: "SELECT * FROM food_items WHERE name ILIKE '\''%sữa%'\'' AND deleted = false")'
 
 # Step 2: Thêm mới
 npx mcporter call 'supabase.execute_sql(query: "INSERT INTO food_items (user_id, name, category, quantity, unit, storage, expiration_date, deleted) VALUES ('\''...'\'', '\''Sữa tươi'\'', '\''Dairy'\'', 2, '\''l'\'', '\''fridge'\'', '\''2026-04-10'\'', false) RETURNING id")'
@@ -223,7 +226,7 @@ When user asks to ingest/import recipes:
    - `steps[]`
 2. Dedupe check:
    ```bash
-   npx mcporter call 'supabase.execute_sql(query: "SELECT id FROM recipes WHERE user_id = '\''...'\'' AND LOWER(title) = LOWER('\''recipe title'\'') AND deleted = false")'
+   npx mcporter call 'supabase.execute_sql(query: "SELECT id FROM recipes WHERE LOWER(title) = LOWER('\''recipe title'\'') AND deleted = false")'
    ```
 3. Preview write plan (what rows/tables will be affected).
 4. Targeted inserts/updates:
@@ -273,12 +276,12 @@ When returning result, include:
 # 1) Liệt kê toàn bộ bảng/cột/FK trong public
 npx mcporter call 'supabase.list_tables(schemas: ["public"], verbose: true)'
 
-# 2) Xem dữ liệu mẫu food_items theo user (đã loại soft-deleted)
-npx mcporter call 'supabase.execute_sql(query: "SELECT id, name, quantity, unit, category, storage, expiration_date FROM food_items WHERE user_id = '\''<user-id>'\'' AND deleted = false ORDER BY expiration_date NULLS LAST LIMIT 50")'
+# 2) Xem dữ liệu mẫu food_items (đã loại soft-deleted)
+npx mcporter call 'supabase.execute_sql(query: "SELECT id, name, quantity, unit, category, storage, expiration_date FROM food_items WHERE deleted = false ORDER BY expiration_date NULLS LAST LIMIT 50")'
 
 # 3) Xem recipe + ingredient + step theo 1 recipe id
 npx mcporter call 'supabase.execute_sql(query: "SELECT r.id, r.title, ri.name AS ingredient_name, rs.step_number, rs.instruction FROM recipes r LEFT JOIN recipe_ingredients ri ON ri.recipe_id = r.id LEFT JOIN recipe_steps rs ON rs.recipe_id = r.id WHERE r.id = '\''<recipe-id>'\'' AND r.deleted = false ORDER BY rs.step_number")'
 
-# 4) Xem meal log + item entries theo user
-npx mcporter call 'supabase.execute_sql(query: "SELECT ml.id AS meal_log_id, ml.logged_at, ml.meal_type, ml.total_cost, mie.item_name, mie.quantity, mie.price FROM meal_logs ml LEFT JOIN meal_item_entries mie ON mie.meal_log_id = ml.id WHERE ml.user_id = '\''<user-id>'\'' AND ml.deleted = false ORDER BY ml.logged_at DESC LIMIT 100")'
+# 4) Xem meal log + item entries (đã loại soft-deleted)
+npx mcporter call 'supabase.execute_sql(query: "SELECT ml.id AS meal_log_id, ml.logged_at, ml.meal_type, ml.total_cost, mie.item_name, mie.quantity, mie.price FROM meal_logs ml LEFT JOIN meal_item_entries mie ON mie.meal_log_id = ml.id WHERE ml.deleted = false ORDER BY ml.logged_at DESC LIMIT 100")'
 ```

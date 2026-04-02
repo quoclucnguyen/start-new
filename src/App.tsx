@@ -1,21 +1,92 @@
+import { lazy, Suspense, type ReactNode } from "react";
 import { createMemoryRouter, RouterProvider } from "react-router";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@/lib/query-client";
 import { AuthGuard } from "@/components/AuthGuard";
 import { MainLayout } from "@/components/layout";
-import { InventoryDashboard, AddFoodItemPage, BarcodeScannerPage } from "@/pages/inventory";
-import { LoginPage } from "@/pages/login";
-import { SettingsPage } from "@/pages/settings";
-import { ShoppingListPage } from "@/pages/shopping";
-import { RecipeManagementPage, RecipeSuggestionsPage } from "@/pages/recipes";
-import { DiaryDashboard, QuickLogPage, MealHistoryPage, VenueDetailPage } from "@/pages/diary";
 import "./App.css";
+
+const InventoryDashboard = lazy(() =>
+  import("@/pages/inventory").then((mod) => ({
+    default: mod.InventoryDashboard,
+  })),
+);
+const AddFoodItemPage = lazy(() =>
+  import("@/pages/inventory").then((mod) => ({
+    default: mod.AddFoodItemPage,
+  })),
+);
+const BarcodeScannerPage = lazy(() =>
+  import("@/pages/inventory").then((mod) => ({
+    default: mod.BarcodeScannerPage,
+  })),
+);
+
+const LoginPage = lazy(() =>
+  import("@/pages/login").then((mod) => ({
+    default: mod.LoginPage,
+  })),
+);
+const SettingsPage = lazy(() =>
+  import("@/pages/settings").then((mod) => ({
+    default: mod.SettingsPage,
+  })),
+);
+const ShoppingListPage = lazy(() =>
+  import("@/pages/shopping").then((mod) => ({
+    default: mod.ShoppingListPage,
+  })),
+);
+const RecipeSuggestionsPage = lazy(() =>
+  import("@/pages/recipes").then((mod) => ({
+    default: mod.RecipeSuggestionsPage,
+  })),
+);
+const RecipeManagementPage = lazy(() =>
+  import("@/pages/recipes").then((mod) => ({
+    default: mod.RecipeManagementPage,
+  })),
+);
+const DiaryDashboard = lazy(() =>
+  import("@/pages/diary").then((mod) => ({
+    default: mod.DiaryDashboard,
+  })),
+);
+const QuickLogPage = lazy(() =>
+  import("@/pages/diary").then((mod) => ({
+    default: mod.QuickLogPage,
+  })),
+);
+const MealHistoryPage = lazy(() =>
+  import("@/pages/diary").then((mod) => ({
+    default: mod.MealHistoryPage,
+  })),
+);
+const VenueDetailPage = lazy(() =>
+  import("@/pages/diary").then((mod) => ({
+    default: mod.VenueDetailPage,
+  })),
+);
+
+function withSuspense(element: ReactNode) {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center min-h-[40vh] text-sm text-muted-foreground">
+          Đang tải...
+        </div>
+      }
+    >
+      {element}
+    </Suspense>
+  );
+}
 
 // Use MemoryRouter for Telegram Mini App (no browser history)
 const router = createMemoryRouter([
   {
     path: "/login",
-    element: <LoginPage />,
+    element: withSuspense(<LoginPage />),
   },
   {
     path: "/",
@@ -27,39 +98,39 @@ const router = createMemoryRouter([
     children: [
       {
         index: true,
-        element: <InventoryDashboard />,
+        element: withSuspense(<InventoryDashboard />),
       },
       {
         path: "list",
-        element: <ShoppingListPage />,
+        element: withSuspense(<ShoppingListPage />),
       },
       {
         path: "recipes",
         children: [
           {
             index: true,
-            element: <RecipeSuggestionsPage />,
+            element: withSuspense(<RecipeSuggestionsPage />),
           },
           {
             path: "manage",
-            element: <RecipeManagementPage />,
+            element: withSuspense(<RecipeManagementPage />),
           },
         ],
       },
       {
         path: "settings",
-        element: <SettingsPage />,
+        element: withSuspense(<SettingsPage />),
       },
       {
         path: "diary",
         children: [
           {
             index: true,
-            element: <DiaryDashboard />,
+            element: withSuspense(<DiaryDashboard />),
           },
           {
             path: "history",
-            element: <MealHistoryPage />,
+            element: withSuspense(<MealHistoryPage />),
           },
         ],
       },
@@ -69,7 +140,7 @@ const router = createMemoryRouter([
     path: "add",
     element: (
       <AuthGuard>
-        <AddFoodItemPage />
+        {withSuspense(<AddFoodItemPage />)}
       </AuthGuard>
     ),
   },
@@ -77,7 +148,7 @@ const router = createMemoryRouter([
     path: "scan",
     element: (
       <AuthGuard>
-        <BarcodeScannerPage />
+        {withSuspense(<BarcodeScannerPage />)}
       </AuthGuard>
     ),
   },
@@ -85,7 +156,7 @@ const router = createMemoryRouter([
     path: "diary/log",
     element: (
       <AuthGuard>
-        <QuickLogPage />
+        {withSuspense(<QuickLogPage />)}
       </AuthGuard>
     ),
   },
@@ -93,7 +164,7 @@ const router = createMemoryRouter([
     path: "diary/venue/:id",
     element: (
       <AuthGuard>
-        <VenueDetailPage />
+        {withSuspense(<VenueDetailPage />)}
       </AuthGuard>
     ),
   },

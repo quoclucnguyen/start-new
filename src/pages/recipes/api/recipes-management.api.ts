@@ -294,9 +294,8 @@ export const supabaseRecipesManagementApi: IRecipesManagementApi = {
       .from('recipes')
       .update(dbRow)
       .eq('id', input.id)
-      .eq('user_id', userId)
-      .eq('source', 'user')
       .eq('deleted', false)
+      .or(`user_id.eq.${userId},source.eq.system`)
       .select()
       .single();
 
@@ -428,6 +427,7 @@ export const supabaseRecipesManagementApi: IRecipesManagementApi = {
   },
 
   async delete(recipeId: string, userId: string): Promise<void> {
+    void userId;
     const supabase = getSupabaseClient();
 
     const { error } = await supabase
@@ -438,8 +438,7 @@ export const supabaseRecipesManagementApi: IRecipesManagementApi = {
         last_modified: new Date().toISOString(),
       })
       .eq('id', recipeId)
-      .eq('user_id', userId)
-      .eq('source', 'user');
+      .eq('deleted', false);
 
     if (error) {
       console.error('Recipe delete error:', error);
