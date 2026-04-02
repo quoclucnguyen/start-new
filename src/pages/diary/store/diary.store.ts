@@ -26,6 +26,12 @@ interface DiaryUIState {
   setEditingVenueId: (id: string | null) => void;
   deleteConfirmId: string | null;
   setDeleteConfirmId: (id: string | null) => void;
+
+  // Meal plan states
+  editingMealPlanId: string | null;
+  setEditingMealPlanId: (id: string | null) => void;
+  deletePlanConfirmId: string | null;
+  setDeletePlanConfirmId: (id: string | null) => void;
 }
 
 const defaultFilters: DiaryFilters = {
@@ -57,4 +63,9 @@ export const useDiaryStore = create<DiaryUIState>((set) => ({
   setEditingVenueId: (id) => set({ editingVenueId: id }),
   deleteConfirmId: null,
   setDeleteConfirmId: (id) => set({ deleteConfirmId: id }),
+
+  editingMealPlanId: null,
+  setEditingMealPlanId: (id) => set({ editingMealPlanId: id }),
+  deletePlanConfirmId: null,
+  setDeletePlanConfirmId: (id) => set({ deletePlanConfirmId: id }),
 }));

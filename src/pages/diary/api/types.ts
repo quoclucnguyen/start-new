@@ -228,6 +228,76 @@ export interface DbMealItemEntry {
 }
 
 // ============================================================================
+// MealPlan (bữa ăn trong kế hoạch)
+// ============================================================================
+
+export interface MealPlanItem {
+  id: string;
+  mealPlanId: string;
+  title: string;
+  recipeId?: string;
+  notes?: string;
+  sortOrder: number;
+}
+
+export interface MealPlan {
+  id: string;
+  plannedDate: string; // YYYY-MM-DD
+  title: string;
+  notes?: string;
+  sortOrder: number;
+  items: MealPlanItem[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CreateMealPlanItemInput {
+  title: string;
+  recipeId?: string;
+  notes?: string;
+}
+
+export interface CreateMealPlanInput {
+  plannedDate: string;
+  title: string;
+  notes?: string;
+  sortOrder?: number;
+  items?: CreateMealPlanItemInput[];
+}
+
+export interface UpdateMealPlanInput {
+  id: string;
+  plannedDate?: string;
+  title?: string;
+  notes?: string;
+  sortOrder?: number;
+  items?: CreateMealPlanItemInput[];
+}
+
+export interface DbMealPlan {
+  id: string;
+  user_id: string;
+  planned_date: string;
+  title: string;
+  notes: string | null;
+  sort_order: number;
+  created_at: string;
+  updated_at: string;
+  last_modified: string;
+  deleted: boolean;
+  synced: boolean;
+}
+
+export interface DbMealPlanItem {
+  id: string;
+  meal_plan_id: string;
+  title: string;
+  recipe_id: string | null;
+  notes: string | null;
+  sort_order: number;
+}
+
+// ============================================================================
 // Helpers
 // ============================================================================
 

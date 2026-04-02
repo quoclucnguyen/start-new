@@ -1,11 +1,14 @@
 import * as React from 'react';
 import { useNavigate } from 'react-router';
 import { DotLoading } from 'antd-mobile';
-import { ChevronLeft, ChevronRight, Clock } from 'lucide-react';
-import { useMealLogs } from '@/pages/diary/api';
+import { ChevronLeft, ChevronRight, Clock, CalendarPlus } from 'lucide-react';
+import { useMealLogs, useMealPlans } from '@/pages/diary/api';
+import { useRecipesList } from '@/pages/recipes/api/use-recipes-management';
 import { cn } from '@/lib/utils';
-import type { MealLog } from '@/pages/diary/api/types';
+import type { MealLog, MealPlan } from '@/pages/diary/api/types';
 import { MealLogCard } from '@/pages/diary/components/meal-log-card';
+import { MealPlanCard } from '@/pages/diary/components/meal-plan-card';
+import { MealPlanForm } from '@/pages/diary/components/meal-plan-form';
 import { EmptyState, SectionHeader } from '@/components/shared';
 
 const WEEKDAY_LABELS = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
@@ -82,43 +85,67 @@ const getLogsByDate = (logs: MealLog[]): Map<string, MealLog[]> => {
   return grouped;
 };
 
+const getPlansByDate = (plans: MealPlan[]): Map<string, MealPlan[]> => {
+  const grouped = new Map<string, MealPlan[]>();
+
+  for (const plan of plans) {
+    const existing = grouped.get(plan.plannedDate);
+    if (existing) {
+      existing.push(plan);
+    } else {
+      grouped.set(plan.plannedDate, [plan]);
+    }
+  }
+
+  for (const dayPlans of grouped.values()) {
+    dayPlans.sort((a, b) => a.sortOrder - b.sortOrder);
+  }
+
+  return grouped;
+};
+
 export const DiaryDashboard: React.FC = () => {
   const navigate = useNavigate();
   const today = React.useMemo(() => new Date(), []);
   const [displayMonth, setDisplayMonth] = React.useState<Date>(() => getMonthStart(today));
   const [selectedDateKey, setSelectedDateKey] = React.useState<string>(() => toDateKey(today));
-  const hasResolvedInitialSelection = React.useRef(false);
   const { data: mealLogs, isLoading: logsLoading } = useMealLogs();
+  const { data: mealPlans, isLoading: plansLoading } = useMealPlans();
+  const { data: recipes } = useRecipesList();
 
   const logsByDate = React.useMemo(() => getLogsByDate(mealLogs ?? []), [mealLogs]);
+  const plansByDate = React.useMemo(() => getPlansByDate(mealPlans ?? []), [mealPlans]);
 
-  React.useEffect(() => {
-    if (!mealLogs || hasResolvedInitialSelection.current) {
-      return;
+  const recipesMap = React.useMemo(() => {
+    const map = new Map<string, (typeof recipes extends (infer T)[] | undefined ? T : never)>();
+    if (recipes) {
+      for (const recipe of recipes) {
+        map.set(recipe.id, recipe);
+      }
     }
+    return map;
+  }, [recipes]);
 
-    hasResolvedInitialSelection.current = true;
+  // Meal plan form state
+  const [planFormVisible, setPlanFormVisible] = React.useState(false);
+  const [editingPlanId, setEditingPlanId] = React.useState<string | null>(null);
+  const [activeTab, setActiveTab] = React.useState<'plan' | 'log'>('plan');
 
-    if (mealLogs.length === 0) {
-      return;
-    }
+  const handleGoToToday = React.useCallback(() => {
+    const now = new Date();
+    setSelectedDateKey(toDateKey(now));
+    setDisplayMonth(getMonthStart(now));
+  }, []);
 
-    if (logsByDate.has(selectedDateKey)) {
-      return;
-    }
-
-    const latestDateKey = [...logsByDate.keys()].sort((a, b) => b.localeCompare(a))[0];
-    if (!latestDateKey) {
-      return;
-    }
-
-    setSelectedDateKey(latestDateKey);
-    setDisplayMonth(getMonthStart(fromDateKey(latestDateKey)));
-  }, [logsByDate, mealLogs, selectedDateKey]);
+  const isTodaySelected = React.useMemo(
+    () => selectedDateKey === toDateKey(new Date()),
+    [selectedDateKey],
+  );
 
   const calendarCells = React.useMemo(() => buildCalendarCells(displayMonth), [displayMonth]);
 
   const selectedDateLogs = logsByDate.get(selectedDateKey) ?? [];
+  const selectedDatePlans = plansByDate.get(selectedDateKey) ?? [];
 
   const selectedDateLabel = React.useMemo(
     () => getSelectedDateLabel(selectedDateKey),
@@ -137,7 +164,7 @@ export const DiaryDashboard: React.FC = () => {
   return (
     <div className="flex flex-col gap-4 py-2">
       <section className="rounded-2xl border border-border/60 bg-secondary/40 p-3">
-        <div className="mb-3 flex items-center justify-between">
+        <div className="mb-2 flex items-center justify-between">
           <button
             type="button"
             aria-label="Tháng trước"
@@ -167,6 +194,21 @@ export const DiaryDashboard: React.FC = () => {
           </button>
         </div>
 
+        <div className="mb-3 flex justify-end">
+          <button
+            type="button"
+            onClick={handleGoToToday}
+            className={cn(
+              'rounded-full border px-3 py-1 text-xs font-medium transition-colors active:bg-muted',
+              isTodaySelected
+                ? 'border-primary/60 bg-primary/10 text-primary'
+                : 'border-border/60 bg-background/80 text-foreground',
+            )}
+          >
+            Hôm nay
+          </button>
+        </div>
+
         <div className="grid grid-cols-7 gap-1">
           {WEEKDAY_LABELS.map((weekday) => (
             <div key={weekday} className="py-1 text-center text-[11px] font-medium text-muted-foreground">
@@ -177,6 +219,7 @@ export const DiaryDashboard: React.FC = () => {
           {calendarCells.map((cell) => {
             const isSelected = cell.dateKey === selectedDateKey;
             const hasLogs = logsByDate.has(cell.dateKey);
+            const hasPlans = plansByDate.has(cell.dateKey);
 
             return (
               <button
@@ -197,13 +240,25 @@ export const DiaryDashboard: React.FC = () => {
                 )}
               >
                 <span className="leading-none">{cell.date.getDate()}</span>
-                {hasLogs && (
-                  <span
-                    className={cn(
-                      'absolute bottom-1 h-1.5 w-1.5 rounded-full',
-                      isSelected ? 'bg-primary' : 'bg-primary/80',
+                {(hasLogs || hasPlans) && (
+                  <span className="absolute bottom-1 flex items-center gap-0.5">
+                    {hasPlans && (
+                      <span
+                        className={cn(
+                          'h-1.5 w-1.5 rounded-full',
+                          isSelected ? 'bg-amber-500' : 'bg-amber-500/80',
+                        )}
+                      />
                     )}
-                  />
+                    {hasLogs && (
+                      <span
+                        className={cn(
+                          'h-1.5 w-1.5 rounded-full',
+                          isSelected ? 'bg-primary' : 'bg-primary/80',
+                        )}
+                      />
+                    )}
+                  </span>
                 )}
               </button>
             );
@@ -211,30 +266,122 @@ export const DiaryDashboard: React.FC = () => {
         </div>
       </section>
 
+      {/* Tabs */}
       <section>
-        <SectionHeader
-          title={`Nhật ký • ${selectedDateLabel}`}
-          action={
-            <div className="flex items-center gap-3">
-              <button
-                type="button"
-                onClick={() => navigate('/diary/history')}
-                className="text-sm font-medium text-muted-foreground"
-              >
-                Lịch sử
-              </button>
-              <button
-                type="button"
-                onClick={() => navigate('/diary/log')}
-                className="text-sm font-medium text-primary"
-              >
-                Ghi mới
-              </button>
-            </div>
-          }
-        />
+        <div className="flex items-center rounded-xl border border-border/60 bg-secondary/40 p-1">
+          <button
+            type="button"
+            onClick={() => setActiveTab('plan')}
+            className={cn(
+              'flex-1 rounded-lg py-2 text-sm font-medium transition-colors',
+              activeTab === 'plan'
+                ? 'bg-background text-foreground shadow-sm'
+                : 'text-muted-foreground active:bg-muted',
+            )}
+          >
+            Kế hoạch
+            {selectedDatePlans.length > 0 && (
+              <span className="ml-1.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-amber-500/20 px-1 text-xs font-semibold text-amber-600">
+                {selectedDatePlans.length}
+              </span>
+            )}
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab('log')}
+            className={cn(
+              'flex-1 rounded-lg py-2 text-sm font-medium transition-colors',
+              activeTab === 'log'
+                ? 'bg-background text-foreground shadow-sm'
+                : 'text-muted-foreground active:bg-muted',
+            )}
+          >
+            Nhật ký
+            {selectedDateLogs.length > 0 && (
+              <span className="ml-1.5 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-primary/20 px-1 text-xs font-semibold text-primary">
+                {selectedDateLogs.length}
+              </span>
+            )}
+          </button>
+        </div>
+
+        {/* Tab header with actions */}
+        <div className="mt-3">
+          {activeTab === 'plan' ? (
+            <SectionHeader
+              title={selectedDateLabel}
+              action={
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEditingPlanId(null);
+                    setPlanFormVisible(true);
+                  }}
+                  className="text-sm font-medium text-primary"
+                >
+                  Thêm
+                </button>
+              }
+            />
+          ) : (
+            <SectionHeader
+              title={selectedDateLabel}
+              action={
+                <div className="flex items-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => navigate('/diary/history')}
+                    className="text-sm font-medium text-muted-foreground"
+                  >
+                    Lịch sử
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => navigate('/diary/log')}
+                    className="text-sm font-medium text-primary"
+                  >
+                    Ghi mới
+                  </button>
+                </div>
+              }
+            />
+          )}
+        </div>
+
+        {/* Tab content */}
         <div className="flex flex-col gap-2 mt-2">
-          {logsLoading ? (
+          {activeTab === 'plan' ? (
+            plansLoading ? (
+              <div className="flex flex-col gap-3 py-2">
+                <div className="animate-pulse rounded-xl border border-border/40 bg-secondary/60 p-4">
+                  <div className="mb-2 h-4 w-32 rounded bg-muted/60" />
+                  <div className="h-3 w-24 rounded bg-muted/60" />
+                </div>
+              </div>
+            ) : selectedDatePlans.length > 0 ? (
+              selectedDatePlans.map((plan) => (
+                <MealPlanCard
+                  key={plan.id}
+                  plan={plan}
+                  recipesMap={recipesMap}
+                  onEdit={() => {
+                    setEditingPlanId(plan.id);
+                    setPlanFormVisible(true);
+                  }}
+                  onDelete={() => {
+                    setEditingPlanId(plan.id);
+                    setPlanFormVisible(true);
+                  }}
+                />
+              ))
+            ) : (
+              <EmptyState
+                icon={<CalendarPlus size={32} className="opacity-50" />}
+                title="Chưa lên kế hoạch"
+                description="Thêm kế hoạch bữa ăn cho ngày này."
+              />
+            )
+          ) : logsLoading ? (
             <div className="flex flex-col gap-3 py-2">
               {Array.from({ length: 2 }, (_, index) => (
                 <div
@@ -267,6 +414,17 @@ export const DiaryDashboard: React.FC = () => {
           )}
         </div>
       </section>
+
+      {/* Meal Plan Form */}
+      <MealPlanForm
+        visible={planFormVisible}
+        onClose={() => {
+          setPlanFormVisible(false);
+          setEditingPlanId(null);
+        }}
+        plannedDate={selectedDateKey}
+        editingPlanId={editingPlanId}
+      />
     </div>
   );
 };

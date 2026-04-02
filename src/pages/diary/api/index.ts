@@ -14,6 +14,11 @@ export type {
   MealItemEntry,
   CreateMealItemEntryInput,
   UpdateMealItemEntryInput,
+  MealPlan,
+  MealPlanItem,
+  CreateMealPlanInput,
+  CreateMealPlanItemInput,
+  UpdateMealPlanInput,
 } from './types';
 
 export {
@@ -36,6 +41,11 @@ export { supabaseMealItemEntriesApi, type IMealItemEntriesApi } from './meal-ite
 export { useVenues, useVenue, useVenueSearch, VENUES_QUERY_KEY } from './use-venues';
 export { useMealLogs, useMealLog, useRecentMealLogs, MEAL_LOGS_QUERY_KEY } from './use-meal-logs';
 export { useMenuItems, useAllMenuItems, MENU_ITEMS_QUERY_KEY } from './use-menu-items';
+
+// Meal plan hooks
+export { useMealPlans, MEAL_PLANS_QUERY_KEY } from './use-meal-plans';
+export { supabaseMealPlansApi, type IMealPlansApi } from './meal-plans.api';
+export { useAddMealPlan, useUpdateMealPlan, useDeleteMealPlan, useAddMealPlanItem, useRemoveMealPlanItem } from './use-meal-plan-mutations';
 
 // Mutation hooks
 export { useAddVenue, useUpdateVenue, useDeleteVenue } from './use-venue-mutations';
