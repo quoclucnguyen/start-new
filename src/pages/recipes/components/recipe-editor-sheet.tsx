@@ -66,6 +66,7 @@ const RecipeEditorSheet: React.FC = () => {
         id: editingRecipeId,
         title: values.title,
         description: values.description || undefined,
+        sourceUrl: values.sourceUrl.trim() || undefined,
         cookTimeMinutes: values.cookTimeMinutes,
         prepTimeMinutes: values.prepTimeMinutes || undefined,
         servings: values.servings,
@@ -91,6 +92,7 @@ const RecipeEditorSheet: React.FC = () => {
       const createInput: CreateRecipeInput = {
         title: values.title,
         description: values.description || undefined,
+        sourceUrl: values.sourceUrl.trim() || undefined,
         cookTimeMinutes: values.cookTimeMinutes,
         prepTimeMinutes: values.prepTimeMinutes || undefined,
         servings: values.servings,

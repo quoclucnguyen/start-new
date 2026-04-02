@@ -46,6 +46,7 @@ export function useCreateRecipe() {
         title: newRecipeInput.title,
         description: newRecipeInput.description,
         imageUrl: newRecipeInput.imageUrl,
+        sourceUrl: newRecipeInput.sourceUrl,
         cookTimeMinutes: newRecipeInput.cookTimeMinutes,
         prepTimeMinutes: newRecipeInput.prepTimeMinutes,
         servings: newRecipeInput.servings,

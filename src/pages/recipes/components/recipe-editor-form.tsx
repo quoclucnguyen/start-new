@@ -11,6 +11,7 @@ import type { RecipeDifficulty, RecipeDetail } from '@/api/types';
 interface RecipeEditorFormValues {
   title: string;
   description: string;
+  sourceUrl: string;
   cookTimeMinutes: number;
   prepTimeMinutes: number;
   servings: number;
@@ -39,6 +40,7 @@ function getDefaultValues(recipe?: RecipeDetail | null): RecipeEditorFormValues 
     return {
       title: '',
       description: '',
+      sourceUrl: '',
       cookTimeMinutes: 30,
       prepTimeMinutes: 10,
       servings: 2,
@@ -52,6 +54,7 @@ function getDefaultValues(recipe?: RecipeDetail | null): RecipeEditorFormValues 
   return {
     title: recipe.title,
     description: recipe.description ?? '',
+    sourceUrl: recipe.sourceUrl ?? '',
     cookTimeMinutes: recipe.cookTimeMinutes,
     prepTimeMinutes: recipe.prepTimeMinutes ?? 0,
     servings: recipe.servings,
@@ -141,6 +144,18 @@ const RecipeEditorForm: React.FC<RecipeEditorFormProps> = ({
             'resize-none min-h-15',
           )}
           rows={2}
+        />
+      </div>
+
+      {/* Source URL */}
+      <div className="flex flex-col gap-1">
+        <label className="text-sm font-bold">Nguồn công thức (URL)</label>
+        <Input
+          type="url"
+          placeholder="https://example.com/cong-thuc"
+          value={values.sourceUrl}
+          onChange={(e) => updateField('sourceUrl', e.target.value)}
+          className="h-11"
         />
       </div>
 

@@ -189,6 +189,7 @@ export interface Recipe {
   title: string;
   description?: string;
   imageUrl?: string;
+  sourceUrl?: string;
   cookTimeMinutes: number;
   prepTimeMinutes?: number;
   servings: number;
@@ -229,6 +230,7 @@ export interface CreateRecipeInput {
   title: string;
   description?: string;
   imageUrl?: string;
+  sourceUrl?: string;
   cookTimeMinutes: number;
   prepTimeMinutes?: number;
   servings: number;
@@ -252,6 +254,7 @@ export interface UpdateRecipeInput {
   title?: string;
   description?: string;
   imageUrl?: string;
+  sourceUrl?: string;
   cookTimeMinutes?: number;
   prepTimeMinutes?: number;
   servings?: number;
@@ -267,6 +270,7 @@ export interface DbRecipe {
   title: string;
   description: string | null;
   image_url: string | null;
+  source_url: string | null;
   cook_time_minutes: number;
   prep_time_minutes: number | null;
   servings: number;

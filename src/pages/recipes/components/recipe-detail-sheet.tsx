@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
-import { Clock, Users } from 'lucide-react';
+import { Clock, ExternalLink, Users } from 'lucide-react';
 import { BottomSheet } from '@/components/shared';
 import { Button } from '@/components/ui/button';
 import { RecipeIngredientsPanel } from './recipe-ingredients-panel';
@@ -100,6 +100,18 @@ const RecipeDetailSheet: React.FC<RecipeDetailSheetProps> = ({
                 </span>
                 <DifficultyBadge difficulty={recipe.difficulty} />
               </div>
+
+              {recipe.sourceUrl && (
+                <a
+                  href={recipe.sourceUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-3 inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
+                >
+                  <ExternalLink className="size-3.5" />
+                  Nguồn công thức
+                </a>
+              )}
 
               {/* Tags */}
               {recipe.tags.length > 0 && (

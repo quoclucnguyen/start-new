@@ -56,6 +56,7 @@ function mapDbToRecipe(row: DbRecipe): Recipe {
     title: row.title,
     description: row.description ?? undefined,
     imageUrl: row.image_url ?? undefined,
+    sourceUrl: row.source_url ?? undefined,
     cookTimeMinutes: row.cook_time_minutes,
     prepTimeMinutes: row.prep_time_minutes ?? undefined,
     servings: row.servings,
@@ -100,6 +101,7 @@ function mapCreateRecipeToDb(
     title: input.title,
     description: input.description ?? null,
     image_url: input.imageUrl ?? null,
+    source_url: input.sourceUrl ?? null,
     cook_time_minutes: input.cookTimeMinutes,
     prep_time_minutes: input.prepTimeMinutes ?? null,
     servings: input.servings,
@@ -119,6 +121,7 @@ function mapUpdateRecipeToDb(input: UpdateRecipeInput): Partial<DbRecipe> {
   if (input.title !== undefined) dbRow.title = input.title;
   if (input.description !== undefined) dbRow.description = input.description ?? null;
   if (input.imageUrl !== undefined) dbRow.image_url = input.imageUrl ?? null;
+  if (input.sourceUrl !== undefined) dbRow.source_url = input.sourceUrl ?? null;
   if (input.cookTimeMinutes !== undefined) dbRow.cook_time_minutes = input.cookTimeMinutes;
   if (input.prepTimeMinutes !== undefined) dbRow.prep_time_minutes = input.prepTimeMinutes ?? null;
   if (input.servings !== undefined) dbRow.servings = input.servings;
@@ -395,6 +398,7 @@ export const supabaseRecipesManagementApi: IRecipesManagementApi = {
         title: `[Copy] ${original.title}`,
         description: original.description,
         imageUrl: original.imageUrl,
+        sourceUrl: original.sourceUrl,
         cookTimeMinutes: original.cookTimeMinutes,
         prepTimeMinutes: original.prepTimeMinutes,
         servings: original.servings,
@@ -537,6 +541,7 @@ export const mockRecipesManagementApi: IRecipesManagementApi = {
       title: input.title,
       description: input.description,
       imageUrl: input.imageUrl,
+      sourceUrl: input.sourceUrl,
       cookTimeMinutes: input.cookTimeMinutes,
       prepTimeMinutes: input.prepTimeMinutes,
       servings: input.servings,
@@ -657,6 +662,7 @@ export const mockRecipesManagementApi: IRecipesManagementApi = {
         title: `[Copy] ${original.title}`,
         description: original.description,
         imageUrl: original.imageUrl,
+        sourceUrl: original.sourceUrl,
         cookTimeMinutes: original.cookTimeMinutes,
         prepTimeMinutes: original.prepTimeMinutes,
         servings: original.servings,

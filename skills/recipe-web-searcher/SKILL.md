@@ -1,9 +1,9 @@
 ---
 name: recipe-web-searcher
 description: >
-  Tìm kiếm công thức nấu ăn trên internet, trích lọc thông tin chi tiết,
-  sau đó chuyển giao cho skill food-system-orchestrator để lưu vào database.
-  Sử dụng khi người dùng muốn tìm và nhập công thức mới từ web.
+  Tìm kiếm công thức nấu ăn trên internet, trích lọc dữ liệu chuẩn hoá,
+  rồi chuyển giao cho skill openclaw-food-system-orchestrator để lưu đúng
+  cấu trúc recipes + recipe_ingredients + recipe_steps trong database.
 triggers:
   - tìm công thức
   - search recipe
@@ -15,7 +15,7 @@ tools:
   - web_search
   - web_fetch
 delegates_to:
-  - food-system-orchestrator
+  - openclaw-food-system-orchestrator
 ---
 
 # Recipe Web Searcher
@@ -23,172 +23,167 @@ delegates_to:
 ## Mục đích
 
 Skill này chịu trách nhiệm:
-1. Nhận yêu cầu tìm công thức từ người dùng
-2. Sử dụng search tool để tìm công thức trên internet
-3. Trích lọc và chuẩn hoá dữ liệu công thức
-4. Chuyển giao dữ liệu đã chuẩn hoá cho skill **food-system-orchestrator** để INSERT vào bảng `recipes`
+
+1. Nhận yêu cầu tìm công thức từ người dùng.
+2. Tìm nguồn đáng tin cậy trên web.
+3. Trích lọc và chuẩn hoá payload recipe theo schema hiện tại.
+4. Delegate cho `openclaw-food-system-orchestrator` để ghi dữ liệu vào DB.
+
+> Skill này **không tự chạy SQL**.
+
+---
+
+## Database Shape (must-follow)
+
+### `public.recipes`
+
+Lưu metadata công thức:
+
+- `title`, `description`
+- `source_url`, `image_url`
+- `cook_time_minutes`, `prep_time_minutes`, `servings`
+- `difficulty` (`easy|medium|hard`)
+- `visibility` (`private|shared`)
+- `source` (`user|system`)
+- `tags` (`text[]`)
+
+### `public.recipe_ingredients`
+
+Lưu nguyên liệu theo recipe:
+
+- `recipe_id`, `name`, `normalized_name`
+- `quantity`, `unit`, `optional`, `sort_order`
+
+### `public.recipe_steps`
+
+Lưu các bước nấu:
+
+- `recipe_id`, `step_number`, `instruction`, `estimated_minutes`
+
+> Không có cột `ingredients` hay `instructions` trực tiếp trong bảng `recipes`.
+
+---
 
 ## Quy trình thực hiện
 
-### Bước 1 — Xác định yêu cầu
+### Bước 1 — Làm rõ yêu cầu
 
-Hỏi hoặc suy luận từ ngữ cảnh các thông tin sau:
-- **Tên món ăn** hoặc từ khoá tìm kiếm (bắt buộc)
-- **Ẩm thực / vùng miền** (tuỳ chọn, ví dụ: Việt Nam, Hàn Quốc, Ý)
-- **Hạn chế / yêu cầu đặc biệt** (tuỳ chọn, ví dụ: chay, ít calo, không gluten)
-- **Số lượng kết quả mong muốn** (mặc định: 3)
+Thu thập:
 
-### Bước 2 — Tìm kiếm trên web
+- Tên món/từ khóa (bắt buộc)
+- Ẩm thực/vùng miền (tùy chọn)
+- Ràng buộc (chay, ít calo, dị ứng...) (tùy chọn)
+- Số kết quả mong muốn (mặc định 3)
 
-Thực hiện search với các chiến lược query sau (ưu tiên từ trên xuống):
+### Bước 2 — Tìm kiếm
 
-```
+Query gợi ý:
+
+```text
 "{tên món} recipe"
 "{tên món} công thức nấu ăn"
 "{tên món} {ẩm thực} recipe ingredients instructions"
 ```
 
-Nếu kết quả không đủ chất lượng, thử mở rộng:
-```
-"best {tên món} recipe site:allrecipes.com OR site:cookpad.com OR site:cooky.vn"
+Fallback:
+
+```text
+"best {tên món} recipe site:cookpad.com OR site:dienmayxanh.com OR site:allrecipes.com"
 ```
 
-Ưu tiên nguồn đáng tin cậy:
-- cooky.vn, dienmayxanh.com/vao-bep, cookpad.com (tiếng Việt)
-- allrecipes.com, seriouseats.com, budgetbytes.com (tiếng Anh)
+Nguồn ưu tiên: cookpad, dienmayxanh/vao-bep, cooky, allrecipes, serious eats, budgetbytes.
 
 ### Bước 3 — Fetch và trích lọc
 
-Với mỗi kết quả tìm được, dùng `web_fetch` để lấy nội dung trang. Trích lọc chính xác các trường sau:
+Mỗi candidate cần cố gắng trích các field:
 
-| Trường | Mô tả | Bắt buộc |
-|--------|--------|----------|
-| `title` | Tên công thức | ✅ |
-| `description` | Mô tả ngắn về món ăn | ❌ |
-| `ingredients` | Danh sách nguyên liệu kèm số lượng | ✅ |
-| `instructions` | Các bước thực hiện theo thứ tự | ✅ |
-| `prep_time` | Thời gian chuẩn bị (phút, kiểu integer) | ❌ |
-| `cook_time` | Thời gian nấu (phút, kiểu integer) | ❌ |
-| `servings` | Số phần ăn (kiểu integer) | ❌ |
-| `source_url` | URL gốc của công thức | ✅ |
-| `image_url` | URL ảnh minh hoạ | ❌ |
-| `tags` | Mảng tag phân loại | ❌ |
+- `title` (required)
+- `description` (optional)
+- `ingredients` (required)
+- `steps` (required)
+- `prepTimeMinutes` (optional)
+- `cookTimeMinutes` (optional)
+- `servings` (optional)
+- `sourceUrl` (required)
+- `imageUrl` (optional)
+- `tags` (optional)
 
-### Bước 4 — Chuẩn hoá dữ liệu
+### Bước 4 — Chuẩn hoá payload
 
-Chuyển đổi dữ liệu trích lọc sang đúng format của bảng `recipes`:
+Payload trao cho orchestrator nên theo format app-level (camelCase):
 
 ```json
 {
-  "title": "Phở Bò Hà Nội",
-  "description": "Công thức phở bò truyền thống Hà Nội với nước dùng ninh xương 12 tiếng",
-  "ingredients": [
-    { "name": "xương ống bò", "quantity": "1.5", "unit": "kg" },
-    { "name": "thịt bò tái", "quantity": "300", "unit": "g" },
-    { "name": "bánh phở tươi", "quantity": "500", "unit": "g" },
-    { "name": "hành tây", "quantity": "2", "unit": "củ" },
-    { "name": "gừng", "quantity": "1", "unit": "nhánh" },
-    { "name": "hoa hồi", "quantity": "3", "unit": "cánh" },
-    { "name": "quế", "quantity": "1", "unit": "thanh" },
-    { "name": "nước mắm", "quantity": "3", "unit": "tbsp" }
-  ],
-  "instructions": [
-    "Rửa sạch xương, chần qua nước sôi, rửa lại.",
-    "Nướng hành tây và gừng đến khi cháy xém vỏ ngoài.",
-    "Cho xương vào nồi với 4 lít nước, đun sôi, hớt bọt.",
-    "Thêm hành nướng, gừng nướng, hoa hồi, quế. Ninh lửa nhỏ 6-12 tiếng.",
-    "Lọc nước dùng, nêm nước mắm và muối vừa ăn.",
-    "Trụng bánh phở qua nước sôi, cho vào tô.",
-    "Xếp thịt bò tái lên trên, chan nước dùng sôi.",
-    "Thêm hành lá, rau mùi. Ăn kèm giá, húng quế, chanh, ớt."
-  ],
-  "prep_time": 30,
-  "cook_time": 720,
+  "title": "Phở bò Hà Nội",
+  "description": "Công thức phở bò truyền thống",
+  "sourceUrl": "https://example.com/pho-bo",
+  "imageUrl": "https://example.com/pho-bo.jpg",
+  "cookTimeMinutes": 240,
+  "prepTimeMinutes": 30,
   "servings": 6,
-  "source_url": "https://example.com/pho-bo-ha-noi",
-  "image_url": "https://example.com/pho.jpg",
-  "tags": ["vietnamese", "soup", "beef", "traditional"]
+  "difficulty": "medium",
+  "visibility": "private",
+  "source": "user",
+  "tags": ["món việt", "món nước", "thịt bò"],
+  "ingredients": [
+    { "name": "xương bò", "quantity": 1.5, "unit": "kg", "optional": false },
+    { "name": "gừng", "quantity": 1, "unit": "nhánh", "optional": false }
+  ],
+  "steps": [
+    { "instruction": "Chần xương bò", "estimatedMinutes": 15 },
+    { "instruction": "Ninh nước dùng", "estimatedMinutes": 180 }
+  ]
 }
 ```
 
-**Quy tắc chuẩn hoá:**
-- `ingredients` phải là mảng JSON, mỗi phần tử có ít nhất `name`; `quantity` và `unit` nếu có
-- `instructions` phải là mảng string, mỗi phần tử là một bước riêng biệt, đúng thứ tự
-- `prep_time` và `cook_time` luôn tính bằng phút (integer)
-- `tags` là mảng string, viết thường, không dấu tiếng Việt, dùng tiếng Anh
-- Nếu nguồn gốc không cung cấp một trường tuỳ chọn → bỏ qua trường đó, KHÔNG bịa dữ liệu
+Rules:
 
-### Bước 5 — Xác nhận với người dùng
+- `sourceUrl` phải là URL gốc bài công thức.
+- `ingredients[].name` bắt buộc, giữ thứ tự xuất hiện.
+- `steps[].instruction` bắt buộc, giữ thứ tự bước.
+- `difficulty` nếu không chắc: dùng `easy`.
+- `tags` **luôn là tiếng Việt**, viết thường, không trộn tiếng Anh.
+- Nếu nguồn gốc dùng tag tiếng Anh thì phải dịch nghĩa sang tiếng Việt trước khi lưu.
+- Ưu tiên tag ngắn, rõ nghĩa theo ngữ cảnh món ăn (ví dụ: `món nước`, `chiên`, `hải sản`, `ăn sáng`).
+- Không bịa dữ liệu khi nguồn không có.
 
-Trước khi lưu, LUÔN trình bày tóm tắt công thức đã trích lọc cho người dùng xem:
+### Bước 5 — Xác nhận user trước khi lưu
 
-```
-📋 Công thức tìm được: {title}
-   Nguồn: {source_url}
-   Nguyên liệu: {số lượng} items
-   Các bước: {số bước} bước
-   Thời gian: chuẩn bị {prep_time} phút, nấu {cook_time} phút
-   Khẩu phần: {servings} người
-```
+Luôn tóm tắt:
 
-Hỏi: "Bạn muốn lưu công thức này vào hệ thống không?"
-
-### Bước 6 — Chuyển giao cho food-system-orchestrator
-
-Khi người dùng xác nhận, **uỷ quyền** (delegate) cho skill `food-system-orchestrator` thực hiện INSERT vào bảng `recipes`.
-
-Câu lệnh INSERT mẫu mà food-system-orchestrator sẽ chạy:
-
-```sql
-INSERT INTO public.recipes (
-  user_id,
-  title,
-  description,
-  ingredients,
-  instructions,
-  prep_time,
-  cook_time,
-  servings,
-  source_url,
-  image_url,
-  tags,
-  created_at,
-  updated_at
-) VALUES (
-  :current_user_id,
-  :title,
-  :description,
-  :ingredients::jsonb,
-  :instructions::jsonb,
-  :prep_time,
-  :cook_time,
-  :servings,
-  :source_url,
-  :image_url,
-  :tags::text[],
-  now(),
-  now()
-);
+```text
+📋 Công thức: {title}
+🔗 Nguồn: {sourceUrl}
+🥬 Nguyên liệu: {n} mục
+🧾 Các bước: {m} bước
+⏱️ Thời gian: chuẩn bị {prepTimeMinutes} phút, nấu {cookTimeMinutes} phút
+🍽️ Khẩu phần: {servings}
 ```
 
-**Lưu ý:** skill này KHÔNG tự chạy SQL. Nó chuẩn bị payload rồi delegate cho food-system-orchestrator xử lý phần ghi dữ liệu, tuân thủ đúng quy trình bảo mật (RLS, xác nhận user, v.v.) đã định nghĩa trong skill đó.
+Hỏi rõ: “Bạn muốn lưu công thức này vào hệ thống không?”
 
-## Xử lý lỗi
+### Bước 6 — Delegate cho orchestrator
 
-| Tình huống | Hành động |
-|-----------|-----------|
-| Không tìm thấy kết quả | Thử query thay thế, nếu vẫn không có → báo người dùng |
-| Trang web không fetch được | Bỏ qua, thử kết quả tiếp theo |
-| Thiếu ingredients hoặc instructions | Không đủ điều kiện lưu → báo người dùng trang nguồn không đầy đủ |
-| Người dùng từ chối lưu | Hỏi muốn tìm công thức khác hay dừng |
-| Trùng title trong DB | Cảnh báo người dùng, hỏi có muốn lưu thêm bản mới không |
+Khi user đồng ý, chuyển payload cho `openclaw-food-system-orchestrator` với yêu cầu ghi **multi-table**:
 
-## Ví dụ tương tác
+1. Insert `recipes`.
+2. Insert `recipe_ingredients` theo `recipe_id` vừa tạo.
+3. Insert `recipe_steps` theo `recipe_id` vừa tạo.
 
-**User:** Tìm giúp tôi công thức làm bánh mì Việt Nam
-**Agent:**
-1. Search: `"bánh mì Việt Nam recipe"`, `"Vietnamese banh mi recipe ingredients"`
-2. Fetch top 3 kết quả, trích lọc thông tin
-3. Trình bày tóm tắt 3 công thức cho user chọn
-4. User chọn → chuẩn hoá → xác nhận → delegate INSERT cho food-system-orchestrator
-```
+Kèm nhắc orchestrator:
+
+- Dùng `source_url` từ payload `sourceUrl`.
+- Dùng `apply_migration` nếu phải đổi schema.
+- Dùng `execute_sql` cho DML.
+
+---
+
+## Error Handling
+
+| Tình huống | Cách xử lý |
+|---|---|
+| Không có kết quả phù hợp | Đổi query, nới nguồn tìm kiếm |
+| Fetch lỗi / trang chặn bot | Bỏ qua và thử nguồn khác |
+| Thiếu ingredients hoặc steps | Báo user là nguồn không đủ dữ liệu để lưu |
+| User từ chối lưu | Hỏi có muốn tìm công thức khác |
+| Nghi ngờ trùng công thức | Báo orchestrator dedupe theo title trước khi insert |
