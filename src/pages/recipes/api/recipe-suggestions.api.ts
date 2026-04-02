@@ -47,12 +47,11 @@ function sortInventoryForSuggestions(items: FoodItem[]): FoodItem[] {
 
 async function fetchAllRecipeDetails(
   recipesApi: IRecipesManagementApi,
-  userId: string,
 ): Promise<RecipeDetail[]> {
-  const recipes = await recipesApi.list(userId);
+  const recipes = await recipesApi.list();
 
   const details = await Promise.all(
-    recipes.map((recipe) => recipesApi.getById(recipe.id, userId)),
+    recipes.map((recipe) => recipesApi.getById(recipe.id)),
   );
   return details.filter((detail): detail is RecipeDetail => detail !== null);
 }
@@ -110,7 +109,7 @@ function createRecipeSuggestionsApi(
       filters: RecipeSuggestionFilters = {},
     ): Promise<RecipeSuggestionsResult> {
       const [recipes, inventory] = await Promise.all([
-        fetchAllRecipeDetails(recipesApi, userId),
+        fetchAllRecipeDetails(recipesApi),
         inventoryApi.getAll(userId),
       ]);
 
@@ -127,7 +126,8 @@ function createRecipeSuggestionsApi(
     },
 
     async getRecipeDetail(recipeId: string, userId: string): Promise<RecipeDetail | null> {
-      return recipesApi.getById(recipeId, userId);
+      void userId;
+      return recipesApi.getById(recipeId);
     },
   };
 }

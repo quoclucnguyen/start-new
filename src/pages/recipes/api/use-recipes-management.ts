@@ -18,7 +18,7 @@ export function useRecipesList(options?: { search?: string; tags?: string[] }) {
       if (!userId) {
         throw new Error('User not authenticated');
       }
-      return supabaseRecipesManagementApi.list(userId, options);
+      return supabaseRecipesManagementApi.list(options);
     },
     enabled: !!userId,
   });
@@ -37,7 +37,7 @@ export function useRecipeById(recipeId: string | null) {
       if (!userId) {
         throw new Error('User not authenticated');
       }
-      return recipeId ? supabaseRecipesManagementApi.getById(recipeId, userId) : Promise.resolve(null);
+      return recipeId ? supabaseRecipesManagementApi.getById(recipeId) : Promise.resolve(null);
     },
     enabled: !!recipeId && !!userId,
   });

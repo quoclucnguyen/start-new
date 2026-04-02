@@ -23,7 +23,7 @@ export function useCreateRecipe() {
   return useMutation({
     mutationFn: (input: CreateRecipeInput) => {
       if (!userId) throw new Error('User not authenticated');
-      return supabaseRecipesManagementApi.create(input, userId);
+      return supabaseRecipesManagementApi.create(input);
     },
     onMutate: async (newRecipeInput) => {
       if (!userId) return;
@@ -98,7 +98,7 @@ export function useUpdateRecipe() {
   return useMutation({
     mutationFn: (input: UpdateRecipeInput) => {
       if (!userId) throw new Error('User not authenticated');
-      return supabaseRecipesManagementApi.update(input, userId);
+      return supabaseRecipesManagementApi.update(input);
     },
     onMutate: async (updatedRecipe) => {
       if (!userId) return;
@@ -164,7 +164,7 @@ export function useReplaceRecipeIngredients() {
   >({
     mutationFn: ({ recipeId, ingredients }) => {
       if (!userId) throw new Error('User not authenticated');
-      return supabaseRecipesManagementApi.replaceIngredients(recipeId, ingredients, userId);
+      return supabaseRecipesManagementApi.replaceIngredients(recipeId, ingredients);
     },
     onSettled: (_data, _error, variables) => {
       if (userId) {
@@ -194,7 +194,7 @@ export function useReplaceRecipeSteps() {
   >({
     mutationFn: ({ recipeId, steps }) => {
       if (!userId) throw new Error('User not authenticated');
-      return supabaseRecipesManagementApi.replaceSteps(recipeId, steps, userId);
+      return supabaseRecipesManagementApi.replaceSteps(recipeId, steps);
     },
     onSettled: (_data, _error, variables) => {
       if (userId) {
@@ -220,7 +220,7 @@ export function useDuplicateRecipe() {
   return useMutation<RecipeDetail, Error, string>({
     mutationFn: (recipeId: string) => {
       if (!userId) throw new Error('User not authenticated');
-      return supabaseRecipesManagementApi.duplicate(recipeId, userId);
+      return supabaseRecipesManagementApi.duplicate(recipeId);
     },
     onSettled: () => {
       if (userId) {
@@ -246,7 +246,7 @@ export function useDeleteRecipe() {
   return useMutation({
     mutationFn: (recipeId: string) => {
       if (!userId) throw new Error('User not authenticated');
-      return supabaseRecipesManagementApi.delete(recipeId, userId);
+      return supabaseRecipesManagementApi.delete(recipeId);
     },
     onMutate: async (deletedId) => {
       if (!userId) return;

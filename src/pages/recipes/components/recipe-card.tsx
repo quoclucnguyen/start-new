@@ -187,7 +187,8 @@ const RecipeCard = React.forwardRef<HTMLDivElement, RecipeCardProps>(
               <div className="flex gap-2">
                 {missingIngredients.length > 0 && onAddMissing && (
                   <Button variant="secondary" className="flex-1" onClick={onAddMissing}>
-                    Add Missing
+                    <CircleCheck className="size-4" />
+                    Thêm nguyên liệu
                   </Button>
                 )}
                 <Button className={cn('flex-1', !onAddMissing && 'w-full')} onClick={onCook}>

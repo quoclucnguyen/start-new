@@ -18,22 +18,20 @@ import type {
  * Abstract API interface for recipe management.
  */
 export interface IRecipesManagementApi {
-  list(userId: string, options?: { search?: string; tags?: string[] }): Promise<Recipe[]>;
-  getById(id: string, userId: string): Promise<RecipeDetail | null>;
-  create(input: CreateRecipeInput, userId: string): Promise<RecipeDetail>;
-  update(input: UpdateRecipeInput, userId: string): Promise<Recipe>;
+  list(options?: { search?: string; tags?: string[] }): Promise<Recipe[]>;
+  getById(id: string): Promise<RecipeDetail | null>;
+  create(input: CreateRecipeInput): Promise<RecipeDetail>;
+  update(input: UpdateRecipeInput): Promise<Recipe>;
   replaceIngredients(
     recipeId: string,
     ingredients: CreateRecipeInput['ingredients'],
-    userId: string,
   ): Promise<RecipeIngredient[]>;
   replaceSteps(
     recipeId: string,
     steps: CreateRecipeInput['steps'],
-    userId: string,
   ): Promise<RecipeStep[]>;
-  duplicate(recipeId: string, userId: string): Promise<RecipeDetail>;
-  delete(recipeId: string, userId: string): Promise<void>;
+  duplicate(recipeId: string): Promise<RecipeDetail>;
+  delete(recipeId: string): Promise<void>;
 }
 
 // ============================================================================
@@ -96,10 +94,9 @@ function mapDbToStep(row: DbRecipeStep): RecipeStep {
 
 function mapCreateRecipeToDb(
   input: CreateRecipeInput,
-  userId: string,
 ): Omit<DbRecipe, 'id' | 'created_at' | 'updated_at' | 'last_modified' | 'deleted' | 'synced'> {
   return {
-    user_id: userId,
+    user_id: null,
     title: input.title,
     description: input.description ?? null,
     image_url: input.imageUrl ?? null,
@@ -137,14 +134,13 @@ function mapUpdateRecipeToDb(input: UpdateRecipeInput): Partial<DbRecipe> {
 // ============================================================================
 
 export const supabaseRecipesManagementApi: IRecipesManagementApi = {
-  async list(userId: string, options?: { search?: string; tags?: string[] }): Promise<Recipe[]> {
+  async list(options?: { search?: string; tags?: string[] }): Promise<Recipe[]> {
     const supabase = getSupabaseClient();
 
     let query = supabase
       .from('recipes')
       .select('*')
       .eq('deleted', false)
-      .or(`user_id.eq.${userId},source.eq.system`)
       .order('updated_at', { ascending: false });
 
     if (options?.search) {
@@ -165,7 +161,7 @@ export const supabaseRecipesManagementApi: IRecipesManagementApi = {
     return (data as DbRecipe[]).map(mapDbToRecipe);
   },
 
-  async getById(id: string, userId: string): Promise<RecipeDetail | null> {
+  async getById(id: string): Promise<RecipeDetail | null> {
     const supabase = getSupabaseClient();
 
     const { data: recipeData, error: recipeError } = await supabase
@@ -173,7 +169,6 @@ export const supabaseRecipesManagementApi: IRecipesManagementApi = {
       .select('*')
       .eq('id', id)
       .eq('deleted', false)
-      .or(`user_id.eq.${userId},source.eq.system`)
       .single();
 
     if (recipeError) {
@@ -216,11 +211,11 @@ export const supabaseRecipesManagementApi: IRecipesManagementApi = {
     };
   },
 
-  async create(input: CreateRecipeInput, userId: string): Promise<RecipeDetail> {
+  async create(input: CreateRecipeInput): Promise<RecipeDetail> {
     const supabase = getSupabaseClient();
 
     // 1. Insert recipe
-    const dbRecipe = mapCreateRecipeToDb(input, userId);
+    const dbRecipe = mapCreateRecipeToDb(input);
     const { data: recipeData, error: recipeError } = await supabase
       .from('recipes')
       .insert(dbRecipe)
@@ -285,7 +280,7 @@ export const supabaseRecipesManagementApi: IRecipesManagementApi = {
     return { ...recipe, ingredients, steps };
   },
 
-  async update(input: UpdateRecipeInput, userId: string): Promise<Recipe> {
+  async update(input: UpdateRecipeInput): Promise<Recipe> {
     const supabase = getSupabaseClient();
 
     const dbRow = mapUpdateRecipeToDb(input);
@@ -295,7 +290,6 @@ export const supabaseRecipesManagementApi: IRecipesManagementApi = {
       .update(dbRow)
       .eq('id', input.id)
       .eq('deleted', false)
-      .or(`user_id.eq.${userId},source.eq.system`)
       .select()
       .single();
 
@@ -310,9 +304,7 @@ export const supabaseRecipesManagementApi: IRecipesManagementApi = {
   async replaceIngredients(
     recipeId: string,
     ingredients: CreateRecipeInput['ingredients'],
-    userId: string,
   ): Promise<RecipeIngredient[]> {
-    void userId;
     const supabase = getSupabaseClient();
 
     // Delete existing ingredients
@@ -355,9 +347,7 @@ export const supabaseRecipesManagementApi: IRecipesManagementApi = {
   async replaceSteps(
     recipeId: string,
     steps: CreateRecipeInput['steps'],
-    userId: string,
   ): Promise<RecipeStep[]> {
-    void userId;
     const supabase = getSupabaseClient();
 
     // Delete existing steps
@@ -394,9 +384,9 @@ export const supabaseRecipesManagementApi: IRecipesManagementApi = {
     return (data as DbRecipeStep[]).map(mapDbToStep);
   },
 
-  async duplicate(recipeId: string, userId: string): Promise<RecipeDetail> {
+  async duplicate(recipeId: string): Promise<RecipeDetail> {
     // Fetch original recipe
-    const original = await this.getById(recipeId, userId);
+    const original = await this.getById(recipeId);
     if (!original) throw new Error(`Recipe ${recipeId} not found`);
 
     // Create duplicate
@@ -422,12 +412,10 @@ export const supabaseRecipesManagementApi: IRecipesManagementApi = {
           estimatedMinutes: step.estimatedMinutes,
         })),
       },
-      userId,
     );
   },
 
-  async delete(recipeId: string, userId: string): Promise<void> {
-    void userId;
+  async delete(recipeId: string): Promise<void> {
     const supabase = getSupabaseClient();
 
     const { error } = await supabase
@@ -503,8 +491,7 @@ function saveSteps(steps: RecipeStep[]): void {
 }
 
 export const mockRecipesManagementApi: IRecipesManagementApi = {
-  async list(userId: string, options?: { search?: string; tags?: string[] }): Promise<Recipe[]> {
-    void userId;
+  async list(options?: { search?: string; tags?: string[] }): Promise<Recipe[]> {
     await delay();
     let recipes = getStoredRecipes().filter((r) => !r.deleted);
 
@@ -524,8 +511,7 @@ export const mockRecipesManagementApi: IRecipesManagementApi = {
     );
   },
 
-  async getById(id: string, userId: string): Promise<RecipeDetail | null> {
-    void userId;
+  async getById(id: string): Promise<RecipeDetail | null> {
     await delay();
     const recipe = getStoredRecipes().find((r) => r.id === id && !r.deleted);
     if (!recipe) return null;
@@ -540,14 +526,14 @@ export const mockRecipesManagementApi: IRecipesManagementApi = {
     return { ...recipe, ingredients, steps };
   },
 
-  async create(input: CreateRecipeInput, userId: string): Promise<RecipeDetail> {
+  async create(input: CreateRecipeInput): Promise<RecipeDetail> {
     await delay();
     const now = new Date().toISOString();
     const recipeId = generateId();
 
     const recipe: Recipe = {
       id: recipeId,
-      userId,
+      userId: null,
       title: input.title,
       description: input.description,
       imageUrl: input.imageUrl,
@@ -599,8 +585,7 @@ export const mockRecipesManagementApi: IRecipesManagementApi = {
     return { ...recipe, ingredients: newIngredients, steps: newSteps };
   },
 
-  async update(input: UpdateRecipeInput, userId: string): Promise<Recipe> {
-    void userId;
+  async update(input: UpdateRecipeInput): Promise<Recipe> {
     await delay();
     const recipes = getStoredRecipes();
     const index = recipes.findIndex((r) => r.id === input.id && !r.deleted);
@@ -623,9 +608,7 @@ export const mockRecipesManagementApi: IRecipesManagementApi = {
   async replaceIngredients(
     recipeId: string,
     ingredients: CreateRecipeInput['ingredients'],
-    userId: string,
   ): Promise<RecipeIngredient[]> {
-    void userId;
     await delay();
     const allIngredients = getStoredIngredients().filter((i) => i.recipeId !== recipeId);
 
@@ -648,9 +631,7 @@ export const mockRecipesManagementApi: IRecipesManagementApi = {
   async replaceSteps(
     recipeId: string,
     steps: CreateRecipeInput['steps'],
-    userId: string,
   ): Promise<RecipeStep[]> {
-    void userId;
     await delay();
     const allSteps = getStoredSteps().filter((s) => s.recipeId !== recipeId);
 
@@ -667,8 +648,8 @@ export const mockRecipesManagementApi: IRecipesManagementApi = {
     return newSteps;
   },
 
-  async duplicate(recipeId: string, userId: string): Promise<RecipeDetail> {
-    const original = await this.getById(recipeId, userId);
+  async duplicate(recipeId: string): Promise<RecipeDetail> {
+    const original = await this.getById(recipeId);
     if (!original) throw new Error(`Recipe ${recipeId} not found`);
 
     return this.create(
@@ -693,12 +674,10 @@ export const mockRecipesManagementApi: IRecipesManagementApi = {
           estimatedMinutes: step.estimatedMinutes,
         })),
       },
-      userId,
     );
   },
 
-  async delete(recipeId: string, userId: string): Promise<void> {
-    void userId;
+  async delete(recipeId: string): Promise<void> {
     await delay();
     const recipes = getStoredRecipes();
     const index = recipes.findIndex((r) => r.id === recipeId);
