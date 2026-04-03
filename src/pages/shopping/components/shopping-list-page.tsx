@@ -6,7 +6,6 @@ import { useShoppingList } from '../api/use-shopping-list';
 import {
   useAddShoppingListItem,
   useToggleShoppingItemChecked,
-  useDeleteShoppingListItem,
   useDeleteCheckedItems,
   useMovePurchasedToInventory,
 } from '../api/use-shopping-list-mutations';
@@ -66,7 +65,6 @@ export const ShoppingListPage: React.FC<ShoppingListPageProps> = ({ className })
   const { data: categories = [] } = useCategories();
   const addMutation = useAddShoppingListItem();
   const toggleMutation = useToggleShoppingItemChecked();
-  const deleteMutation = useDeleteShoppingListItem();
   const deleteCheckedMutation = useDeleteCheckedItems();
   const moveToInventoryMutation = useMovePurchasedToInventory();
 
@@ -91,23 +89,6 @@ export const ShoppingListPage: React.FC<ShoppingListPageProps> = ({ className })
 
   const handleToggle = (id: string, checked: boolean) => {
     toggleMutation.mutate({ id, checked });
-  };
-
-  const handleDelete = async (id: string, name: string) => {
-    const confirmed = await new Promise<boolean>((resolve) => {
-      Dialog.confirm({
-        title: 'Xóa món',
-        content: `Xóa "${name}" khỏi danh sách mua?`,
-        confirmText: 'Xóa',
-        cancelText: 'Hủy',
-        onConfirm: () => resolve(true),
-        onCancel: () => resolve(false),
-      });
-    });
-
-    if (confirmed) {
-      deleteMutation.mutate(id);
-    }
   };
 
   const handleDeleteChecked = async () => {
@@ -215,7 +196,6 @@ export const ShoppingListPage: React.FC<ShoppingListPageProps> = ({ className })
                     emoji={categoryIconMap.get(item.category)}
                     checked={item.checked}
                     onCheckedChange={(checked) => handleToggle(item.id, checked)}
-                    onClick={() => handleDelete(item.id, item.name)}
                   />
                 ))}
               </div>
@@ -245,7 +225,6 @@ export const ShoppingListPage: React.FC<ShoppingListPageProps> = ({ className })
                     emoji={categoryIconMap.get(item.category)}
                     checked={item.checked}
                     onCheckedChange={(checked) => handleToggle(item.id, checked)}
-                    onClick={() => handleDelete(item.id, item.name)}
                   />
                 ))}
               </div>
