@@ -11,12 +11,33 @@ interface StorageLocationPickerProps extends Omit<React.HTMLAttributes<HTMLDivEl
   onChange?: (id: string) => void;
 }
 
+function resolveSelectedStorageValue(
+  value: string | undefined,
+  locations: StorageLocationConfig[]
+): string | undefined {
+  if (!value) return undefined;
+
+  const directNameMatch = locations.find((location) => location.name === value);
+  if (directNameMatch) return directNameMatch.name;
+
+  const idMatch = locations.find((location) => location.id === value);
+  if (idMatch) return idMatch.name;
+
+  const caseInsensitiveMatch = locations.find(
+    (location) => location.name.toLowerCase() === value.toLowerCase()
+  );
+  if (caseInsensitiveMatch) return caseInsensitiveMatch.name;
+
+  return value;
+}
+
 const StorageLocationPicker = React.forwardRef<HTMLDivElement, StorageLocationPickerProps>(
   ({ className, locations: propLocations, value, onChange, ...props }, ref) => {
     const { data: fetchedLocations = [] } = useStorageLocations();
     
     // Use provided locations or fetch from API
     const locations = propLocations || fetchedLocations;
+    const selectedValue = resolveSelectedStorageValue(value, locations);
 
     return (
       <div
@@ -33,9 +54,9 @@ const StorageLocationPicker = React.forwardRef<HTMLDivElement, StorageLocationPi
                 <span className="text-sm font-medium">{location.name}</span>
               </div>
             ),
-            value: location.id,
+            value: location.name,
           }))}
-          value={value ? [value] : []}
+          value={selectedValue ? [selectedValue] : []}
           onChange={(v) => {
             if (v.length > 0) {
               onChange?.(v[0]);

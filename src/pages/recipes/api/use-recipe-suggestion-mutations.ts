@@ -42,7 +42,7 @@ export function useAddMissingToShoppingList() {
       for (const ing of toAdd) {
         const input: CreateShoppingListItemInput = {
           name: ing.name,
-          category: 'other',
+          category: 'Other',
           quantity: ing.quantity ?? 1,
           unit: 'pieces',
           notes: `Added from recipe suggestion`,

@@ -31,15 +31,17 @@ function sortShoppingList(
   items: ShoppingListItemType[],
   categoryConfigs: CategoryConfig[],
 ): ShoppingListItemType[] {
-  // CategoryPicker stores cat.id (UUID), so key by id
-  const categoryOrder = new Map(categoryConfigs.map((c, i) => [c.id, i]));
+  const categoryOrder = new Map(categoryConfigs.map((c, i) => [c.name, i]));
+  const categoryNameById = new Map(categoryConfigs.map((c) => [c.id, c.name]));
 
   return [...items].sort((a, b) => {
     // Unchecked items first
     if (a.checked !== b.checked) return a.checked ? 1 : -1;
     // Then by category sort order
-    const aOrder = categoryOrder.get(a.category) ?? 999;
-    const bOrder = categoryOrder.get(b.category) ?? 999;
+    const aCategoryName = categoryNameById.get(a.category) ?? a.category;
+    const bCategoryName = categoryNameById.get(b.category) ?? b.category;
+    const aOrder = categoryOrder.get(aCategoryName) ?? 999;
+    const bOrder = categoryOrder.get(bCategoryName) ?? 999;
     if (aOrder !== bOrder) return aOrder - bOrder;
     // Then by creation date (newest first)
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
@@ -80,12 +82,18 @@ export const ShoppingListPage: React.FC<ShoppingListPageProps> = ({ className })
   const checkedItems = sortedItems.filter((i) => i.checked);
   const uncheckedGroups = groupByCategory(uncheckedItems);
 
-  // Build category lookup maps (keyed by cat.id since CategoryPicker stores UUID)
-  const categoryNameMap = new Map(categories.map((c) => [c.id, c.name]));
-  const categoryIconMap = new Map(categories.map((c) => [c.id, c.icon]));
+  const categoryNameMap = new Map(categories.map((c) => [c.name, c.name]));
+  const categoryNameFromIdMap = new Map(categories.map((c) => [c.id, c.name]));
+  const categoryIconMap = new Map(categories.map((c) => [c.name, c.icon]));
+  const categoryIconFromIdMap = new Map(categories.map((c) => [c.id, c.icon]));
 
-  /** Resolve category ID to display name */
-  const getCategoryName = (catId: string) => categoryNameMap.get(catId) || catId;
+  /** Resolve category legacy ID or current name to display name */
+  const getCategoryName = (rawCategory: string) =>
+    categoryNameMap.get(rawCategory) || categoryNameFromIdMap.get(rawCategory) || rawCategory;
+
+  /** Resolve category legacy ID or current name to emoji */
+  const getCategoryIcon = (rawCategory: string) =>
+    categoryIconMap.get(rawCategory) || categoryIconFromIdMap.get(rawCategory);
 
   const handleToggle = (id: string, checked: boolean) => {
     toggleMutation.mutate({ id, checked });
@@ -193,7 +201,7 @@ export const ShoppingListPage: React.FC<ShoppingListPageProps> = ({ className })
                     key={item.id}
                     name={item.name}
                     quantity={`${item.quantity} ${item.unit}`}
-                    emoji={categoryIconMap.get(item.category)}
+                    emoji={getCategoryIcon(item.category)}
                     checked={item.checked}
                     onCheckedChange={(checked) => handleToggle(item.id, checked)}
                   />
@@ -222,7 +230,7 @@ export const ShoppingListPage: React.FC<ShoppingListPageProps> = ({ className })
                     key={item.id}
                     name={item.name}
                     quantity={`${item.quantity} ${item.unit}`}
-                    emoji={categoryIconMap.get(item.category)}
+                    emoji={getCategoryIcon(item.category)}
                     checked={item.checked}
                     onCheckedChange={(checked) => handleToggle(item.id, checked)}
                   />

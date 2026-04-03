@@ -1,10 +1,8 @@
 import {
-  mockFoodItemsApi,
   supabaseFoodItemsApi,
   type IFoodItemsApi,
 } from '@/pages/inventory/api/food-items.api';
 import {
-  mockRecipesManagementApi,
   supabaseRecipesManagementApi,
   type IRecipesManagementApi,
 } from './recipes-management.api';
@@ -131,9 +129,4 @@ function createRecipeSuggestionsApi(
 export const supabaseRecipeSuggestionsApi = createRecipeSuggestionsApi(
   supabaseRecipesManagementApi,
   supabaseFoodItemsApi,
-);
-
-export const mockRecipeSuggestionsApi = createRecipeSuggestionsApi(
-  mockRecipesManagementApi,
-  mockFoodItemsApi,
 );

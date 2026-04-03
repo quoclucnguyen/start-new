@@ -32,8 +32,8 @@ function mapDbToFoodItem(row: DbFoodItem): FoodItem {
   return {
     id: row.id,
     name: row.name,
-    category: (row.category as FoodCategory) || 'other',
-    storage: (row.storage as StorageLocation) || 'pantry',
+    category: (row.category as FoodCategory) || 'Other',
+    storage: (row.storage as StorageLocation) || 'Pantry',
     expiryDate: row.expiration_date,
     quantity: Number(row.quantity),
     unit: (row.unit as QuantityUnit) || 'pieces',
@@ -213,107 +213,3 @@ export const supabaseFoodItemsApi: IFoodItemsApi = {
     }
   },
 };
-
-// ============================================================================
-// Mock Implementation (for development/testing)
-// ============================================================================
-
-// Storage key for localStorage
-const STORAGE_KEY = 'food-inventory-items';
-
-// Generate unique ID
-function generateId(): string {
-  return `${Date.now()}-${Math.random().toString(36).substring(2, 11)}`;
-}
-
-// Simulated network delay
-function delay(ms: number = 300): Promise<void> {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-// Get items from localStorage
-function getStoredItems(): FoodItem[] {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    return stored ? JSON.parse(stored) : [];
-  } catch {
-    return [];
-  }
-}
-
-// Save items to localStorage
-function saveItems(items: FoodItem[]): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-}
-
-/**
- * Mock implementation using localStorage (for development without Supabase)
- */
-/* eslint-disable @typescript-eslint/no-unused-vars */
-export const mockFoodItemsApi: IFoodItemsApi = {
-  async getAll(): Promise<FoodItem[]> {
-    await delay();
-    return getStoredItems();
-  },
-
-  async getById(id: string): Promise<FoodItem | null> {
-    await delay();
-    const items = getStoredItems();
-    return items.find(item => item.id === id) || null;
-  },
-
-  async create(input: CreateFoodItemInput, _userId: string): Promise<FoodItem> {
-    await delay();
-    const now = new Date().toISOString();
-    const newItem: FoodItem = {
-      ...input,
-      id: generateId(),
-      createdAt: now,
-      updatedAt: now,
-    };
-
-    const items = getStoredItems();
-    items.push(newItem);
-    saveItems(items);
-
-    return newItem;
-  },
-
-  async update(input: UpdateFoodItemInput): Promise<FoodItem> {
-    await delay();
-    const items = getStoredItems();
-    const index = items.findIndex(item => item.id === input.id);
-
-    if (index === -1) {
-      throw new Error(`Food item with id ${input.id} not found`);
-    }
-
-    const updatedItem: FoodItem = {
-      ...items[index],
-      ...input,
-      updatedAt: new Date().toISOString(),
-    };
-
-    items[index] = updatedItem;
-    saveItems(items);
-
-    return updatedItem;
-  },
-
-  async delete(id: string): Promise<void> {
-    await delay();
-    const items = getStoredItems();
-    const filteredItems = items.filter(item => item.id !== id);
-
-    if (filteredItems.length === items.length) {
-      throw new Error(`Food item with id ${id} not found`);
-    }
-
-    saveItems(filteredItems);
-  },
-};
-/* eslint-enable @typescript-eslint/no-unused-vars */
-
-// ============================================================================
-// Export active implementation
-// ============================================================================

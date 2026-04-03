@@ -5,7 +5,6 @@ export * from './types';
 // Inventory API (moved to pages/inventory/api)
 // ============================================================================
 export {
-  mockFoodItemsApi,
   supabaseFoodItemsApi,
   type IFoodItemsApi,
 } from '@/pages/inventory/api/food-items.api';
@@ -49,7 +48,6 @@ export {
 // Shopping API (moved to pages/shopping/api)
 // ============================================================================
 export {
-  mockShoppingListApi,
   supabaseShoppingListApi,
   type IShoppingListApi,
 } from '@/pages/shopping/api/shopping-list.api';
@@ -69,7 +67,6 @@ export {
 // Recipes API (moved to pages/recipes/api)
 // ============================================================================
 export {
-  mockRecipesManagementApi,
   supabaseRecipesManagementApi,
   normalizeIngredientName,
   type IRecipesManagementApi,
@@ -87,7 +84,6 @@ export {
 } from '@/pages/recipes/api/use-recipes-management-mutations';
 
 export {
-  mockRecipeSuggestionsApi,
   supabaseRecipeSuggestionsApi,
   type IRecipeSuggestionsApi,
 } from '@/pages/recipes/api/recipe-suggestions.api';

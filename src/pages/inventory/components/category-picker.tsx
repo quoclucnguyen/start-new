@@ -12,12 +12,33 @@ interface CategoryPickerProps {
   categories?: CategoryConfig[];
 }
 
+function resolveSelectedCategoryValue(
+  value: string | undefined,
+  categories: CategoryConfig[]
+): string | undefined {
+  if (!value) return undefined;
+
+  const directNameMatch = categories.find((cat) => cat.name === value);
+  if (directNameMatch) return directNameMatch.name;
+
+  const idMatch = categories.find((cat) => cat.id === value);
+  if (idMatch) return idMatch.name;
+
+  const caseInsensitiveMatch = categories.find(
+    (cat) => cat.name.toLowerCase() === value.toLowerCase()
+  );
+  if (caseInsensitiveMatch) return caseInsensitiveMatch.name;
+
+  return value;
+}
+
 const CategoryPicker = React.forwardRef<HTMLDivElement, CategoryPickerProps>(
   ({ value, onChange, className, categories: propCategories }, ref) => {
     const { data: fetchedCategories = [] } = useCategories();
     
     // Use provided categories or fetch from API
     const categories = propCategories || fetchedCategories;
+    const selectedValue = resolveSelectedCategoryValue(value, categories);
 
     const handleChange = (values: string[]) => {
       if (values.length > 0) {
@@ -29,10 +50,10 @@ const CategoryPicker = React.forwardRef<HTMLDivElement, CategoryPickerProps>(
       <div ref={ref} className={cn('w-full', className)}>
         <div className="overflow-x-auto -mx-4 px-4 scrollbar-hide">
           <Selector
-            value={value ? [value] : []}
+            value={selectedValue ? [selectedValue] : []}
             onChange={handleChange}
             options={categories.map((cat) => ({
-              value: cat.id,
+              value: cat.name,
               label: (
                 <div className="flex items-center gap-1.5">
                   <span>{cat.icon}</span>

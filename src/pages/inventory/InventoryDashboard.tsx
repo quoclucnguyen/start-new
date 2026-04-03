@@ -61,6 +61,7 @@ export const InventoryDashboard: React.FC = () => {
   // Create a lookup map for categories by id
   const categoryMap = React.useMemo(() => {
     return categoriesData.reduce((acc, cat) => {
+      acc[cat.name] = cat;
       acc[cat.id] = cat;
       return acc;
     }, {} as Record<string, CategoryConfig>);
@@ -69,6 +70,7 @@ export const InventoryDashboard: React.FC = () => {
   // Create a lookup map for storage locations by id
   const storageMap = React.useMemo(() => {
     return storageLocationsData.reduce((acc, loc) => {
+      acc[loc.name] = loc;
       acc[loc.id] = loc;
       return acc;
     }, {} as Record<string, StorageLocationConfig>);
@@ -80,7 +82,7 @@ export const InventoryDashboard: React.FC = () => {
     return [
       { id: 'all', label: 'Tất cả' },
       ...filterableCategories.map((cat) => ({
-        id: cat.id,
+        id: cat.name,
         label: cat.name,
         icon: <span>{cat.icon}</span>,
       })),
@@ -93,7 +95,7 @@ export const InventoryDashboard: React.FC = () => {
     return [
       { id: 'all', label: 'Tất cả', icon: <Package size={16} /> },
       ...filterableLocations.map((loc) => ({
-        id: loc.id,
+        id: loc.name,
         label: loc.name,
         icon: <span>{loc.icon}</span>,
       })),
@@ -103,6 +105,14 @@ export const InventoryDashboard: React.FC = () => {
   // Filter and sort items
   const filteredItems = React.useMemo(() => {
     let result = [...items];
+    const selectedCategory =
+      filters.category === 'all'
+        ? 'all'
+        : (categoryMap[filters.category]?.name ?? filters.category);
+    const selectedStorage =
+      filters.storage === 'all'
+        ? 'all'
+        : (storageMap[filters.storage]?.name ?? filters.storage);
 
     // Search filter
     if (filters.search) {
@@ -113,13 +123,17 @@ export const InventoryDashboard: React.FC = () => {
     }
 
     // Category filter
-    if (filters.category !== 'all') {
-      result = result.filter((item) => item.category === filters.category);
+    if (selectedCategory !== 'all') {
+      result = result.filter(
+        (item) => (categoryMap[item.category]?.name ?? item.category) === selectedCategory
+      );
     }
 
     // Storage filter
-    if (filters.storage !== 'all') {
-      result = result.filter((item) => item.storage === filters.storage);
+    if (selectedStorage !== 'all') {
+      result = result.filter(
+        (item) => (storageMap[item.storage]?.name ?? item.storage) === selectedStorage
+      );
     }
 
     // Sort
@@ -139,7 +153,7 @@ export const InventoryDashboard: React.FC = () => {
     });
 
     return result;
-  }, [items, filters]);
+  }, [items, filters, categoryMap, storageMap]);
 
   // Expiring soon items (expiring or soon status)
   const expiringSoonItems = React.useMemo(() => {

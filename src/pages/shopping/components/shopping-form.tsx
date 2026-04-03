@@ -27,7 +27,7 @@ interface ShoppingFormProps {
 
 const defaultValues: ShoppingFormValues = {
   name: '',
-  category: 'other',
+  category: 'Other',
   quantity: 1,
   unit: 'pieces',
   notes: '',
@@ -41,7 +41,7 @@ const ShoppingForm = React.forwardRef<ShoppingFormRef, ShoppingFormProps>(
       if (initialValues) {
         return {
           name: initialValues.name || '',
-          category: initialValues.category || 'other',
+          category: initialValues.category || 'Other',
           quantity: initialValues.quantity || 1,
           unit: initialValues.unit || 'pieces',
           notes: initialValues.notes || '',

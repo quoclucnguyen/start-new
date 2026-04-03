@@ -34,8 +34,8 @@ interface FoodFormProps {
 
 const defaultValues: FoodFormValues = {
   name: '',
-  category: 'other',
-  storage: 'fridge',
+  category: 'Other',
+  storage: 'Fridge',
   expiryDate: null,
   noExpiry: false,
   quantity: 1,
@@ -52,8 +52,8 @@ const FoodForm = React.forwardRef<FoodFormRef, FoodFormProps>(
       if (initialValues) {
         return {
           name: initialValues.name || '',
-          category: initialValues.category || 'other',
-          storage: initialValues.storage || 'fridge',
+          category: initialValues.category || 'Other',
+          storage: initialValues.storage || 'Fridge',
           expiryDate: initialValues.expiryDate ? new Date(initialValues.expiryDate) : null,
           noExpiry: !initialValues.expiryDate,
           quantity: initialValues.quantity || 1,

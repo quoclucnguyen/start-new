@@ -256,7 +256,7 @@ export function useMovePurchasedToInventory() {
           category: shoppingItem.category,
           quantity: shoppingItem.quantity,
           unit: shoppingItem.unit,
-          storage: 'pantry',
+          storage: 'Pantry',
           expiryDate: null,
           purchaseDate: new Date().toISOString().slice(0, 10),
           notes: shoppingItem.notes,
