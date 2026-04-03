@@ -61,7 +61,7 @@ export function useUpdateMenuItem() {
   return useMutation({
     mutationFn: (input: UpdateMenuItemInput) => {
       if (!userId) throw new Error('User not authenticated');
-      return supabaseMenuItemsApi.update(input, userId);
+      return supabaseMenuItemsApi.update(input);
     },
     onSettled: () => {
       if (userId) {
@@ -79,7 +79,7 @@ export function useDeleteMenuItem() {
   return useMutation({
     mutationFn: (id: string) => {
       if (!userId) throw new Error('User not authenticated');
-      return supabaseMenuItemsApi.delete(id, userId);
+      return supabaseMenuItemsApi.delete(id);
     },
     onSettled: () => {
       if (userId) {

@@ -18,7 +18,7 @@ export function useFoodItems() {
       if (!userId) {
         throw new Error('User not authenticated');
       }
-      return supabaseFoodItemsApi.getAll(userId);
+      return supabaseFoodItemsApi.getAll();
     },
     enabled: !!userId,
   });
@@ -37,7 +37,7 @@ export function useFoodItem(id: string | null) {
       if (!userId) {
         throw new Error('User not authenticated');
       }
-      return id ? supabaseFoodItemsApi.getById(id, userId) : Promise.resolve(null);
+      return id ? supabaseFoodItemsApi.getById(id) : Promise.resolve(null);
     },
     enabled: !!id && !!userId,
   });

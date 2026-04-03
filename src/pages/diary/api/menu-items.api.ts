@@ -11,11 +11,11 @@ import type {
 // ============================================================================
 
 export interface IMenuItemsApi {
-  getByVenue(venueId: string, userId: string): Promise<MenuItem[]>;
-  getAll(userId: string): Promise<MenuItem[]>;
+  getByVenue(venueId: string): Promise<MenuItem[]>;
+  getAll(): Promise<MenuItem[]>;
   create(input: CreateMenuItemInput, userId: string): Promise<MenuItem>;
-  update(input: UpdateMenuItemInput, userId: string): Promise<MenuItem>;
-  delete(id: string, userId: string): Promise<void>;
+  update(input: UpdateMenuItemInput): Promise<MenuItem>;
+  delete(id: string): Promise<void>;
 }
 
 // ============================================================================
@@ -76,13 +76,12 @@ function mapUpdateInputToDb(input: UpdateMenuItemInput): Partial<DbMenuItem> {
 // ============================================================================
 
 export const supabaseMenuItemsApi: IMenuItemsApi = {
-  async getByVenue(venueId: string, userId: string): Promise<MenuItem[]> {
+  async getByVenue(venueId: string): Promise<MenuItem[]> {
     const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from('menu_items')
       .select('*')
       .eq('venue_id', venueId)
-      .eq('user_id', userId)
       .eq('deleted', false)
       .order('name');
 
@@ -93,12 +92,11 @@ export const supabaseMenuItemsApi: IMenuItemsApi = {
     return (data as DbMenuItem[]).map(mapDbToMenuItem);
   },
 
-  async getAll(userId: string): Promise<MenuItem[]> {
+  async getAll(): Promise<MenuItem[]> {
     const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from('menu_items')
       .select('*')
-      .eq('user_id', userId)
       .eq('deleted', false)
       .order('name');
 
@@ -125,39 +123,50 @@ export const supabaseMenuItemsApi: IMenuItemsApi = {
     return mapDbToMenuItem(data as DbMenuItem);
   },
 
-  async update(input: UpdateMenuItemInput, userId: string): Promise<MenuItem> {
+  async update(input: UpdateMenuItemInput): Promise<MenuItem> {
     const supabase = getSupabaseClient();
     const dbRow = mapUpdateInputToDb(input);
     const { data, error } = await supabase
       .from('menu_items')
       .update(dbRow)
       .eq('id', input.id)
-      .eq('user_id', userId)
       .eq('deleted', false)
-      .select()
+      .select('*')
       .single();
 
     if (error) {
+      if (error.code === 'PGRST116') {
+        throw new Error(`Menu item with id ${input.id} not found or access denied`);
+      }
       console.error('Supabase menu_items update error:', error);
       throw new Error(error.message);
     }
     return mapDbToMenuItem(data as DbMenuItem);
   },
 
-  async delete(id: string, userId: string): Promise<void> {
+  async delete(id: string): Promise<void> {
     const supabase = getSupabaseClient();
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from('menu_items')
       .update({
         deleted: true,
         updated_at: new Date().toISOString(),
       })
       .eq('id', id)
-      .eq('user_id', userId);
+      .eq('deleted', false)
+      .select('id')
+      .single();
 
     if (error) {
+      if (error.code === 'PGRST116') {
+        throw new Error(`Menu item with id ${id} not found or access denied`);
+      }
       console.error('Supabase menu_items delete error:', error);
       throw new Error(error.message);
+    }
+
+    if (!data) {
+      throw new Error(`Menu item with id ${id} not found or access denied`);
     }
   },
 };
@@ -200,7 +209,8 @@ export const mockMenuItemsApi: IMenuItemsApi = {
     return getStoredMenuItems();
   },
 
-  async create(input: CreateMenuItemInput): Promise<MenuItem> {
+  async create(input: CreateMenuItemInput, _userId: string): Promise<MenuItem> {
+    void _userId;
     await delay();
     const item: MenuItem = {
       id: generateId(),

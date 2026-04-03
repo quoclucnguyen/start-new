@@ -16,3 +16,22 @@ export function getSupabaseClient(): SupabaseClient {
   }
   return cachedClient;
 }
+
+export async function getSupabaseUserIdOrThrow(
+  client: SupabaseClient = getSupabaseClient(),
+): Promise<string> {
+  const {
+    data: { user },
+    error,
+  } = await client.auth.getUser();
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  if (!user) {
+    throw new Error('User not authenticated');
+  }
+
+  return user.id;
+}

@@ -19,7 +19,7 @@ export function useRecipeSuggestions(filters: RecipeSuggestionFilters = {}) {
     queryKey: [...RECIPE_SUGGESTIONS_QUERY_KEY, userId, filters],
     queryFn: async () => {
       if (!userId) throw new Error('User not authenticated');
-      return supabaseRecipeSuggestionsApi.list(userId, filters);
+      return supabaseRecipeSuggestionsApi.list(filters);
     },
     enabled: !!userId,
     staleTime: 2 * 60 * 1000, // 2 minutes
@@ -38,7 +38,7 @@ export function useRecipeSuggestionDetail(recipeId: string | null) {
     queryFn: async () => {
       if (!userId) throw new Error('User not authenticated');
       if (!recipeId) return null;
-      return supabaseRecipeSuggestionsApi.getRecipeDetail(recipeId, userId);
+      return supabaseRecipeSuggestionsApi.getRecipeDetail(recipeId);
     },
     enabled: !!recipeId && !!userId,
     staleTime: 5 * 60 * 1000,

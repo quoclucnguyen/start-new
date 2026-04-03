@@ -14,11 +14,11 @@ import type {
  * This allows swapping between mock and real implementations.
  */
 export interface IFoodItemsApi {
-  getAll(userId: string): Promise<FoodItem[]>;
-  getById(id: string, userId: string): Promise<FoodItem | null>;
+  getAll(): Promise<FoodItem[]>;
+  getById(id: string): Promise<FoodItem | null>;
   create(input: CreateFoodItemInput, userId: string): Promise<FoodItem>;
-  update(input: UpdateFoodItemInput, userId: string): Promise<FoodItem>;
-  delete(id: string, userId: string): Promise<void>;
+  update(input: UpdateFoodItemInput): Promise<FoodItem>;
+  delete(id: string): Promise<void>;
 }
 
 // ============================================================================
@@ -98,13 +98,12 @@ function mapUpdateInputToDb(
  * Supabase implementation of the food items API
  */
 export const supabaseFoodItemsApi: IFoodItemsApi = {
-  async getAll(userId: string): Promise<FoodItem[]> {
+  async getAll(): Promise<FoodItem[]> {
     const supabase = getSupabaseClient();
 
     const { data, error } = await supabase
       .from('food_items')
       .select('*')
-      .eq('user_id', userId)
       .eq('deleted', false)
       .order('expiration_date', { ascending: true, nullsFirst: false });
 
@@ -116,14 +115,13 @@ export const supabaseFoodItemsApi: IFoodItemsApi = {
     return (data as DbFoodItem[]).map(mapDbToFoodItem);
   },
 
-  async getById(id: string, userId: string): Promise<FoodItem | null> {
+  async getById(id: string): Promise<FoodItem | null> {
     const supabase = getSupabaseClient();
 
     const { data, error } = await supabase
       .from('food_items')
       .select('*')
       .eq('id', id)
-      .eq('user_id', userId)
       .eq('deleted', false)
       .single();
 
@@ -158,7 +156,7 @@ export const supabaseFoodItemsApi: IFoodItemsApi = {
     return mapDbToFoodItem(data as DbFoodItem);
   },
 
-  async update(input: UpdateFoodItemInput, userId: string): Promise<FoodItem> {
+  async update(input: UpdateFoodItemInput): Promise<FoodItem> {
     const supabase = getSupabaseClient();
 
     const dbRow = mapUpdateInputToDb(input);
@@ -167,12 +165,14 @@ export const supabaseFoodItemsApi: IFoodItemsApi = {
       .from('food_items')
       .update(dbRow)
       .eq('id', input.id)
-      .eq('user_id', userId)
       .eq('deleted', false)
-      .select()
+      .select('*')
       .single();
 
     if (error) {
+      if (error.code === 'PGRST116') {
+        throw new Error(`Food item with id ${input.id} not found or access denied`);
+      }
       console.error('Supabase update error:', error);
       throw new Error(error.message);
     }
@@ -184,11 +184,11 @@ export const supabaseFoodItemsApi: IFoodItemsApi = {
     return mapDbToFoodItem(data as DbFoodItem);
   },
 
-  async delete(id: string, userId: string): Promise<void> {
+  async delete(id: string): Promise<void> {
     const supabase = getSupabaseClient();
 
     // Soft delete: set deleted = true instead of actually deleting
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from('food_items')
       .update({
         deleted: true,
@@ -196,11 +196,20 @@ export const supabaseFoodItemsApi: IFoodItemsApi = {
         last_modified: new Date().toISOString(),
       })
       .eq('id', id)
-      .eq('user_id', userId);
+      .eq('deleted', false)
+      .select('id')
+      .single();
 
     if (error) {
+      if (error.code === 'PGRST116') {
+        throw new Error(`Food item with id ${id} not found or access denied`);
+      }
       console.error('Supabase delete error:', error);
       throw new Error(error.message);
+    }
+
+    if (!data) {
+      throw new Error(`Food item with id ${id} not found or access denied`);
     }
   },
 };
@@ -242,12 +251,12 @@ function saveItems(items: FoodItem[]): void {
  */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 export const mockFoodItemsApi: IFoodItemsApi = {
-  async getAll(_userId: string): Promise<FoodItem[]> {
+  async getAll(): Promise<FoodItem[]> {
     await delay();
     return getStoredItems();
   },
 
-  async getById(id: string, _userId: string): Promise<FoodItem | null> {
+  async getById(id: string): Promise<FoodItem | null> {
     await delay();
     const items = getStoredItems();
     return items.find(item => item.id === id) || null;
@@ -270,7 +279,7 @@ export const mockFoodItemsApi: IFoodItemsApi = {
     return newItem;
   },
 
-  async update(input: UpdateFoodItemInput, _userId: string): Promise<FoodItem> {
+  async update(input: UpdateFoodItemInput): Promise<FoodItem> {
     await delay();
     const items = getStoredItems();
     const index = items.findIndex(item => item.id === input.id);
@@ -291,7 +300,7 @@ export const mockFoodItemsApi: IFoodItemsApi = {
     return updatedItem;
   },
 
-  async delete(id: string, _userId: string): Promise<void> {
+  async delete(id: string): Promise<void> {
     await delay();
     const items = getStoredItems();
     const filteredItems = items.filter(item => item.id !== id);

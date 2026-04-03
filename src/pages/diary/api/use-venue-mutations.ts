@@ -60,7 +60,7 @@ export function useUpdateVenue() {
   return useMutation({
     mutationFn: (input: UpdateVenueInput) => {
       if (!userId) throw new Error('User not authenticated');
-      return supabaseVenuesApi.update(input, userId);
+      return supabaseVenuesApi.update(input);
     },
     onMutate: async (updatedInput) => {
       if (!userId) return;
@@ -98,7 +98,7 @@ export function useDeleteVenue() {
   return useMutation({
     mutationFn: (id: string) => {
       if (!userId) throw new Error('User not authenticated');
-      return supabaseVenuesApi.delete(id, userId);
+      return supabaseVenuesApi.delete(id);
     },
     onMutate: async (deletedId) => {
       if (!userId) return;

@@ -18,7 +18,7 @@ export function useShoppingList() {
       if (!userId) {
         throw new Error('User not authenticated');
       }
-      return supabaseShoppingListApi.getAll(userId);
+      return supabaseShoppingListApi.getAll();
     },
     enabled: !!userId,
     staleTime: 5 * 60 * 1000, // 5 minutes
@@ -38,7 +38,7 @@ export function useShoppingListItem(id: string | null) {
       if (!userId) {
         throw new Error('User not authenticated');
       }
-      return id ? supabaseShoppingListApi.getById(id, userId) : Promise.resolve(null);
+      return id ? supabaseShoppingListApi.getById(id) : Promise.resolve(null);
     },
     enabled: !!id && !!userId,
     staleTime: 5 * 60 * 1000,

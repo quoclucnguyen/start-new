@@ -70,7 +70,7 @@ export function useUpdateShoppingListItem() {
   return useMutation({
     mutationFn: (input: UpdateShoppingListItemInput) => {
       if (!userId) throw new Error('User not authenticated');
-      return supabaseShoppingListApi.update(input, userId);
+      return supabaseShoppingListApi.update(input);
     },
     onMutate: async (updatedItem) => {
       if (!userId) return;
@@ -113,7 +113,7 @@ export function useToggleShoppingItemChecked() {
   return useMutation({
     mutationFn: ({ id, checked }: { id: string; checked: boolean }) => {
       if (!userId) throw new Error('User not authenticated');
-      return supabaseShoppingListApi.update({ id, checked }, userId);
+      return supabaseShoppingListApi.update({ id, checked });
     },
     onMutate: async ({ id, checked }) => {
       if (!userId) return;
@@ -161,7 +161,7 @@ export function useDeleteShoppingListItem() {
   return useMutation({
     mutationFn: (id: string) => {
       if (!userId) throw new Error('User not authenticated');
-      return supabaseShoppingListApi.delete(id, userId);
+      return supabaseShoppingListApi.delete(id);
     },
     onMutate: async (deletedId) => {
       if (!userId) return;
@@ -200,7 +200,7 @@ export function useDeleteCheckedItems() {
   return useMutation({
     mutationFn: () => {
       if (!userId) throw new Error('User not authenticated');
-      return supabaseShoppingListApi.deleteChecked(userId);
+      return supabaseShoppingListApi.deleteChecked();
     },
     onMutate: async () => {
       if (!userId) return;
@@ -266,7 +266,7 @@ export function useMovePurchasedToInventory() {
         createdItems.push(created);
 
         // Soft-delete from shopping list
-        await supabaseShoppingListApi.delete(shoppingItem.id, userId);
+        await supabaseShoppingListApi.delete(shoppingItem.id);
       }
 
       return createdItems;

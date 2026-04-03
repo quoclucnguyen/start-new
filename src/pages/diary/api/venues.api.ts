@@ -12,12 +12,12 @@ import type {
 // ============================================================================
 
 export interface IVenuesApi {
-  getAll(userId: string): Promise<Venue[]>;
-  getById(id: string, userId: string): Promise<Venue | null>;
+  getAll(): Promise<Venue[]>;
+  getById(id: string): Promise<Venue | null>;
   create(input: CreateVenueInput, userId: string): Promise<Venue>;
-  update(input: UpdateVenueInput, userId: string): Promise<Venue>;
-  delete(id: string, userId: string): Promise<void>;
-  search(query: string, userId: string): Promise<Venue[]>;
+  update(input: UpdateVenueInput): Promise<Venue>;
+  delete(id: string): Promise<void>;
+  search(query: string): Promise<Venue[]>;
 }
 
 // ============================================================================
@@ -80,12 +80,11 @@ function mapUpdateInputToDb(input: UpdateVenueInput): Partial<DbVenue> {
 // ============================================================================
 
 export const supabaseVenuesApi: IVenuesApi = {
-  async getAll(userId: string): Promise<Venue[]> {
+  async getAll(): Promise<Venue[]> {
     const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from('venues')
       .select('*')
-      .eq('user_id', userId)
       .eq('deleted', false)
       .order('updated_at', { ascending: false });
 
@@ -96,13 +95,12 @@ export const supabaseVenuesApi: IVenuesApi = {
     return (data as DbVenue[]).map(mapDbToVenue);
   },
 
-  async getById(id: string, userId: string): Promise<Venue | null> {
+  async getById(id: string): Promise<Venue | null> {
     const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from('venues')
       .select('*')
       .eq('id', id)
-      .eq('user_id', userId)
       .eq('deleted', false)
       .single();
 
@@ -130,28 +128,30 @@ export const supabaseVenuesApi: IVenuesApi = {
     return mapDbToVenue(data as DbVenue);
   },
 
-  async update(input: UpdateVenueInput, userId: string): Promise<Venue> {
+  async update(input: UpdateVenueInput): Promise<Venue> {
     const supabase = getSupabaseClient();
     const dbRow = mapUpdateInputToDb(input);
     const { data, error } = await supabase
       .from('venues')
       .update(dbRow)
       .eq('id', input.id)
-      .eq('user_id', userId)
       .eq('deleted', false)
-      .select()
+      .select('*')
       .single();
 
     if (error) {
+      if (error.code === 'PGRST116') {
+        throw new Error(`Venue with id ${input.id} not found or access denied`);
+      }
       console.error('Supabase venues update error:', error);
       throw new Error(error.message);
     }
     return mapDbToVenue(data as DbVenue);
   },
 
-  async delete(id: string, userId: string): Promise<void> {
+  async delete(id: string): Promise<void> {
     const supabase = getSupabaseClient();
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from('venues')
       .update({
         deleted: true,
@@ -159,20 +159,28 @@ export const supabaseVenuesApi: IVenuesApi = {
         last_modified: new Date().toISOString(),
       })
       .eq('id', id)
-      .eq('user_id', userId);
+      .eq('deleted', false)
+      .select('id')
+      .single();
 
     if (error) {
+      if (error.code === 'PGRST116') {
+        throw new Error(`Venue with id ${id} not found or access denied`);
+      }
       console.error('Supabase venues delete error:', error);
       throw new Error(error.message);
     }
+
+    if (!data) {
+      throw new Error(`Venue with id ${id} not found or access denied`);
+    }
   },
 
-  async search(query: string, userId: string): Promise<Venue[]> {
+  async search(query: string): Promise<Venue[]> {
     const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from('venues')
       .select('*')
-      .eq('user_id', userId)
       .eq('deleted', false)
       .ilike('name', `%${query}%`)
       .order('name')
@@ -224,7 +232,8 @@ export const mockVenuesApi: IVenuesApi = {
     return getStoredVenues().find(v => v.id === id) ?? null;
   },
 
-  async create(input: CreateVenueInput): Promise<Venue> {
+  async create(input: CreateVenueInput, _userId: string): Promise<Venue> {
+    void _userId;
     await delay();
     const venue: Venue = {
       id: generateId(),

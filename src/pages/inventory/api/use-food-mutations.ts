@@ -74,7 +74,7 @@ export function useUpdateFoodItem() {
       if (!userId) {
         throw new Error('User not authenticated');
       }
-      return supabaseFoodItemsApi.update(input, userId);
+      return supabaseFoodItemsApi.update(input);
     },
     onMutate: async (updatedItem) => {
       if (!userId) return;
@@ -123,7 +123,7 @@ export function useDeleteFoodItem() {
       if (!userId) {
         throw new Error('User not authenticated');
       }
-      return supabaseFoodItemsApi.delete(id, userId);
+      return supabaseFoodItemsApi.delete(id);
     },
     onMutate: async (deletedId) => {
       if (!userId) return;

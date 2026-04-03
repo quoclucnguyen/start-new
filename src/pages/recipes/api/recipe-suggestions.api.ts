@@ -19,8 +19,8 @@ import type {
 } from '@/api/types';
 
 export interface IRecipeSuggestionsApi {
-  list(userId: string, filters?: RecipeSuggestionFilters): Promise<RecipeSuggestionsResult>;
-  getRecipeDetail(recipeId: string, userId: string): Promise<RecipeDetail | null>;
+  list(filters?: RecipeSuggestionFilters): Promise<RecipeSuggestionsResult>;
+  getRecipeDetail(recipeId: string): Promise<RecipeDetail | null>;
 }
 
 function compareInventoryByExpiryPriority(a: FoodItem, b: FoodItem): number {
@@ -104,13 +104,10 @@ function createRecipeSuggestionsApi(
   inventoryApi: Pick<IFoodItemsApi, 'getAll'>,
 ): IRecipeSuggestionsApi {
   return {
-    async list(
-      userId: string,
-      filters: RecipeSuggestionFilters = {},
-    ): Promise<RecipeSuggestionsResult> {
+    async list(filters: RecipeSuggestionFilters = {}): Promise<RecipeSuggestionsResult> {
       const [recipes, inventory] = await Promise.all([
         fetchAllRecipeDetails(recipesApi),
-        inventoryApi.getAll(userId),
+        inventoryApi.getAll(),
       ]);
 
       const sortedInventory = sortInventoryForSuggestions(inventory);
@@ -125,8 +122,7 @@ function createRecipeSuggestionsApi(
       };
     },
 
-    async getRecipeDetail(recipeId: string, userId: string): Promise<RecipeDetail | null> {
-      void userId;
+    async getRecipeDetail(recipeId: string): Promise<RecipeDetail | null> {
       return recipesApi.getById(recipeId);
     },
   };

@@ -64,7 +64,7 @@ export function useUpdateMealPlan() {
   return useMutation({
     mutationFn: (input: UpdateMealPlanInput) => {
       if (!userId) throw new Error('User not authenticated');
-      return supabaseMealPlansApi.update(input, userId);
+      return supabaseMealPlansApi.update(input);
     },
     onMutate: async (updatedInput) => {
       if (!userId) return;
@@ -103,7 +103,7 @@ export function useDeleteMealPlan() {
   return useMutation({
     mutationFn: (id: string) => {
       if (!userId) throw new Error('User not authenticated');
-      return supabaseMealPlansApi.delete(id, userId);
+      return supabaseMealPlansApi.delete(id);
     },
     onMutate: async (deletedId) => {
       if (!userId) return;

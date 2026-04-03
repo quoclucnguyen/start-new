@@ -1,16 +1,19 @@
-import * as React from 'react';
-import { Input, TextArea, Toast, Dialog } from 'antd-mobile';
-import { CalendarDays, Plus, X } from 'lucide-react';
-import { BottomSheet, FixedBottomAction } from '@/components/shared';
-import { RecipePicker } from './recipe-picker';
+import * as React from "react";
+import { Input, TextArea, Toast, Dialog } from "antd-mobile";
+import { CalendarDays, Plus, X } from "lucide-react";
+import { BottomSheet, FixedBottomAction } from "@/components/shared";
+import { RecipePicker } from "./recipe-picker";
 import {
   useAddMealPlan,
   useUpdateMealPlan,
   useDeleteMealPlan,
   useMealPlans,
-} from '@/pages/diary/api';
-import type { MealPlan, CreateMealPlanItemInput } from '@/pages/diary/api/types';
-import type { Recipe } from '@/api/types';
+} from "@/pages/diary/api";
+import type {
+  MealPlan,
+  CreateMealPlanItemInput,
+} from "@/pages/diary/api/types";
+import type { Recipe } from "@/api/types";
 
 interface ItemDraft {
   key: string;
@@ -28,14 +31,14 @@ interface MealPlanFormProps {
   editingPlanId?: string | null;
 }
 
-const DEFAULT_MEAL_TITLE_SUGGESTIONS = ['Bữa sáng', 'Bữa trưa', 'Bữa tối'];
+const DEFAULT_MEAL_TITLE_SUGGESTIONS = ["Bữa sáng", "Bữa trưa", "Bữa tối"];
 
 const normalizeForSearch = (value: string): string =>
   value
     .trim()
     .toLowerCase()
-    .normalize('NFD')
-    .replace(/[\u0300-\u036f]/g, '');
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
 
 export const MealPlanForm: React.FC<MealPlanFormProps> = ({
   visible,
@@ -52,8 +55,8 @@ export const MealPlanForm: React.FC<MealPlanFormProps> = ({
     ? allPlans?.find((p) => p.id === editingPlanId)
     : undefined;
 
-  const [title, setTitle] = React.useState('');
-  const [notes, setNotes] = React.useState('');
+  const [title, setTitle] = React.useState("");
+  const [notes, setNotes] = React.useState("");
   const [date, setDate] = React.useState(plannedDate);
   const [items, setItems] = React.useState<ItemDraft[]>([]);
   const [isTitleFocused, setIsTitleFocused] = React.useState(false);
@@ -139,7 +142,7 @@ export const MealPlanForm: React.FC<MealPlanFormProps> = ({
   React.useEffect(() => {
     if (editingPlan) {
       setTitle(editingPlan.title);
-      setNotes(editingPlan.notes ?? '');
+      setNotes(editingPlan.notes ?? "");
       setDate(editingPlan.plannedDate);
       setItems(
         editingPlan.items.map((it) => ({
@@ -155,8 +158,8 @@ export const MealPlanForm: React.FC<MealPlanFormProps> = ({
   // Reset form when opening for new plan
   React.useEffect(() => {
     if (visible && !editingPlanId) {
-      setTitle('');
-      setNotes('');
+      setTitle("");
+      setNotes("");
       setDate(plannedDate);
       setItems([]);
       setIsTitleFocused(false);
@@ -164,7 +167,7 @@ export const MealPlanForm: React.FC<MealPlanFormProps> = ({
   }, [visible, editingPlanId, plannedDate]);
 
   const addItem = () => {
-    setItems((prev) => [...prev, { key: `new-${Date.now()}`, title: '' }]);
+    setItems((prev) => [...prev, { key: `new-${Date.now()}`, title: "" }]);
   };
 
   const removeItem = (key: string) => {
@@ -177,7 +180,11 @@ export const MealPlanForm: React.FC<MealPlanFormProps> = ({
     );
   };
 
-  const handleRecipeChange = (key: string, recipeId: string | undefined, recipe: Recipe | undefined) => {
+  const handleRecipeChange = (
+    key: string,
+    recipeId: string | undefined,
+    recipe: Recipe | undefined,
+  ) => {
     updateItem(key, { recipeId });
     // Auto-fill item title from recipe if empty
     const item = items.find((it) => it.key === key);
@@ -189,7 +196,7 @@ export const MealPlanForm: React.FC<MealPlanFormProps> = ({
   const handleSave = async () => {
     const trimmedTitle = title.trim();
     if (!trimmedTitle) {
-      Toast.show({ content: 'Vui lòng nhập tên bữa ăn', icon: 'fail' });
+      Toast.show({ content: "Vui lòng nhập tên bữa ăn", icon: "fail" });
       return;
     }
 
@@ -212,7 +219,7 @@ export const MealPlanForm: React.FC<MealPlanFormProps> = ({
         },
         {
           onSuccess: () => {
-            Toast.show({ content: 'Đã cập nhật', icon: 'success' });
+            Toast.show({ content: "Đã cập nhật", icon: "success" });
             onClose();
           },
         },
@@ -227,7 +234,7 @@ export const MealPlanForm: React.FC<MealPlanFormProps> = ({
         },
         {
           onSuccess: () => {
-            Toast.show({ content: 'Đã thêm kế hoạch', icon: 'success' });
+            Toast.show({ content: "Đã thêm kế hoạch", icon: "success" });
             onClose();
           },
         },
@@ -238,13 +245,13 @@ export const MealPlanForm: React.FC<MealPlanFormProps> = ({
   const handleDelete = () => {
     if (!editingPlan) return;
     Dialog.confirm({
-      content: 'Xoá kế hoạch này?',
-      confirmText: 'Xoá',
-      cancelText: 'Huỷ',
+      content: "Xoá kế hoạch này?",
+      confirmText: "Xoá",
+      cancelText: "Huỷ",
       onConfirm: () => {
         deleteMutation.mutate(editingPlan.id, {
           onSuccess: () => {
-            Toast.show({ content: 'Đã xoá', icon: 'success' });
+            Toast.show({ content: "Đã xoá", icon: "success" });
             onClose();
           },
         });
@@ -253,12 +260,12 @@ export const MealPlanForm: React.FC<MealPlanFormProps> = ({
   };
 
   const dateLabel = (() => {
-    const d = new Date(date + 'T00:00:00');
-    return d.toLocaleDateString('vi-VN', {
-      weekday: 'short',
-      day: '2-digit',
-      month: '2-digit',
-      year: 'numeric',
+    const d = new Date(date + "T00:00:00");
+    return d.toLocaleDateString("vi-VN", {
+      weekday: "short",
+      day: "2-digit",
+      month: "2-digit",
+      year: "numeric",
     });
   })();
 
@@ -268,7 +275,7 @@ export const MealPlanForm: React.FC<MealPlanFormProps> = ({
     <BottomSheet
       visible={visible}
       onClose={onClose}
-      title={editingPlan ? 'Sửa kế hoạch' : 'Thêm kế hoạch'}
+      title={editingPlan ? "Sửa kế hoạch" : "Thêm kế hoạch"}
       height="80vh"
     >
       <div className="flex flex-col gap-4 px-4 pb-24">
@@ -290,7 +297,7 @@ export const MealPlanForm: React.FC<MealPlanFormProps> = ({
               onChange={setTitle}
               onFocus={handleTitleFocus}
               onBlur={handleTitleBlur}
-              className="!rounded-lg !border-border/60 !bg-secondary/40"
+              className="rounded-lg! border-border/60! bg-secondary/40!"
             />
 
             {isTitleFocused && filteredMealTitleSuggestions.length > 0 && (
@@ -346,7 +353,7 @@ export const MealPlanForm: React.FC<MealPlanFormProps> = ({
                     placeholder="Tên món..."
                     value={item.title}
                     onChange={(val) => updateItem(item.key, { title: val })}
-                    className="flex-1 !rounded-lg !border-border/60 !bg-background"
+                    className="flex-1 rounded-lg! border-border/60! bg-background!"
                   />
                   <button
                     type="button"
@@ -358,7 +365,9 @@ export const MealPlanForm: React.FC<MealPlanFormProps> = ({
                 </div>
                 <RecipePicker
                   value={item.recipeId}
-                  onChange={(rid, recipe) => handleRecipeChange(item.key, rid, recipe)}
+                  onChange={(rid, recipe) =>
+                    handleRecipeChange(item.key, rid, recipe)
+                  }
                 />
               </div>
             ))}
@@ -375,7 +384,7 @@ export const MealPlanForm: React.FC<MealPlanFormProps> = ({
             value={notes}
             onChange={setNotes}
             rows={2}
-            className="!rounded-lg !border-border/60 !bg-secondary/40"
+            className="rounded-lg! border-border/60! bg-secondary/40!"
           />
         </div>
       </div>
@@ -397,7 +406,7 @@ export const MealPlanForm: React.FC<MealPlanFormProps> = ({
             disabled={isSaving}
             className="flex-1 rounded-xl bg-primary py-3 text-sm font-bold text-primary-foreground active:bg-primary/90 disabled:opacity-50"
           >
-            {isSaving ? 'Đang lưu...' : editingPlan ? 'Cập nhật' : 'Thêm'}
+            {isSaving ? "Đang lưu..." : editingPlan ? "Cập nhật" : "Thêm"}
           </button>
         </div>
       </FixedBottomAction>

@@ -13,7 +13,7 @@ export function useVenues() {
     queryKey: [...VENUES_QUERY_KEY, userId],
     queryFn: () => {
       if (!userId) throw new Error('User not authenticated');
-      return supabaseVenuesApi.getAll(userId);
+      return supabaseVenuesApi.getAll();
     },
     enabled: !!userId,
   });
@@ -27,7 +27,7 @@ export function useVenue(id: string | null) {
     queryKey: [...VENUES_QUERY_KEY, userId, id],
     queryFn: () => {
       if (!userId) throw new Error('User not authenticated');
-      return id ? supabaseVenuesApi.getById(id, userId) : Promise.resolve(null);
+      return id ? supabaseVenuesApi.getById(id) : Promise.resolve(null);
     },
     enabled: !!id && !!userId,
   });
@@ -41,7 +41,7 @@ export function useVenueSearch(query: string) {
     queryKey: [...VENUES_QUERY_KEY, userId, 'search', query],
     queryFn: () => {
       if (!userId) throw new Error('User not authenticated');
-      return supabaseVenuesApi.search(query, userId);
+      return supabaseVenuesApi.search(query);
     },
     enabled: !!userId && query.length >= 1,
   });

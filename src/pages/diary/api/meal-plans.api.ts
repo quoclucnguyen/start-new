@@ -13,10 +13,10 @@ import type {
 // ============================================================================
 
 export interface IMealPlansApi {
-  getAll(userId: string): Promise<MealPlan[]>;
+  getAll(): Promise<MealPlan[]>;
   create(input: CreateMealPlanInput, userId: string): Promise<MealPlan>;
-  update(input: UpdateMealPlanInput, userId: string): Promise<MealPlan>;
-  delete(id: string, userId: string): Promise<void>;
+  update(input: UpdateMealPlanInput): Promise<MealPlan>;
+  delete(id: string): Promise<void>;
   addItem(mealPlanId: string, item: { title: string; recipeId?: string; notes?: string }): Promise<MealPlanItem>;
   removeItem(itemId: string): Promise<void>;
 }
@@ -83,12 +83,11 @@ function mapUpdateInputToDb(input: UpdateMealPlanInput): Partial<DbMealPlan> {
 // ============================================================================
 
 export const supabaseMealPlansApi: IMealPlansApi = {
-  async getAll(userId: string): Promise<MealPlan[]> {
+  async getAll(): Promise<MealPlan[]> {
     const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from('meal_plans')
       .select('*, meal_plan_items(*)')
-      .eq('user_id', userId)
       .eq('deleted', false)
       .order('planned_date', { ascending: true })
       .order('sort_order', { ascending: true });
@@ -141,19 +140,21 @@ export const supabaseMealPlansApi: IMealPlansApi = {
     return mealPlan;
   },
 
-  async update(input: UpdateMealPlanInput, userId: string): Promise<MealPlan> {
+  async update(input: UpdateMealPlanInput): Promise<MealPlan> {
     const supabase = getSupabaseClient();
     const dbRow = mapUpdateInputToDb(input);
     const { data, error } = await supabase
       .from('meal_plans')
       .update(dbRow)
       .eq('id', input.id)
-      .eq('user_id', userId)
       .eq('deleted', false)
       .select('*, meal_plan_items(*)')
       .single();
 
     if (error) {
+      if (error.code === 'PGRST116') {
+        throw new Error(`Meal plan with id ${input.id} not found or access denied`);
+      }
       console.error('Supabase meal_plans update error:', error);
       throw new Error(error.message);
     }
@@ -199,9 +200,9 @@ export const supabaseMealPlansApi: IMealPlansApi = {
     return mapDbToMealPlan(data as DbMealPlan & { meal_plan_items?: DbMealPlanItem[] });
   },
 
-  async delete(id: string, userId: string): Promise<void> {
+  async delete(id: string): Promise<void> {
     const supabase = getSupabaseClient();
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from('meal_plans')
       .update({
         deleted: true,
@@ -209,11 +210,20 @@ export const supabaseMealPlansApi: IMealPlansApi = {
         last_modified: new Date().toISOString(),
       })
       .eq('id', id)
-      .eq('user_id', userId);
+      .eq('deleted', false)
+      .select('id')
+      .single();
 
     if (error) {
+      if (error.code === 'PGRST116') {
+        throw new Error(`Meal plan with id ${id} not found or access denied`);
+      }
       console.error('Supabase meal_plans delete error:', error);
       throw new Error(error.message);
+    }
+
+    if (!data) {
+      throw new Error(`Meal plan with id ${id} not found or access denied`);
     }
   },
 

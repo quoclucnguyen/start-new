@@ -14,7 +14,7 @@ export function useMenuItems(venueId: string | null) {
     queryFn: () => {
       if (!userId) throw new Error('User not authenticated');
       if (!venueId) return Promise.resolve([]);
-      return supabaseMenuItemsApi.getByVenue(venueId, userId);
+      return supabaseMenuItemsApi.getByVenue(venueId);
     },
     enabled: !!venueId && !!userId,
   });
@@ -28,7 +28,7 @@ export function useAllMenuItems() {
     queryKey: [...MENU_ITEMS_QUERY_KEY, userId, 'all'],
     queryFn: () => {
       if (!userId) throw new Error('User not authenticated');
-      return supabaseMenuItemsApi.getAll(userId);
+      return supabaseMenuItemsApi.getAll();
     },
     enabled: !!userId,
   });

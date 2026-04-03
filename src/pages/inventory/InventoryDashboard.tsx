@@ -31,6 +31,8 @@ import {
   Package,
 } from 'lucide-react';
 
+type ActionSheetShowHandler = ReturnType<typeof ActionSheet.show>;
+
 export const InventoryDashboard: React.FC = () => {
   const navigate = useNavigate();
   const { data: items = [], isLoading, error } = useFoodItems();
@@ -38,6 +40,7 @@ export const InventoryDashboard: React.FC = () => {
   const { data: storageLocationsData = [] } = useStorageLocations();
   const deleteFoodItem = useDeleteFoodItem();
   const [selectedDetailItemId, setSelectedDetailItemId] = React.useState<string | null>(null);
+  const actionSheetHandlerRef = React.useRef<ActionSheetShowHandler | null>(null);
   
   const {
     filters,
@@ -47,6 +50,13 @@ export const InventoryDashboard: React.FC = () => {
     editingItemId,
     setEditingItemId,
   } = useUIStore();
+
+  React.useEffect(() => {
+    return () => {
+      actionSheetHandlerRef.current?.close();
+      actionSheetHandlerRef.current = null;
+    };
+  }, []);
 
   // Create a lookup map for categories by id
   const categoryMap = React.useMemo(() => {
@@ -156,6 +166,7 @@ export const InventoryDashboard: React.FC = () => {
 
     deleteFoodItem.mutate(item.id, {
       onSuccess: () => {
+        actionSheetHandlerRef.current?.close();
         Toast.show({
           content: 'Đã xóa món',
           position: 'bottom',
@@ -176,17 +187,25 @@ export const InventoryDashboard: React.FC = () => {
   const openItemActions = (item: FoodItem, event: React.MouseEvent) => {
     event.stopPropagation();
 
-    ActionSheet.show({
+    actionSheetHandlerRef.current?.close();
+
+    actionSheetHandlerRef.current = ActionSheet.show({
       actions: [
         {
           text: 'Xem chi tiết',
           key: 'view',
-          onClick: () => setSelectedDetailItemId(item.id),
+          onClick: () => {
+            actionSheetHandlerRef.current?.close();
+            setSelectedDetailItemId(item.id);
+          },
         },
         {
           text: 'Chỉnh sửa',
           key: 'edit',
-          onClick: () => setEditingItemId(item.id),
+          onClick: () => {
+            actionSheetHandlerRef.current?.close();
+            setEditingItemId(item.id);
+          },
         },
         {
           text: 'Xóa',
@@ -197,6 +216,9 @@ export const InventoryDashboard: React.FC = () => {
           },
         },
       ],
+      onClose: () => {
+        actionSheetHandlerRef.current = null;
+      },
     });
   };
 

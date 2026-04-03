@@ -13,7 +13,7 @@ export function useMealPlans() {
     queryKey: [...MEAL_PLANS_QUERY_KEY, userId],
     queryFn: () => {
       if (!userId) throw new Error('User not authenticated');
-      return supabaseMealPlansApi.getAll(userId);
+      return supabaseMealPlansApi.getAll();
     },
     enabled: !!userId,
   });

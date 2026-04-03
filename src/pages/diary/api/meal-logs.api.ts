@@ -18,12 +18,12 @@ import { supabaseMealItemEntriesApi } from './meal-item-entries.api';
 // ============================================================================
 
 export interface IMealLogsApi {
-  getAll(userId: string): Promise<MealLog[]>;
-  getById(id: string, userId: string): Promise<MealLog | null>;
+  getAll(): Promise<MealLog[]>;
+  getById(id: string): Promise<MealLog | null>;
   create(input: CreateMealLogInput, userId: string): Promise<MealLog>;
-  update(input: UpdateMealLogInput, userId: string): Promise<MealLog>;
-  delete(id: string, userId: string): Promise<void>;
-  getRecent(userId: string, limit?: number): Promise<MealLog[]>;
+  update(input: UpdateMealLogInput): Promise<MealLog>;
+  delete(id: string): Promise<void>;
+  getRecent(limit?: number): Promise<MealLog[]>;
 }
 
 // ============================================================================
@@ -119,12 +119,11 @@ function mapUpdateInputToDb(input: UpdateMealLogInput): Partial<DbMealLog> {
 // ============================================================================
 
 export const supabaseMealLogsApi: IMealLogsApi = {
-  async getAll(userId: string): Promise<MealLog[]> {
+  async getAll(): Promise<MealLog[]> {
     const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from('meal_logs')
       .select('*, venues(*), meal_item_entries(*)')
-      .eq('user_id', userId)
       .eq('deleted', false)
       .order('logged_at', { ascending: false });
 
@@ -136,13 +135,12 @@ export const supabaseMealLogsApi: IMealLogsApi = {
       .map(mapDbToMealLog);
   },
 
-  async getById(id: string, userId: string): Promise<MealLog | null> {
+  async getById(id: string): Promise<MealLog | null> {
     const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from('meal_logs')
       .select('*, venues(*), meal_item_entries(*)')
       .eq('id', id)
-      .eq('user_id', userId)
       .eq('deleted', false)
       .single();
 
@@ -181,28 +179,30 @@ export const supabaseMealLogsApi: IMealLogsApi = {
     return mealLog;
   },
 
-  async update(input: UpdateMealLogInput, userId: string): Promise<MealLog> {
+  async update(input: UpdateMealLogInput): Promise<MealLog> {
     const supabase = getSupabaseClient();
     const dbRow = mapUpdateInputToDb(input);
     const { data, error } = await supabase
       .from('meal_logs')
       .update(dbRow)
       .eq('id', input.id)
-      .eq('user_id', userId)
       .eq('deleted', false)
       .select('*, venues(*)')
       .single();
 
     if (error) {
+      if (error.code === 'PGRST116') {
+        throw new Error(`Meal log with id ${input.id} not found or access denied`);
+      }
       console.error('Supabase meal_logs update error:', error);
       throw new Error(error.message);
     }
     return mapDbToMealLog(data as DbMealLog & { venues: DbVenue | null });
   },
 
-  async delete(id: string, userId: string): Promise<void> {
+  async delete(id: string): Promise<void> {
     const supabase = getSupabaseClient();
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from('meal_logs')
       .update({
         deleted: true,
@@ -210,20 +210,28 @@ export const supabaseMealLogsApi: IMealLogsApi = {
         last_modified: new Date().toISOString(),
       })
       .eq('id', id)
-      .eq('user_id', userId);
+      .eq('deleted', false)
+      .select('id')
+      .single();
 
     if (error) {
+      if (error.code === 'PGRST116') {
+        throw new Error(`Meal log with id ${id} not found or access denied`);
+      }
       console.error('Supabase meal_logs delete error:', error);
       throw new Error(error.message);
     }
+
+    if (!data) {
+      throw new Error(`Meal log with id ${id} not found or access denied`);
+    }
   },
 
-  async getRecent(userId: string, limit: number = 5): Promise<MealLog[]> {
+  async getRecent(limit: number = 5): Promise<MealLog[]> {
     const supabase = getSupabaseClient();
     const { data, error } = await supabase
       .from('meal_logs')
       .select('*, venues(*), meal_item_entries(*)')
-      .eq('user_id', userId)
       .eq('deleted', false)
       .order('logged_at', { ascending: false })
       .limit(limit);
@@ -279,7 +287,8 @@ export const mockMealLogsApi: IMealLogsApi = {
     return log ? { ...log, items: log.items ?? [] } : null;
   },
 
-  async create(input: CreateMealLogInput): Promise<MealLog> {
+  async create(input: CreateMealLogInput, _userId: string): Promise<MealLog> {
+    void _userId;
     await delay();
     const log: MealLog = {
       id: generateId(),
@@ -316,10 +325,10 @@ export const mockMealLogsApi: IMealLogsApi = {
     saveLogs(getStoredLogs().filter(l => l.id !== id));
   },
 
-  async getRecent(_userId: string, limit: number = 5): Promise<MealLog[]> {
+  async getRecent(_limit: number = 5): Promise<MealLog[]> {
     await delay();
     return getStoredLogs()
-      .slice(0, limit)
+      .slice(0, _limit)
       .map((log) => ({
         ...log,
         items: log.items ?? [],

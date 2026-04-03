@@ -25,7 +25,7 @@ export function useAddMissingToShoppingList() {
       if (!userId) throw new Error('User not authenticated');
 
       // Fetch existing shopping list for dedup
-      const existingItems = await supabaseShoppingListApi.getAll(userId);
+      const existingItems = await supabaseShoppingListApi.getAll();
       const uncheckedNames = new Set(
         existingItems
           .filter((item) => !item.checked)
