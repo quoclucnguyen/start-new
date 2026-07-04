@@ -34,7 +34,7 @@ export function useRecipeSuggestionDetail(recipeId: string | null) {
   const userId = user?.id;
 
   return useQuery<RecipeDetail | null, Error>({
-    queryKey: [...RECIPE_SUGGESTIONS_QUERY_KEY, 'detail', recipeId, userId],
+    queryKey: [...RECIPE_SUGGESTIONS_QUERY_KEY, userId, 'detail', recipeId],
     queryFn: async () => {
       if (!userId) throw new Error('User not authenticated');
       if (!recipeId) return null;

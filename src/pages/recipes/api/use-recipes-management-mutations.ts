@@ -60,9 +60,9 @@ export function useCreateRecipe() {
       };
 
       // Update all matching list queries
-      queryClient.setQueriesData<Recipe[]>(
+      queryClient.setQueriesData<Recipe[] | RecipeDetail>(
         { queryKey: [...RECIPES_MANAGEMENT_QUERY_KEY, userId], exact: false },
-        (old) => (old ? [optimisticRecipe, ...old] : [optimisticRecipe]),
+        (old) => (Array.isArray(old) ? [optimisticRecipe, ...old] : old),
       );
 
       return { previousQueries };
@@ -114,14 +114,16 @@ export function useUpdateRecipe() {
       });
 
       // Optimistically update in list
-      queryClient.setQueriesData<Recipe[]>(
+      queryClient.setQueriesData<Recipe[] | RecipeDetail>(
         { queryKey: [...RECIPES_MANAGEMENT_QUERY_KEY, userId], exact: false },
         (old) =>
-          old?.map((item) =>
-            item.id === updatedRecipe.id
-              ? { ...item, ...updatedRecipe, updatedAt: new Date().toISOString() }
-              : item,
-          ) ?? [],
+          Array.isArray(old)
+            ? old.map((item) =>
+                item.id === updatedRecipe.id
+                  ? { ...item, ...updatedRecipe, updatedAt: new Date().toISOString() }
+                  : item,
+              )
+            : old,
       );
 
       return { previousQueries };
@@ -262,9 +264,9 @@ export function useDeleteRecipe() {
       });
 
       // Optimistically remove from list
-      queryClient.setQueriesData<Recipe[]>(
+      queryClient.setQueriesData<Recipe[] | RecipeDetail>(
         { queryKey: [...RECIPES_MANAGEMENT_QUERY_KEY, userId], exact: false },
-        (old) => old?.filter((item) => item.id !== deletedId) ?? [],
+        (old) => (Array.isArray(old) ? old.filter((item) => item.id !== deletedId) : old),
       );
 
       return { previousQueries };

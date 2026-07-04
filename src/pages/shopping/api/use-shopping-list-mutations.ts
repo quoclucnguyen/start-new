@@ -271,7 +271,7 @@ export function useMovePurchasedToInventory() {
 
       return createdItems;
     },
-    onSuccess: () => {
+    onSettled: () => {
       if (userId) {
         queryClient.invalidateQueries({ queryKey: [...SHOPPING_LIST_QUERY_KEY, userId] });
         queryClient.invalidateQueries({ queryKey: [...FOOD_ITEMS_QUERY_KEY, userId] });
