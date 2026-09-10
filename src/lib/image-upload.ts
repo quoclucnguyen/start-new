@@ -5,14 +5,15 @@ const pica = new Pica();
 
 // Configuration
 const MAX_IMAGE_SIZE = 800; // Max width/height in pixels
+const VISION_IMAGE_SIZE = 1280; // Max width/height for AI vision input (keeps label text readable)
 const JPEG_QUALITY = 0.8; // JPEG quality (0-1)
 const STORAGE_BUCKET = 'food-images';
 
 /**
  * Resize an image using pica library
- * Maintains aspect ratio while fitting within MAX_IMAGE_SIZE
+ * Maintains aspect ratio while fitting within maxSize
  */
-async function resizeImage(file: File): Promise<Blob> {
+async function resizeImage(file: File, maxSize: number = MAX_IMAGE_SIZE): Promise<Blob> {
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.onload = async () => {
@@ -20,14 +21,14 @@ async function resizeImage(file: File): Promise<Blob> {
         // Calculate new dimensions maintaining aspect ratio
         let width = img.width;
         let height = img.height;
-        
-        if (width > MAX_IMAGE_SIZE || height > MAX_IMAGE_SIZE) {
+
+        if (width > maxSize || height > maxSize) {
           if (width > height) {
-            height = Math.round((height * MAX_IMAGE_SIZE) / width);
-            width = MAX_IMAGE_SIZE;
+            height = Math.round((height * maxSize) / width);
+            width = maxSize;
           } else {
-            width = Math.round((width * MAX_IMAGE_SIZE) / height);
-            height = MAX_IMAGE_SIZE;
+            width = Math.round((width * maxSize) / height);
+            height = maxSize;
           }
         }
 
@@ -83,6 +84,27 @@ function generateFileName(userId: string): string {
 export interface UploadImageResult {
   url: string;
   path: string;
+}
+
+/**
+ * Resize an image for AI vision input.
+ * Uses a larger max size than storage uploads (1280px) so label/receipt
+ * text stays readable for the model. Result is JPEG ~<300KB.
+ */
+export async function resizeImageForVision(file: File): Promise<Blob> {
+  return resizeImage(file, VISION_IMAGE_SIZE);
+}
+
+/**
+ * Convert a Blob to a base64 data URL (used to send images to API routes)
+ */
+export function blobToDataUrl(blob: Blob): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = () => reject(new Error('Failed to read image data'));
+    reader.readAsDataURL(blob);
+  });
 }
 
 /**
