@@ -4,10 +4,11 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
     "lint": "eslint .",
-    "preview": "vite preview",
+    "check:regressions": "node scripts/regression-checks.mjs",
     "openclaw:ingest-recipe": "node scripts/openclaw-recipe-ingest.mjs"
   },
   "dependencies": {
@@ -16,7 +17,6 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@ericblade/quagga2": "^1.12.1",
     "@supabase/supabase-js": "^2.48.0",
-    "@tailwindcss/vite": "^4.1.18",
     "@tanstack/query-persist-client-core": "^5.91.18",
     "@tanstack/query-sync-storage-persister": "^5.90.21",
     "@tanstack/react-query": "^5.90.19",
@@ -25,6 +25,7 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-react": "^0.562.0",
+    "next": "^15.5.20",
     "pica": "^9.0.1",
     "react": "^19.2.0",
     "react-dom": "^19.2.0",
@@ -35,11 +36,11 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "@tailwindcss/postcss": "^4.3.2",
     "@types/node": "^24.10.8",
     "@types/pica": "^9.0.5",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",
-    "@vitejs/plugin-react": "^5.1.1",
     "babel-plugin-react-compiler": "^1.0.0",
     "eslint": "^9.39.1",
     "eslint-plugin-react-hooks": "^7.0.1",
@@ -47,7 +48,6 @@
     "globals": "^16.5.0",
     "tw-animate-css": "^1.4.0",
     "typescript": "~5.9.3",
-    "typescript-eslint": "^8.46.4",
-    "vite": "^7.2.4"
+    "typescript-eslint": "^8.46.4"
   }
 }

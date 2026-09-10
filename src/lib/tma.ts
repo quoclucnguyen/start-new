@@ -59,12 +59,12 @@ export function isInTelegramWebView(): boolean {
 /** Exchange initData for Supabase session via Edge Function */
 export async function exchangeTma(initDataRaw: string): Promise<TmaExchangeResponse> {
   const base =
-    import.meta.env.VITE_TMA_EXCHANGE_URL ||
-    `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/tma-exchange`;
+    process.env.NEXT_PUBLIC_TMA_EXCHANGE_URL ||
+    `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/tma-exchange`;
 
   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-  if (import.meta.env.VITE_SUPABASE_ANON_KEY) {
-    headers.Authorization = `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`;
+  if (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY) {
+    headers.Authorization = `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY}`;
   }
 
   const res = await fetch(base, {

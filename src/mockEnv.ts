@@ -1,6 +1,6 @@
 import { emitEvent, isTMA, mockTelegramEnv } from '@tma.js/sdk-react';
 
-if (import.meta.env.DEV) {
+if (process.env.NODE_ENV !== 'production') {
   if (!(await isTMA('complete'))) {
     const themeParams = {
       accent_text_color: '#13ec5b',

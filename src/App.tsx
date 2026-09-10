@@ -4,7 +4,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { queryClient } from "@/lib/query-client";
 import { AuthGuard } from "@/components/AuthGuard";
 import { MainLayout } from "@/components/layout";
-import "./App.css";
+
 
 const InventoryDashboard = lazy(() =>
   import("@/pages/inventory").then((mod) => ({

@@ -154,7 +154,7 @@ export async function deleteFoodImage(filePath: string): Promise<void> {
  */
 export function getFilePathFromUrl(url: string): string | null {
   try {
-    const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
     const bucketPath = `/storage/v1/object/public/${STORAGE_BUCKET}/`;
     const urlObj = new URL(url);
     
