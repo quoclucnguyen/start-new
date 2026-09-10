@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import "../src/index.css";
+import "../index.css";
 
 export const metadata: Metadata = {
   title: "start-new",
