@@ -32,6 +32,11 @@ const SettingsPage = lazy(() =>
     default: mod.SettingsPage,
   })),
 );
+const ChatPage = lazy(() =>
+  import("@/pages/ai/chat-page").then((mod) => ({
+    default: mod.ChatPage,
+  })),
+);
 const ShoppingListPage = lazy(() =>
   import("@/pages/shopping").then((mod) => ({
     default: mod.ShoppingListPage,
@@ -116,6 +121,10 @@ const router = createMemoryRouter([
             element: withSuspense(<RecipeManagementPage />),
           },
         ],
+      },
+      {
+        path: "ai",
+        element: withSuspense(<ChatPage />),
       },
       {
         path: "settings",

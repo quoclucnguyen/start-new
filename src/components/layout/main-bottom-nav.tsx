@@ -6,6 +6,7 @@ import {
   ClipboardList, 
   UtensilsCrossed,
   Utensils, 
+  Bot,
   Settings 
 } from 'lucide-react';
 
@@ -15,6 +16,7 @@ const defaultNavItems: NavItem[] = [
   { id: 'list', label: 'Danh sách', icon: <ClipboardList size={24} />, href: '/list' },
   { id: 'diary', label: 'Nhật ký', icon: <UtensilsCrossed size={24} />, href: '/diary' },
   { id: 'recipes', label: 'Công thức', icon: <Utensils size={24} />, href: '/recipes' },
+  { id: 'ai', label: 'AI', icon: <Bot size={24} />, href: '/ai' },
   { id: 'settings', label: 'Cài đặt', icon: <Settings size={24} />, href: '/settings' },
 ];
 
@@ -24,6 +26,7 @@ const pathToTabId: Record<string, string> = {
   '/list': 'list',
   '/diary': 'diary',
   '/recipes': 'recipes',
+  '/ai': 'ai',
   '/settings': 'settings',
 };
 

@@ -33,6 +33,11 @@ import {
 } from '@/api';
 import type { CategoryConfig, StorageLocationConfig } from '@/api/types';
 import { cn } from '@/lib/utils';
+import {
+  testAiConnection,
+  type SaveAiSettingsInput,
+} from './api/ai-settings.api';
+import { useAiSettings, useSaveAiSettings } from './api/use-ai-settings';
 
 // ============================================================================
 // Constants
@@ -283,6 +288,286 @@ function EditModal({ visible, onClose, onSave, initialData, title, isLoading }: 
 }
 
 // ============================================================================
+// AI Settings Section
+// ============================================================================
+
+/**
+ * Display metadata per known model id. The selectable options themselves come
+ * from the server (`providers` map on the settings status) — never hardcoded.
+ */
+const AI_MODEL_META: Record<string, { label: string; description: string }> = {
+  'claude-haiku-4-5': { label: 'Haiku 4.5', description: 'Nhanh, rẻ' },
+  'claude-sonnet-4-6': { label: 'Sonnet 4.6', description: 'Thông minh hơn, đắt hơn' },
+  'glm-5.3-flash': { label: 'GLM 5.3 Flash', description: 'Multimodal (ảnh), rẻ' },
+  'glm-5.3': { label: 'GLM 5.3', description: 'Flagship, text' },
+};
+
+/** Key input placeholder per provider id. */
+const AI_KEY_INPUT_PLACEHOLDERS: Record<string, string> = {
+  anthropic: 'sk-ant-...',
+  zai: 'Z.AI API key…',
+};
+
+interface AiTestResultState {
+  state: 'idle' | 'testing' | 'success' | 'error';
+  message?: string;
+}
+
+function AiSettingsSection() {
+  const { data: status, isLoading, error: statusError } = useAiSettings();
+  const saveMutation = useSaveAiSettings();
+
+  // Provider/model options come from the server registry (status.providers).
+  const providers = status?.providers ?? {};
+  const providerEntries = Object.entries(providers);
+
+  const [apiKeyInput, setApiKeyInput] = React.useState('');
+  // null until the user explicitly taps a provider/model, so background
+  // refetches never clobber an in-progress edit; falls back to the saved/
+  // server values.
+  const [selectedProvider, setSelectedProvider] = React.useState<string | null>(null);
+  const [selectedModel, setSelectedModel] = React.useState<string | null>(null);
+  const [testResult, setTestResult] = React.useState<AiTestResultState>({
+    state: 'idle',
+  });
+
+  const effectiveProvider = selectedProvider ?? status?.provider ?? 'anthropic';
+  const providerModels = providers[effectiveProvider]?.models ?? [];
+  const effectiveModel =
+    selectedModel && providerModels.includes(selectedModel)
+      ? selectedModel
+      : status?.model && providerModels.includes(status.model)
+        ? status.model
+        : providerModels[0];
+  const hasPersonalKey = status?.source === 'user' && Boolean(status.apiKeyMasked);
+
+  const handleProviderSelect = (providerId: string) => {
+    setSelectedProvider(providerId);
+    // Switching provider invalidates the previous model: reset to the first
+    // model of the newly chosen provider.
+    setSelectedModel(providers[providerId]?.models[0] ?? null);
+  };
+
+  const handleTestConnection = async () => {
+    setTestResult({ state: 'testing' });
+    try {
+      const result = await testAiConnection();
+      setTestResult({
+        state: 'success',
+        message: `Model phản hồi trong ${result.latencyMs}ms`,
+      });
+    } catch (error) {
+      setTestResult({
+        state: 'error',
+        message: error instanceof Error ? error.message : 'Lỗi không xác định',
+      });
+    }
+  };
+
+  const handleSave = () => {
+    const input: SaveAiSettingsInput = {
+      provider: effectiveProvider,
+      model: effectiveModel,
+    };
+    if (apiKeyInput.trim()) {
+      input.apiKey = apiKeyInput.trim();
+    }
+    saveMutation.mutate(input, {
+      onSuccess: () => {
+        setApiKeyInput('');
+        setTestResult({ state: 'idle' });
+        Toast.show({ content: 'Đã lưu cấu hình AI', position: 'bottom' });
+      },
+      onError: () => setTestResult({ state: 'idle' }),
+    });
+  };
+
+  const handleDeleteKey = () => {
+    saveMutation.mutate(
+      { provider: effectiveProvider, model: effectiveModel, apiKey: null },
+      {
+        onSuccess: () => {
+          setApiKeyInput('');
+          setTestResult({ state: 'idle' });
+          Toast.show({ content: 'Đã xoá key cá nhân', position: 'bottom' });
+        },
+      },
+    );
+  };
+
+  let statusTitle = 'Chưa cấu hình';
+  let statusDetail = 'Thêm API key để dùng trợ lý AI';
+  if (statusError) {
+    statusTitle = 'Không tải được cấu hình AI';
+    statusDetail =
+      statusError instanceof Error ? statusError.message : 'Vui lòng thử lại sau';
+  } else if (isLoading) {
+    statusTitle = 'Đang tải cấu hình AI…';
+    statusDetail = '';
+  } else if (status?.source === 'user') {
+    statusTitle = '✓ Đã cấu hình';
+    statusDetail = `${providers[status.provider]?.label ?? status.provider} · Model ${status.model} · key cá nhân ${status.apiKeyMasked ?? ''}`;
+  } else if (status?.source === 'env') {
+    statusTitle = 'Dùng key server';
+    statusDetail = `${providers[status.provider]?.label ?? status.provider} · Model ${status.model} · chưa có key cá nhân`;
+  }
+
+  return (
+    <section className="mt-6 mb-8">
+      <div className="flex items-center justify-between mb-3 px-1">
+        <h2 className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
+          AI
+        </h2>
+        <span className="text-xs text-muted-foreground">Key cá nhân của bạn</span>
+      </div>
+
+      <div className="bg-card rounded-2xl border border-border p-4 space-y-4">
+        {/* Status row */}
+        <div className="flex items-start justify-between gap-3 p-4 bg-accent rounded-xl">
+          <div className="min-w-0">
+            <p className="text-sm font-bold">{statusTitle}</p>
+            {statusDetail ? (
+              <p className="text-xs text-muted-foreground truncate">{statusDetail}</p>
+            ) : null}
+          </div>
+          {hasPersonalKey && (
+            <button
+              onClick={handleDeleteKey}
+              disabled={saveMutation.isPending}
+              className="shrink-0 rounded-lg px-2.5 py-1.5 text-xs font-bold text-destructive hover:bg-destructive/10 transition-colors disabled:opacity-50"
+            >
+              Xoá key
+            </button>
+          )}
+        </div>
+
+        {/* Provider picker — options come from the server registry */}
+        {providerEntries.length > 0 ? (
+          <div className="space-y-2">
+            <label className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
+              Nhà cung cấp
+            </label>
+            <div className="grid grid-cols-2 gap-3">
+              {providerEntries.map(([id, option]) => (
+                <button
+                  key={id}
+                  onClick={() => handleProviderSelect(id)}
+                  className={cn(
+                    'flex flex-col items-start gap-0.5 rounded-xl border p-3 text-left transition-all',
+                    effectiveProvider === id
+                      ? 'border-primary bg-primary/5 ring-1 ring-primary'
+                      : 'border-border hover:border-muted-foreground/40'
+                  )}
+                >
+                  <span className="text-sm font-bold">{option.label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+        ) : null}
+
+        {/* API key input */}
+        <div className="space-y-2">
+          <label className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
+            {providers[effectiveProvider]?.label ?? 'AI'} API key
+          </label>
+          <input
+            type="password"
+            value={apiKeyInput}
+            onChange={(e) => setApiKeyInput(e.target.value)}
+            placeholder={
+              AI_KEY_INPUT_PLACEHOLDERS[effectiveProvider] ?? 'Dán API key của bạn…'
+            }
+            autoComplete="off"
+            className="w-full h-14 px-4 rounded-xl border border-input bg-card text-foreground focus:ring-2 focus:ring-primary focus:border-transparent outline-none font-medium"
+          />
+          <p className="text-xs text-muted-foreground">
+            {hasPersonalKey
+              ? 'Để trống nếu muốn giữ key cá nhân hiện tại.'
+              : 'Key chỉ lưu trong database của bạn và không bao giờ hiển thị lại.'}
+          </p>
+        </div>
+
+        {/* Model picker — options depend on the selected provider */}
+        {providerModels.length > 0 ? (
+          <div className="space-y-2">
+            <label className="text-sm font-bold uppercase tracking-wider text-muted-foreground">
+              Model
+            </label>
+            <div className="grid grid-cols-2 gap-3">
+              {providerModels.map((modelId) => {
+                const meta = AI_MODEL_META[modelId];
+                return (
+                  <button
+                    key={modelId}
+                    onClick={() => setSelectedModel(modelId)}
+                    className={cn(
+                      'flex flex-col items-start gap-0.5 rounded-xl border p-3 text-left transition-all',
+                      effectiveModel === modelId
+                        ? 'border-primary bg-primary/5 ring-1 ring-primary'
+                        : 'border-border hover:border-muted-foreground/40'
+                    )}
+                  >
+                    <span className="text-sm font-bold">{meta?.label ?? modelId}</span>
+                    {meta?.description ? (
+                      <span className="text-xs text-muted-foreground">
+                        {meta.description}
+                      </span>
+                    ) : null}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        ) : null}
+
+        {/* Actions */}
+        <div className="flex gap-3">
+          <button
+            onClick={() => void handleTestConnection()}
+            disabled={testResult.state === 'testing' || saveMutation.isPending}
+            className="flex-1 px-4 py-3 text-sm font-bold text-muted-foreground bg-transparent hover:bg-accent border border-border rounded-xl transition-all disabled:opacity-50"
+          >
+            Kiểm tra kết nối
+          </button>
+          <button
+            onClick={handleSave}
+            disabled={saveMutation.isPending}
+            className="flex-[2] px-4 py-3 text-sm font-bold text-primary-foreground bg-primary hover:bg-primary/90 rounded-xl transition-all disabled:opacity-50"
+          >
+            {saveMutation.isPending ? 'Đang lưu...' : 'Lưu'}
+          </button>
+        </div>
+        <p className="text-xs text-muted-foreground">
+          Kiểm tra kết nối dùng key &amp; model đã lưu.
+        </p>
+
+        {/* Save error (e.g. ai_settings table not migrated yet) */}
+        {saveMutation.isError && saveMutation.error instanceof Error ? (
+          <p className="text-xs leading-5 text-destructive">
+            ✗ {saveMutation.error.message}
+          </p>
+        ) : null}
+
+        {/* Connection test result */}
+        {testResult.state === 'testing' ? (
+          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+            <div className="animate-spin rounded-full h-3.5 w-3.5 border-b-2 border-primary" />
+            Đang kiểm tra…
+          </div>
+        ) : null}
+        {testResult.state === 'success' ? (
+          <p className="text-xs font-semibold text-primary">✓ {testResult.message}</p>
+        ) : null}
+        {testResult.state === 'error' ? (
+          <p className="text-xs leading-5 text-destructive">✗ {testResult.message}</p>
+        ) : null}
+      </div>
+    </section>
+  );
+}
+
+// ============================================================================
 // Main Settings Page
 // ============================================================================
 
@@ -510,6 +795,9 @@ export const SettingsPage: React.FC = () => {
             </section>
           </>
         )}
+
+        {/* AI Section */}
+        <AiSettingsSection />
       </main>
 
       {/* Edit Modal */}
