@@ -28,3 +28,5 @@ dist-ssr
 # next.js
 .next/
 next-env.d.ts
+# local tool state
+.mimosa/
