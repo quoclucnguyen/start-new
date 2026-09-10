@@ -23,11 +23,18 @@ const BottomNavigation = React.forwardRef<HTMLElement, BottomNavigationProps>(
       <nav
         ref={ref}
         className={cn(
-          'fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-lg border-t border-border',
+          'main-bottom-nav fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-lg border-t border-border',
           className
         )}
         {...props}
       >
+        <style>{`
+          .main-bottom-nav .adm-tab-bar-item { min-width: 0; padding: 5px 2px; }
+          .main-bottom-nav .adm-tab-bar-item-title {
+            font-size: 10px; line-height: 1.25;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 100%;
+          }
+        `}</style>
         <TabBar 
           activeKey={activeId} 
           onChange={onItemClick}
